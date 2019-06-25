@@ -1,0 +1,18 @@
+﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using Abp.Extensions;
+using Abp.Runtime.Validation;
+using Abp.Application.Services.Dto;
+
+namespace @(Model.Namespace).Dto
+{
+    public class PagedAndSortedInputDto : PagedInputDto, ISortedResultRequest
+    {
+        public string Sorting { get; set; }
+
+        public PagedAndSortedInputDto()
+        {
+            MaxResultCount = AppConsts.DefaultPageSize;
+        }
+    }
+}

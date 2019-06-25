@@ -1,0 +1,43 @@
+﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using Abp.Application.Services;
+using Abp.Application.Services.Dto;
+using @(Model.Namespace).Dto;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using @Model.Namespace.@(Model.DirectoryName).Dto;
+
+namespace @Model.Namespace.@Model.DirectoryName
+{
+    /// <summary>
+    /// @(Model.LocalName)服务接口
+    /// </summary>
+    public interface I@(Model.ClassName)AppService: IApplicationService
+    {
+
+        /// <summary>
+        /// 获取@(Model.LocalName)列表
+        /// </summary>
+        Task<PagedResultDto<@(Model.ClassName)ListDto>> Get@(Model.ClassName)s(Get@(Model.ClassName)sInput input);
+
+        /// <summary>
+        /// 获取@(Model.LocalName)
+        /// </summary>
+        Task<Get@(Model.ClassName)ForEditOutput> Get@(Model.ClassName)ForEdit(NullableIdDto<long> input);
+
+        /// <summary>
+        /// 创建或编辑@(Model.LocalName)
+        /// </summary>
+        Task CreateOrUpdate@(Model.ClassName)(CreateOrUpdate@(Model.ClassName)Input input);
+
+        /// <summary>
+        /// 删除@(Model.LocalName)
+        /// </summary>
+        Task Delete@(Model.ClassName)(EntityDto<long> input);
+
+        /// <summary>
+        /// 批量删除@(Model.LocalName)
+        /// </summary>
+        Task BatchDelete@(Model.ClassName)s(List<long> input);
+    }
+}

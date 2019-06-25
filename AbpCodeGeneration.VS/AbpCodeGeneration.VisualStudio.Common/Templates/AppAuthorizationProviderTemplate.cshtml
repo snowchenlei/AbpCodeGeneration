@@ -1,0 +1,19 @@
+﻿@inherits RazorEngine.Templating.TemplateBase<CodeBuilder.Models.TemplateModels.AppAuthorizationProviderFileModel>
+using Abp.Authorization;
+
+namespace @(Model.Namespace).Authorization
+{
+    public partial class AppAuthorizationProvider
+    {
+        public void Set@(Model.Name)Permissions(Permission root)
+        {
+        // 在这里配置了@(Model.CnName) 的权限。
+        var entityPermission = root.CreateChildPermission(@(Model.Name)Permissions.Node, L("@Model.CnName"));
+        entityPermission.CreateChildPermission(@(Model.Name)Permissions.Create, L("Create"));
+        entityPermission.CreateChildPermission(@(Model.Name)Permissions.Edit, L("Edit"));
+        entityPermission.CreateChildPermission(@(Model.Name)Permissions.Delete, L("Delete"));
+        entityPermission.CreateChildPermission(@(Model.Name)Permissions.BatchDelete, L("BatchDelete"));
+        entityPermission.CreateChildPermission(@(Model.Name)Permissions.Export, L("Export"));
+        }
+        }
+        }

@@ -1,0 +1,39 @@
+﻿@inherits RazorEngine.Templating.TemplateBase<CodeBuilder.Models.TemplateModels.PermissionsFileModel>
+namespace @(Model.Namespace).Authorization
+{
+    /// <summary>
+    /// 定义权限常量
+    /// </summary>
+    public static class @(Model.Name)Permissions
+    {
+        /// <summary>
+        /// 模块权限
+        /// </summary>
+        public const string Node = "Pages.@(Model.Name)";
+
+        /// <summary>
+        /// 新增权限
+        /// </summary>
+        public const string Create = "Pages.@(Model.Name).Create";
+
+        /// <summary>
+        /// 编辑权限
+        /// </summary>
+        public const string Edit = "Pages.@(Model.Name).Edit";
+
+        /// <summary>
+        /// 删除权限
+        /// </summary>
+        public const string Delete = "Pages.@(Model.Name).Delete";
+
+        /// <summary>
+        /// 批量删除权限
+        /// </summary>
+        public const string BatchDelete = "Pages.@(Model.Name).BatchDelete";
+
+        /// <summary>
+        /// 导出权限
+        /// </summary>
+        public const string Export = "Pages.@(Model.Name).Export";
+    }
+}

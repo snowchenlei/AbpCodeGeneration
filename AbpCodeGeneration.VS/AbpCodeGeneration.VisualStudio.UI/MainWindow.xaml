@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="AbpCodeGeneration.VisualStudio.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AbpCodeGeneration.VisualStudio.UI"
+        mc:Ignorable="d">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>类中文名</Label>
+            <TextBox x:Name="ClassLocalName" Width="50"/>
+            <Label>类主键</Label>
+            <TextBox x:Name="ClassKeyType" Width="50"/>
+        </StackPanel>
+        <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" SelectionUnit="CellOrRowHeader" LoadingRow="DataGrid_LoadingRow">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="属性名" Width="80" Binding="{Binding PropertyName, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="类型" Width="80" Binding="{Binding PropertyType, UpdateSourceTrigger=PropertyChanged}" />
+                <!--<DataGridTextColumn Header="本地化" Width="80" Binding="{Binding Local, UpdateSourceTrigger=PropertyChanged}" />-->
+                <DataGridCheckBoxColumn Header="列表" Width="80" Binding="{Binding IsList, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridCheckBoxColumn Header="修改" Width="80" Binding="{Binding IsEdit, UpdateSourceTrigger=PropertyChanged}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="Remove" Content="删除" Click="Remove_Click"></Button>
+            <Button x:Name="Query" Content="确认" Click="Query_Click"></Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

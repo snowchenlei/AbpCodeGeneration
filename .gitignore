@@ -3,3 +3,11 @@
 ################################################################################
 
 /AbpCodeGeneration.VisualStudio.Common/obj
+/AbpCodeGeneration.VS/.vs/AbpCodeGeneration.VS
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio/bin/Debug
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio/obj
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.Common/bin/Debug
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.Common/obj/Debug
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.UI/bin/Debug
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.UI/obj/Debug
+/AbpCodeGeneration.VS/packages

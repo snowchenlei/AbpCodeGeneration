@@ -1,0 +1,101 @@
+﻿using AbpCodeGeneration.VisualStudio.Common;
+using AbpCodeGeneration.VisualStudio.Common.Model;
+using AbpCodeGeneration.VisualStudio.UI.ViewModels;
+using EnvDTE;
+using EnvDTE80;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace AbpCodeGeneration.VisualStudio.UI
+{
+    /// <summary>
+    /// MainWindow.xaml 的交互逻辑
+    /// </summary>
+    public partial class MainWindow : UserControl
+    {
+        private ObservableCollection<DtoPropertyInfo> DataList = new ObservableCollection<DtoPropertyInfo>();
+        private readonly ProjectHelper projectHelper;
+
+        public MainWindow(DTE2 _dte)
+        {
+            InitializeComponent();
+            projectHelper = new ProjectHelper(_dte);
+            DtoFileModel dto = projectHelper.GetDtoModel();
+            foreach (var item in dto.ClassPropertys)
+            {
+                if ("Id".Equals(item.Name) || (dto.Name + "Id").Equals(item.Name))
+                {
+                    ClassKeyType.Text = item.PropertyType;
+                    continue;
+                }
+                DataList.Add(new DtoPropertyInfo
+                {
+                    PropertyName = item.Name,
+                    PropertyType = item.PropertyType,
+                    IsEdit = true,
+                    IsList = true,
+                    Local = item.Name
+                });
+            }
+            dataGrid.ItemsSource = DataList;
+        }
+
+        private void Query_Click(object sender, RoutedEventArgs e)
+        {
+            DtoFileModel dto = projectHelper.GetDtoModel();
+            
+            projectHelper.CreateFile(new CreateFileInput()
+            {
+                Namespace = dto.Namespace,
+                ClassName = dto.Name,
+                KeyType = ClassKeyType.Text,
+                LocalName = ClassLocalName.Text,
+                DirectoryName = dto.DirName,
+                PropertyInfos = DataList
+            });
+        }
+
+        private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            //增加行号
+            e.Row.Header = e.Row.GetIndex() + 1;
+        }
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+            int _rowIndex = 0;
+            int _columnIndex = 0;
+            if (GetCellXY(dataGrid, ref _rowIndex, ref _columnIndex))
+            {
+                DataList.RemoveAt(_rowIndex);
+            }
+        }
+
+        //---取得选中 Cell 所在的行列
+        private bool GetCellXY(DataGrid dg, ref int rowIndex, ref int columnIndex)
+        {
+            var cells = dg.SelectedCells;
+            if (cells.Any())
+            {
+                rowIndex = dg.Items.IndexOf(cells.First().Item);
+                columnIndex = cells.First().Column.DisplayIndex;
+                return true;
+            }
+            return false;
+        }
+    }
+}

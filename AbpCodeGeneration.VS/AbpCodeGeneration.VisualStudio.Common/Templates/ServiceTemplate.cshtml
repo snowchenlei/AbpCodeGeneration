@@ -1,0 +1,150 @@
+﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using System;
+using System.Diagnostics;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using AutoMapper;
+using Abp.Application.Services.Dto;
+using @(Model.Namespace).Dto;
+using @Model.Namespace.@(Model.DirectoryName).Dto;
+using Abp.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Abp.Authorization;
+using Abp.Linq.Extensions;
+using Abp.Collections.Extensions;
+using Abp.Extensions;
+
+namespace @Model.Namespace.@Model.DirectoryName
+{
+    /// <summary>
+    /// @(Model.LocalName)服务
+    /// </summary>
+    public class @(Model.ClassName)AppService : @(Model.Namespace.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Last())AppServiceBase, I@(Model.ClassName)AppService
+    {
+        private readonly IMapper _mapper;
+        private readonly IRepository<@(Model.ClassName), @Model.KeyType> _repository;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="repository"></param>
+        public @(Model.ClassName)AppService(IMapper mapper
+            , IRepository<@(Model.ClassName), @Model.KeyType> repository)
+        {
+            _mapper = mapper;
+            _repository = repository;
+        }
+
+        /// <summary>
+        /// 拼接查询条件
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private IQueryable<@(Model.ClassName)> Get@(Model.ClassName)sFilteredQuery(Get@(Model.ClassName)sInput input)
+        {
+            var query = _repository.GetAll();
+            //TODO:此处写自己的查询条件
+            return query;
+        }
+
+        /// <summary>
+        /// 获取@(Model.LocalName)列表
+        /// </summary>
+        public async Task<PagedResultDto<@(Model.ClassName)ListDto>> Get@(Model.ClassName)s(Get@(Model.ClassName)sInput input)
+        {
+            var query = Get@(Model.ClassName)sFilteredQuery(input);
+
+            var count = await query.CountAsync();
+
+            var entityList = await query
+            .OrderBy(input.Sorting).AsNoTracking()
+            .PageBy(input)
+            .ToListAsync();
+
+            var entityListDtos =_mapper.Map<List<@(Model.ClassName)ListDto>>(entityList);
+
+            return new PagedResultDto<@(Model.ClassName)ListDto>(count, entityListDtos);
+        }
+
+        /// <summary>
+        /// 获取更新@(Model.LocalName)的数据
+        /// </summary>
+        public async Task<Get@(Model.ClassName)ForEditOutput> Get@(Model.ClassName)ForEdit(NullableIdDto<long> input)
+        {
+            var output = new Get@(Model.ClassName)ForEditOutput();
+            @(Model.ClassName)EditDto editDto;
+            if (input.Id.HasValue)
+            {
+                var entity = await _repository.GetAsync(input.Id.Value);
+                editDto = _mapper.Map<@(Model.ClassName)EditDto>(entity);
+            }
+            else
+            {
+                editDto = new @(Model.ClassName)EditDto();
+            }
+
+            output.@(Model.ClassName) = editDto;
+
+            return output;
+        }
+
+        /// <summary>
+        /// 创建或编辑@(Model.LocalName)
+        /// </summary>
+        public async Task CreateOrUpdate@(Model.ClassName)(CreateOrUpdate@(Model.ClassName)Input input)
+        {
+            if (!input.@(Model.ClassName).Id.HasValue)
+            {
+                await Create@(Model.ClassName)Async(input);
+            }
+            else
+            {
+                await Update@(Model.ClassName)Async(input);
+            }
+        }
+
+        /// <summary>
+        /// 新建
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        protected virtual async Task Create@(Model.ClassName)Async(CreateOrUpdate@(Model.ClassName)Input input)
+        {
+            var entity = _mapper.Map<@(Model.ClassName)>(input.@(Model.ClassName));
+            await _repository.InsertAsync(entity);
+        }
+
+        /// <summary>
+        /// 编辑
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        protected virtual async Task Update@(Model.ClassName)Async(CreateOrUpdate@(Model.ClassName)Input input)
+        {
+            Debug.Assert(input.@(Model.ClassName).Id != null, "input.@(Model.ClassName).Id != null");
+            @(Model.ClassName) entity = await _repository.GetAsync(input.@(Model.ClassName).Id.Value);
+            entity = _mapper.Map(input.@(Model.ClassName), entity);
+            await _repository.UpdateAsync(entity);
+        }
+
+        /// <summary>
+        /// 删除@(Model.LocalName)
+        /// </summary>
+        public async Task Delete@(Model.ClassName)(EntityDto<@Model.KeyType> input)
+        {
+            await _repository.DeleteAsync(input.Id);
+        }
+
+        /// <summary>
+        /// 批量删除@(Model.LocalName)
+        /// </summary>
+        public async Task BatchDelete@(Model.ClassName)s(List<@Model.KeyType> input)
+        {
+            await _repository.DeleteAsync(a => input.Contains(a.Id));
+        }
+    }
+}

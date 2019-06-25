@@ -1,0 +1,117 @@
+﻿@using CodeBuilder
+@using CodeBuilder.Models.TemplateModels
+@inherits RazorEngine.Templating.TemplateBase<CodeBuilder.Models.TemplateModels.DtoFileModel>
+
+<nz-card [nzBordered]="false">
+    <form nz-form [nzLayout]="'inline'" class="search__form">
+        <nz-row nzGutter="8">
+            <nz-col nzSm="24">
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-input-group nzSearch [nzAddOnAfter]="suffixSearchButton">
+                            <input type="text" nz-input [(ngModel)]="filterText" name="filterText" placeholder="{{'SearchWithThreeDot' | localize}}">
+                            <ng-template #suffixSearchButton>
+                                <button nz-button nzType="primary" nzSearch (click)="refresh()">
+                                    <i nz-icon type="search"></i>
+                                </button>
+                            </ng-template>
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+        </nz-row>
+    </form>
+    <button nz-button [nzType]="'primary'" *ngIf="isGranted('Pages.@(Model.Name).Create')" (click)="createOrEdit()">
+        <i nz-icon type="plus"></i>
+        <span>
+            {{"新增" | localize}}
+        </span>
+    </button>
+    <ng-container *ngIf="selectedDataItems.length > 0">
+        <button nz-button [nzType]="'danger'" *ngIf="isGranted('Pages.@(Model.Name).Delete')" (click)="batchDelete()">
+            <i nz-icon type="delete"></i>
+            <span>
+                删除所选
+            </span>
+        </button>
+    </ng-container>
+    <div class="my-md">
+        <nz-alert [nzType]="'info'" [nzShowIcon]="true" [nzMessage]="message">
+            <ng-template #message>
+                <span>
+                    已选择<strong class="text-primary">{{selectedDataItems.length}}</strong> 项
+                </span>
+                <a (click)="restCheckStatus(dataList)" *ngIf="selectedDataItems.length>0" class="ml-md">
+                    {{'Clear' | localize}}
+                </a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="refresh()">
+                    {{'Refresh' | localize}}
+                </a>
+            </ng-template>
+        </nz-alert>
+    </div>
+    <div class="mb-md">
+
+        <nz-table #ajaxTable nzBordered [nzData]="dataList" [nzTotal]="totalItems" [nzLoading]="isTableLoading"
+                  (nzPageIndexChange)="pageNumberChange()" (nzPageSizeChange)="refresh()" [nzShowSizeChanger]="true"
+                  [nzShowQuickJumper]="true" [nzFrontPagination]="false" [nzShowPagination]="false" [nzNoResult]="noDataTemplate">
+            <ng-template #noDataTemplate>
+                <no-data></no-data>
+            </ng-template>
+            <thead>
+                <tr>
+                    <th nzShowCheckbox [(nzChecked)]="allChecked" [nzDisabled]="allCheckboxDisabled" [nzIndeterminate]="checkboxIndeterminate"
+                        (nzCheckedChange)="checkAll($event)">
+                    </th>
+                    @foreach (ClassProperty classProperty in Model.ClassPropertys)
+                    {
+                        if (classProperty.Name == "TenantId")
+                        {
+                            continue;
+                        }
+                        <th>
+                            @classProperty.CnName
+                        </th>
+                    }
+                    <th nzWidth="230px" class="text-center">
+                        {{'Actions' | localize}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of ajaxTable.data">
+                    <td nzShowCheckbox [(nzChecked)]="item.checked" (nzCheckedChange)="refreshCheckStatus(dataList)"></td>
+                    @foreach (ClassProperty classProperty in Model.ClassPropertys)
+                    {
+                        if (classProperty.Name == "TenantId")
+                        {
+                            continue;
+                        }
+                        <td>
+                            {{item.@classProperty.Name.FirstCharToLower()}}
+                        </td>
+                    }
+                    <td class="text-center">
+                        <ng-container *ngIf="isGranted('Pages.@(Model.Name).Edit')">
+                            <a (click)="createOrEdit(item.id)">
+                                <i nz-icon type="edit"></i>
+                                {{'Edit' | localize}}
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="!item.isStatic&&isGranted('Pages.@(Model.Name).Delete')">
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <nz-popconfirm [nzTitle]="'CommonDeleteWarningMessage'| localize" (nzOnConfirm)="delete(item)"
+                                           [nzOkText]="l('Ok')" [nzCancelText]="l('Cancel')">
+                                <a nz-popconfirm>
+                                    <i nz-icon type="delete"></i>
+                                    {{'Delete' | localize}}
+                                </a>
+                            </nz-popconfirm>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+</nz-card>

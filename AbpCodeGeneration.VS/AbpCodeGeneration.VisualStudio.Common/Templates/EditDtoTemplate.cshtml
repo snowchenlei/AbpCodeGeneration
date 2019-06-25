@@ -1,0 +1,20 @@
+﻿@using RazorEngine
+@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using Abp.AutoMapper;
+using Abp.Application.Services.Dto;
+
+namespace @(Model.Namespace).@(Model.DirectoryName).Dto
+{
+    public class @(Model.ClassName)EditDto : NullableIdDto<@Model.KeyType>
+    {
+    @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
+    {
+        <text>public @Raw(classProperty.PropertyType) @Raw(classProperty.PropertyName) { get; set; }</text>
+    }
+    }
+}

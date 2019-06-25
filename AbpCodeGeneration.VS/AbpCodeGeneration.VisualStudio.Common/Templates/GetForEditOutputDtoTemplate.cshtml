@@ -1,0 +1,11 @@
+﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using System.ComponentModel.DataAnnotations;
+
+namespace @(Model.Namespace).@(Model.DirectoryName).Dto
+{
+    public class Get@(Model.ClassName)ForEditOutput
+    {
+        public @(Model.ClassName)EditDto @(Model.ClassName) { get; set; }
+    }
+}

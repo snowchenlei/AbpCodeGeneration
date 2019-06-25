@@ -1,0 +1,89 @@
+﻿@using CodeBuilder
+@using CodeBuilder.Models.TemplateModels
+@inherits RazorEngine.Templating.TemplateBase<CodeBuilder.Models.TemplateModels.DtoFileModel>
+
+import { Component, Injector } from '@@angular/core';
+import {
+    PagedListingComponentBase,
+    PagedRequestDto,
+} from '@@shared/common/paged-listing-component-base';
+import {
+    @(Model.Name)ListDto,
+    @(Model.Name)ServiceProxy,
+    PagedResultDtoOf@(Model.Name)ListDto
+} from '@@shared/service-proxies/service-proxies';
+import { CreateOrEdit@(Model.Name)ModalComponent } from './create-or-edit-@(Model.Name.ToLower())-modal.component';
+import * as _ from 'lodash';
+import { finalize } from 'rxjs/operators';
+
+@@Component({
+    selector: 'app-@(Model.Name.ToLower())s',
+    templateUrl: './@(Model.Name.ToLower()).component.html',
+    styles: [],
+})
+export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Name)ListDto> {
+    advancedFiltersVisible = false;
+    selectedPermission = '';
+
+    constructor(injector: Injector, private _@(Model.Name.FirstCharToLower())Service: @(Model.Name)ServiceProxy) {
+        super(injector);
+    }
+
+    protected fetchDataList(
+        request: PagedRequestDto,
+        pageNumber: number,
+        finishedCallback: () => void,
+    ): void {
+        this._@(Model.Name.FirstCharToLower())Service.get@(Model.Name)s(
+            this.filterText,
+            request.sorting,
+            request.maxResultCount,
+            request.skipCount,
+        )
+        .pipe(finalize(finishedCallback))
+        .subscribe((result: PagedResultDtoOf@(Model.Name)ListDto) => {
+            this.dataList = result.items;
+            this.showPaging(result);
+        });
+    }
+
+    protected delete(entity: @(Model.Name)ListDto): void {
+        this._@(Model.Name.FirstCharToLower())Service.delete(entity.id).subscribe(() => {
+            this.refresh();
+            this.notify.success(this.l('SuccessfullyDeleted'));
+        });
+    }
+
+    createOrEdit(id?: number): void {
+        this.modalHelper
+            .createStatic(CreateOrEdit@(Model.Name)ModalComponent, { @(Model.Name.FirstCharToLower())Id: id }, {size: 'md', includeTabs: true })
+            .subscribe(res => {
+                if (res) {
+                    this.refresh();
+                }
+            });
+    }
+
+    batchDelete(): void {
+        this.message.warn('method not implement!');
+        // const selectCount = this.selectedDataItems.length;
+        // if (selectCount <= 0) {
+        //     abp.message.warn(this.l('SelectAnItem'));
+
+        //     return;
+        // }
+        // this.message.confirm(
+        //     this.l('<b class="text-red">{0}</b> items will be removed.', selectCount),
+        //     this.l('AreYouSure'),
+        //     res => {
+        //         if (res) {
+        //             let deletedIds = _.map(this.selectedDataItems, (item) => new EntityDto({ id: item.id }));
+        //             this._@(Model.Name.FirstCharToLower())Service.batchDelete@(Model.Name)s(deletedIds).subscribe(() => {
+        //                 this.refresh();
+        //                 this.notify.success(this.l('SuccessfullyDeleted'));
+        //             });
+        //         }
+        //     },
+        // );
+    }
+}
