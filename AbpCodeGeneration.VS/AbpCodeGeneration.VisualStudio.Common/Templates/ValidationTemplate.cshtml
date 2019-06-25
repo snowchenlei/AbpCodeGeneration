@@ -1,0 +1,32 @@
+﻿@using RazorEngine
+@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using Abp.AutoMapper;
+using FluentValidation;
+using Abp.Application.Services.Dto;
+using @(Model.Namespace).@(Model.DirectoryName).Dto;
+
+namespace @(Model.Namespace).@(Model.DirectoryName).Validators
+{
+    public class @(Model.ClassName)EditValidator : @(Model.AbsoluteNamespace)Validator<@(Model.ClassName)EditDto>
+    {
+        public @(Model.ClassName)Validator()
+        {
+        @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
+        {
+            <text>RuleFor(m => m.@(classProperty.PropertyName))</text>
+            if (classProperty.Required)
+            {
+                <text>.NotNull()</text>
+                <text>.WithMessage(L("IsRequired", "{PropertyName}"))</text>
+                <text>.NotEmpty()</text>
+                <text>.WithMessage(L("IsRequired", "{PropertyName}"));</text>
+            }
+        }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+﻿@using RazorEngine
+@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using Abp.Localization;
+using Abp.Localization.Sources;
+using FluentValidation;
+
+namespace @(Model.Namespace).@(Model.DirectoryName)
+{
+    public class @(Model.AbsoluteNamespace)Validator<T> : AbstractValidator<T>
+    {
+        protected string L(string name, params object[] args)
+        {
+            return LocalizationHelper.GetSource(@(Model.AbsoluteNamespace)Consts.LocalizationSourceName).GetString(name, args);
+        
+        }
+    }
+}

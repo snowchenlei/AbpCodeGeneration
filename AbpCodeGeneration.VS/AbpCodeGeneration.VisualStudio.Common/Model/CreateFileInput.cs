@@ -6,6 +6,7 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
 {
     public class CreateFileInput
     {
+        public string AbsoluteNamespace { get; set; }
         public string Namespace { get; set; }
         public string ClassName { get; set; }
         public string LocalName { get; set; }

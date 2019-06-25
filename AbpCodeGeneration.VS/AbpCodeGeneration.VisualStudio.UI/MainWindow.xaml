@@ -19,6 +19,7 @@
                 <!--<DataGridTextColumn Header="本地化" Width="80" Binding="{Binding Local, UpdateSourceTrigger=PropertyChanged}" />-->
                 <DataGridCheckBoxColumn Header="列表" Width="80" Binding="{Binding IsList, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridCheckBoxColumn Header="修改" Width="80" Binding="{Binding IsEdit, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridCheckBoxColumn Header="必填" Width="80" Binding="{Binding Required, UpdateSourceTrigger=PropertyChanged}" />
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

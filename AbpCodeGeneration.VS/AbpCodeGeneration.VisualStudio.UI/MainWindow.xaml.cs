@@ -57,9 +57,10 @@ namespace AbpCodeGeneration.VisualStudio.UI
         private void Query_Click(object sender, RoutedEventArgs e)
         {
             DtoFileModel dto = projectHelper.GetDtoModel();
-            
+
             projectHelper.CreateFile(new CreateFileInput()
             {
+                AbsoluteNamespace = dto.Namespace.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Last(),
                 Namespace = dto.Namespace,
                 ClassName = dto.Name,
                 KeyType = ClassKeyType.Text,

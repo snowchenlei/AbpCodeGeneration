@@ -66,7 +66,6 @@ namespace AbpCodeGeneration.VisualStudio.Common
             var model = new DtoFileModel() { Namespace = ApplicationRootNamespace, Name = CodeClass.Name, DirName = ClassAbsolutePathInProject.Replace("\\", ".") };
             List<ClassProperty> classProperties = new List<ClassProperty>();
 
-            //CodeClass.Bases.Cast<CodeClass2>().ToList()[0].Members.Item(8).Name    
             if (CodeClass.Bases.Count > 0)
             {
                 //C#仅支持单继承
@@ -148,7 +147,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             InitRazorEngine();
 
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application");
-            
+
             //获取当前点击的类所在的项目
             if (model.IsFirst)
             {
@@ -157,6 +156,8 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateBasicDto(model, applicationBasicFolder);
                 //编辑AppConst
                 SetConst(applicationProjectItem.SubProject);
+                //创建验证模板
+                CreateValiadtorClassMapper(model, applicationProjectItem);
             }
             //当前类在当前项目中的目录结构
             Project topProject = SelectProjectItem.ContainingProject;
@@ -173,6 +174,9 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateCustomDtoMapper(model, applicationProjectItem);
             }
             SetMapper(applicationProjectItem.SubProject, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
+            //添加Validator
+            var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
+            CreateValidatorFile(model, applicationValidatorFolder);
             //添加服务
             CreateServiceFile(model, applicationNewFolder);
         }
@@ -339,7 +343,12 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_GetsInput = $"Get{model.ClassName}sInput.cs";
             AddFileToProjectItem(dtoFolder, content_GetsInput, fileName_GetsInput);
         }
-        
+        private void CreateValidatorFile(CreateFileInput model, ProjectItem dtoFolder)
+        {
+            string content_Edit = RazorEngine.Engine.Razor.RunCompile("ValidationTemplate", typeof(CreateFileInput), model);
+            string fileName_Edit = $"{model.ClassName}EditValidator.cs";
+            AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
+        }
         /// <summary>
         /// 创建Service类
         /// </summary>
@@ -360,7 +369,13 @@ namespace AbpCodeGeneration.VisualStudio.Common
         private void CreateCustomDtoMapper(CreateFileInput model, ProjectItem dtoFolder)
         {
             string content_Edit = RazorEngine.Engine.Razor.RunCompile("CustomDtoTemplate", typeof(CreateFileInput), model);
-            string fileName_Edit = $"CustomDtoMapper.cs";
+            string fileName_Edit = model.AbsoluteNamespace + "DtoMapper.cs";
+            AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
+        }
+        private void CreateValiadtorClassMapper(CreateFileInput model, ProjectItem dtoFolder)
+        {
+            string content_Edit = RazorEngine.Engine.Razor.RunCompile("ValidationBaseTemplate", typeof(CreateFileInput), model);
+            string fileName_Edit = model.AbsoluteNamespace + "Validator.cs";
             AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
         }
         #endregion
@@ -403,7 +418,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                     if (codeChild.Kind == vsCMElement.vsCMElementFunction && codeChild.Name == "CreateMappings")
                     {
                         var insertCode = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
-                        insertCode.Insert("            // " + classCnName + "\r\n");
+                        insertCode.Insert("            // " + classCnName ?? className + "\r\n");
                         insertCode.Insert("            configuration.CreateMap<" + className + ", " + className + "EditDto>();\r\n");
                         insertCode.Insert("            configuration.CreateMap<" + className + ", " + className + "ListDto>();\r\n");
                         insertCode.Insert("            configuration.CreateMap<" + className + "EditDto, " + className + ">();\r\n");
