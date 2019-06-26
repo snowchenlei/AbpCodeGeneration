@@ -1,0 +1,15 @@
+﻿@using RazorEngine
+@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+
+namespace @(Model.Namespace).@(Model.DirectoryName).Authorization
+{
+    public partial class @(Model.ClassName)PermissionNames
+    {
+        public const string Pages_Administration_@(Model.ClassName)s = "Pages.Administration.@(Model.ClassName)s";
+        public const string Pages_Administration_@(Model.ClassName)s_Create = "Pages.Administration.@(Model.ClassName)s.Create";
+        public const string Pages_Administration_@(Model.ClassName)s_Edit = "Pages.Administration.@(Model.ClassName)s.Edit";
+        public const string Pages_Administration_@(Model.ClassName)s_Delete = "Pages.Administration.@(Model.ClassName)s.Delete";
+        public const string Pages_Administration_@(Model.ClassName)s_BatchDelete = "Pages.Administration.@(Model.ClassName)s.BatchDelete";
+    }
+}

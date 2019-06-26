@@ -1,19 +1,31 @@
-﻿@inherits RazorEngine.Templating.TemplateBase<CodeBuilder.Models.TemplateModels.AppAuthorizationProviderFileModel>
+﻿@using RazorEngine
+@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
 using Abp.Authorization;
+using Abp.Localization;
+using @(Model.Namespace).Authorization;
 
-namespace @(Model.Namespace).Authorization
+namespace @(Model.Namespace).@(Model.DirectoryName).Authorization
 {
-    public partial class AppAuthorizationProvider
+    public partial class @(Model.ClassName)AuthorizationProvider : AuthorizationProvider
     {
-        public void Set@(Model.Name)Permissions(Permission root)
+        public override void SetPermissions(IPermissionDefinitionContext context)
         {
-        // 在这里配置了@(Model.CnName) 的权限。
-        var entityPermission = root.CreateChildPermission(@(Model.Name)Permissions.Node, L("@Model.CnName"));
-        entityPermission.CreateChildPermission(@(Model.Name)Permissions.Create, L("Create"));
-        entityPermission.CreateChildPermission(@(Model.Name)Permissions.Edit, L("Edit"));
-        entityPermission.CreateChildPermission(@(Model.Name)Permissions.Delete, L("Delete"));
-        entityPermission.CreateChildPermission(@(Model.Name)Permissions.BatchDelete, L("BatchDelete"));
-        entityPermission.CreateChildPermission(@(Model.Name)Permissions.Export, L("Export"));
+            var pages = context.GetPermissionOrNull(PermissionNames.Pages) ??
+                        context.CreatePermission(PermissionNames.Pages, L("Pages"));
+            var administration = pages.Children.FirstOrDefault(p => p.Name == AppLtmPermissions.Pages_Administration) ??
+                                 pages.CreateChildPermission(PermissionNames.Pages_Administration, L("Administration"));
+
+            // @(Model.ClassName)
+            var @(Model.CamelClassName)s = administration.CreateChildPermission(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s, L("@(Model.ClassName)s"));
+            @(Model.CamelClassName)s.CreateChildPermission(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create, L("CreatingNew@(Model.ClassName)"));
+            @(Model.CamelClassName)s.CreateChildPermission(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit, L("Editing@(Model.ClassName)"));
+            @(Model.CamelClassName)s.CreateChildPermission(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Delete, L("Deleting@(Model.ClassName)"));
+            @(Model.CamelClassName)s.CreateChildPermission(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_BatchDelete, L("BatchDeleting@(Model.ClassName)"));
         }
+        private static ILocalizableString L(string name)
+        {
+            return new LocalizableString(name, @(Model.AbsoluteNamespace)Consts.LocalizationSourceName);
         }
-        }
+    }
+}

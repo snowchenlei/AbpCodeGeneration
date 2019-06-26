@@ -145,10 +145,13 @@ namespace AbpCodeGeneration.VisualStudio.Common
         public void CreateFile(CreateFileInput model)
         {
             InitRazorEngine();
+            //获取当前点击的类所在的项目
+            Project topProject = SelectProjectItem.ContainingProject;
+            //当前类在当前项目中的目录结构
+            string dirPath = ClassPathInProject = GetSelectFileDirPath(topProject, SelectProjectItem);           
 
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application");
-
-            //获取当前点击的类所在的项目
+            //首次使用
             if (model.IsFirst)
             {
                 //首次初始化，添加通用Dto
@@ -159,11 +162,9 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 //创建验证模板
                 CreateValidationBase(model, applicationProjectItem);
             }
-            //当前类在当前项目中的目录结构
-            Project topProject = SelectProjectItem.ContainingProject;
-            string dirPath = ClassPathInProject = GetSelectFileDirPath(topProject, SelectProjectItem);
+
             //添加项目目录结构
-            var applicationNewFolder = applicationProjectItem.SubProject.ProjectItems.Item(dirPath) ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(dirPath);
+            var applicationNewFolder = GetDeepProjectItem(applicationProjectItem) ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(dirPath);
             //添加Dto
             var applicationDtoFolder = applicationNewFolder.ProjectItems.Item("Dto") ?? applicationNewFolder.ProjectItems.AddFolder("Dto");
             CreateDtoFile(model, applicationDtoFolder);
@@ -177,10 +178,50 @@ namespace AbpCodeGeneration.VisualStudio.Common
             //添加Validator
             var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
             CreateValidatorFile(model, applicationValidatorFolder);
+            //添加权限
+            ProjectItem currentProjectItem = GetDeepProjectItem(topProject);
+            var coreAuthorizationFolder = currentProjectItem.ProjectItems.Item("Authorization")
+                ?? currentProjectItem.ProjectItems.AddFolder("Authorization");
+            CreateAuthorizationFile(model, coreAuthorizationFolder);
             //添加服务
             CreateServiceFile(model, applicationNewFolder);
+            
         }
-
+        #region 获取项目信息
+        private ProjectItem GetDeepProjectItem(Project project)
+        {
+            string[] classAbsolutePaths = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            ProjectItem projectItem = project.ProjectItems.Item(classAbsolutePaths[0]);
+            for (int i = 1; i < classAbsolutePaths.Length; i++)
+            {
+                if (projectItem == null)
+                {
+                    return null;
+                }
+                projectItem = projectItem.ProjectItems.Item(classAbsolutePaths[i]);
+            }
+            return projectItem;
+        }
+        private ProjectItem GetDeepProjectItem(ProjectItem project)
+        {
+            string[] classAbsolutePaths = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            ProjectItem projectItem = project;
+            foreach (string item in classAbsolutePaths)
+            {
+                if (projectItem == null)
+                { return null; }
+                if (projectItem.ProjectItems == null)
+                {
+                    projectItem = projectItem.SubProject.ProjectItems.Item(item);
+                }
+                else
+                {
+                    projectItem = projectItem.ProjectItems.Item(item);
+                }
+            }
+            return projectItem;
+        } 
+        #endregion
         private void InitRazorEngine()
         {
             var config = new TemplateServiceConfiguration
@@ -301,6 +342,22 @@ namespace AbpCodeGeneration.VisualStudio.Common
         }
 
         #region 创建文件
+        /// <summary>
+        /// 创建授权文件
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="coreFolder"></param>
+        private void CreateAuthorizationFile(CreateFileInput model, ProjectItem coreFolder)
+        {
+            string contentAuthorizationProvider = RazorEngine.Engine.Razor.RunCompile("AppAuthorizationProviderTemplate", typeof(CreateFileInput), model);
+            string fileNameAuthorizationProvider = model.ClassName + "AuthorizationProvider.cs";
+            AddFileToProjectItem(coreFolder, contentAuthorizationProvider, fileNameAuthorizationProvider);
+
+            string contentPermissionName = RazorEngine.Engine.Razor.RunCompile("AppPermissionName", typeof(CreateFileInput), model);
+            string fileNamePermissionName = model.ClassName + "PermissionName.cs";
+            AddFileToProjectItem(coreFolder, contentPermissionName, fileNamePermissionName);
+        }
+
         /// <summary>
         /// 创建基础Dto
         /// </summary>
