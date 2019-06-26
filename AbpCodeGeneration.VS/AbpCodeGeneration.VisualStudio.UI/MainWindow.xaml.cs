@@ -56,6 +56,14 @@ namespace AbpCodeGeneration.VisualStudio.UI
 
         private void Query_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show("代码生成成功", "提示", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+            if(result == MessageBoxResult.OK)
+            {
+                //获取父窗体并关闭
+                System.Windows.Window parentWindow = System.Windows.Window.GetWindow(this);
+                parentWindow.Close();
+                return;
+            }
             DtoFileModel dto = projectHelper.GetDtoModel();
 
             projectHelper.CreateFile(new CreateFileInput()

@@ -14,19 +14,38 @@ namespace @(Model.Namespace).@(Model.DirectoryName).Validators
 {
     public class @(Model.ClassName)EditValidator : @(Model.AbsoluteNamespace)Validator<@(Model.ClassName)EditDto>
     {
-        public @(Model.ClassName)Validator()
+        public @(Model.ClassName)EditValidator()
         {
-        @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
-        {
-            <text>RuleFor(m => m.@(classProperty.PropertyName))</text>
-            if (classProperty.Required)
+            @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
             {
-                <text>.NotNull()</text>
-                <text>.WithMessage(L("IsRequired", "{PropertyName}"))</text>
-                <text>.NotEmpty()</text>
-                <text>.WithMessage(L("IsRequired", "{PropertyName}"));</text>
+                if (classProperty.IsValidate)
+                {
+                    <text>RuleFor(m => m.@(classProperty.PropertyName))</text>
+                    if (classProperty.Required)
+                    {
+                        <text>.NotNull()</text>
+                        <text>.WithMessage(L("IsRequired", "{PropertyName}"))</text>
+                        <text>.NotEmpty()</text>
+                        <text>.WithMessage(L("IsRequired", "{PropertyName}"))</text>
+                    }
+                    if (classProperty.MinLength.HasValue)
+                    {
+                        <text>.MaximumLength(@classProperty.MinLength.Value)</text>
+                        <text>.WithMessage(L("OnMinLength", "{PropertyName}", "{MinLength}"))</text>
+                    }
+                    if(classProperty.MaxLength.HasValue)
+                    {
+                        <text>.MaximumLength(@classProperty.MaxLength.Value)</text>
+                        <text>.WithMessage(L("UnderMaxLength", "{PropertyName}", "{MaxLength}"))</text>
+                    }
+                    if(!String.IsNullOrEmpty(classProperty.Regular))
+                    {
+                        <text>.Matches("@classProperty.Regular")</text>
+                        <text>.WithMessage(L("EnterRight", "{PropertyName}"))</text>
+                    }
+                    <text>;</text>
+                }
             }
-        }
         }
     }
 }

@@ -157,7 +157,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 //编辑AppConst
                 SetConst(applicationProjectItem.SubProject);
                 //创建验证模板
-                CreateValiadtorClassMapper(model, applicationProjectItem);
+                CreateValidationBase(model, applicationProjectItem);
             }
             //当前类在当前项目中的目录结构
             Project topProject = SelectProjectItem.ContainingProject;
@@ -343,6 +343,11 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_GetsInput = $"Get{model.ClassName}sInput.cs";
             AddFileToProjectItem(dtoFolder, content_GetsInput, fileName_GetsInput);
         }
+        /// <summary>
+        /// 创建验证文件
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="dtoFolder"></param>
         private void CreateValidatorFile(CreateFileInput model, ProjectItem dtoFolder)
         {
             string content_Edit = RazorEngine.Engine.Razor.RunCompile("ValidationTemplate", typeof(CreateFileInput), model);
@@ -366,13 +371,23 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_Service = $"{model.ClassName}AppService.cs";
             AddFileToProjectItem(dtoFolder, content_Service, fileName_Service);
         } 
+        /// <summary>
+        /// 创建自定义Automapper映射
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="dtoFolder"></param>
         private void CreateCustomDtoMapper(CreateFileInput model, ProjectItem dtoFolder)
         {
             string content_Edit = RazorEngine.Engine.Razor.RunCompile("CustomDtoTemplate", typeof(CreateFileInput), model);
             string fileName_Edit = model.AbsoluteNamespace + "DtoMapper.cs";
             AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
         }
-        private void CreateValiadtorClassMapper(CreateFileInput model, ProjectItem dtoFolder)
+        /// <summary>
+        /// 创建验证基类
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="dtoFolder"></param>
+        private void CreateValidationBase(CreateFileInput model, ProjectItem dtoFolder)
         {
             string content_Edit = RazorEngine.Engine.Razor.RunCompile("ValidationBaseTemplate", typeof(CreateFileInput), model);
             string fileName_Edit = model.AbsoluteNamespace + "Validator.cs";

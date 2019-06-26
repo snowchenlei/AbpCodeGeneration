@@ -104,6 +104,7 @@ namespace AbpCodeGeneration.VisualStudio
                 {
                     IShellService shell = new ShellService();
                     shell.ShowDialog("生成配置", new MainWindow(_dte));
+                    //shell.ShowDialog("生成配置", new Window1());
                 }
             }
         }

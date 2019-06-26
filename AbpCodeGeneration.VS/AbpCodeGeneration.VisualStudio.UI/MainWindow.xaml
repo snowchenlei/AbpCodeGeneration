@@ -16,10 +16,12 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="属性名" Width="80" Binding="{Binding PropertyName, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="类型" Width="80" Binding="{Binding PropertyType, UpdateSourceTrigger=PropertyChanged}" />
-                <!--<DataGridTextColumn Header="本地化" Width="80" Binding="{Binding Local, UpdateSourceTrigger=PropertyChanged}" />-->
                 <DataGridCheckBoxColumn Header="列表" Width="80" Binding="{Binding IsList, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridCheckBoxColumn Header="修改" Width="80" Binding="{Binding IsEdit, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridCheckBoxColumn Header="修改" Width="80" Binding="{Binding IsEdit, UpdateSourceTrigger=PropertyChanged}" />                
                 <DataGridCheckBoxColumn Header="必填" Width="80" Binding="{Binding Required, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="最小长度" Width="80" Binding="{Binding MinLength, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="最大长度" Width="80" Binding="{Binding MaxLength, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="正则" Width="150" Binding="{Binding Regular, UpdateSourceTrigger=PropertyChanged}" />
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
