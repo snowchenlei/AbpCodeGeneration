@@ -176,13 +176,25 @@ namespace AbpCodeGeneration.VisualStudio.Common
             }
             SetMapper(applicationProjectItem.SubProject, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
             //添加Validator
-            var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
-            CreateValidatorFile(model, applicationValidatorFolder);
-            //添加权限
+            if (model.ExistValidation)
+            {
+                var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
+                CreateValidatorFile(model, applicationValidatorFolder);
+            }
             ProjectItem currentProjectItem = GetDeepProjectItem(topProject);
-            var coreAuthorizationFolder = currentProjectItem.ProjectItems.Item("Authorization")
-                ?? currentProjectItem.ProjectItems.AddFolder("Authorization");
-            CreateAuthorizationFile(model, coreAuthorizationFolder);
+            //添加权限
+            if (model.ExistAuthorization)
+            {
+                var coreAuthorizationFolder = currentProjectItem.ProjectItems.Item("Authorization")
+                    ?? currentProjectItem.ProjectItems.AddFolder("Authorization");
+                CreateAuthorizationFile(model, coreAuthorizationFolder);
+            }
+            if (model.ExistDomainService)
+            {
+                var coreDomainServiceFolder = currentProjectItem.ProjectItems.Item("DomainService")
+                    ?? currentProjectItem.ProjectItems.AddFolder("DomainService");
+                CreateDomainServiceFile(model, coreDomainServiceFolder);
+            }
             //添加服务
             CreateServiceFile(model, applicationNewFolder);
             
@@ -357,7 +369,22 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileNamePermissionName = model.ClassName + "PermissionName.cs";
             AddFileToProjectItem(coreFolder, contentPermissionName, fileNamePermissionName);
         }
+        /// <summary>
+        /// 创建领域服务文件
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="coreFolder"></param>
+        private void CreateDomainServiceFile(CreateFileInput model, ProjectItem coreFolder)
+        {
+            string contentAuthorizationProvider = RazorEngine.Engine.Razor.RunCompile("IDomainServiceTemplate", typeof(CreateFileInput), model);
+            string fileNameAuthorizationProvider = $"I{model.ClassName}Manager.cs";
+            AddFileToProjectItem(coreFolder, contentAuthorizationProvider, fileNameAuthorizationProvider);
 
+            string contentPermissionName = RazorEngine.Engine.Razor.RunCompile("DomainServiceTemplate", typeof(CreateFileInput), model);
+            string fileNamePermissionName = model.ClassName + "Manager.cs";
+            AddFileToProjectItem(coreFolder, contentPermissionName, fileNamePermissionName);
+        }
+        
         /// <summary>
         /// 创建基础Dto
         /// </summary>

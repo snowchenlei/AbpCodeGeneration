@@ -28,6 +28,10 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         public string DirectoryName { get; set; }
 
         public bool IsFirst { get; set; } = true;
+        public bool ExistDomainService { get; set; } = true;
+        public bool ExistAuthorization { get; set; } = true; 
+        public bool ExistValidation { get; set; } = true;
+
 
         public string KeyType { get; set; }
         public ICollection<DtoPropertyInfo> PropertyInfos { get; set; }

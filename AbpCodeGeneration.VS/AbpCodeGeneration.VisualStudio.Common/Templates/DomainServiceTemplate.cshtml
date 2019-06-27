@@ -1,0 +1,22 @@
+﻿@using RazorEngine
+@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using Abp.Domain.Repositories;
+
+namespace @(Model.Namespace).@(Model.DirectoryName).DomainService
+{
+    public class @(Model.ClassName)Manager : @(Model.AbsoluteNamespace)DomainServiceBase, IBookManager
+    {
+        private readonly IRepository<@(Model.ClassName), @(Model.KeyType)> _@(Model.CamelClassName)Repository;
+
+		/// <summary>
+		/// @(Model.ClassName)的构造方法
+		///</summary>
+		public BookManager(
+			IRepository<@(Model.ClassName), @(Model.KeyType)> repository)
+		{
+			_@(Model.CamelClassName)Repository =  repository;
+		}
+        // TODO:编写领域业务代码
+    }
+}

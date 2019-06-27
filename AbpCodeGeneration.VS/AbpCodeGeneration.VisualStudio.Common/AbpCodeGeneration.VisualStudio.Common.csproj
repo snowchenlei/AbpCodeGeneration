@@ -91,6 +91,8 @@
     <EmbeddedResource Include="Templates\ValidationTemplate.cshtml" />
     <EmbeddedResource Include="Templates\ValidationBaseTemplate.cshtml" />
     <EmbeddedResource Include="Templates\AppPermissionName.cshtml" />
+    <EmbeddedResource Include="Templates\DomainServiceTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\IDomainServiceTemplate.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.16\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.16\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets')" />

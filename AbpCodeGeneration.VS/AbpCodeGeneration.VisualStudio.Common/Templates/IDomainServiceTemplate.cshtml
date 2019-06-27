@@ -1,0 +1,11 @@
+﻿@using RazorEngine
+@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using Abp.Domain.Services;
+
+namespace @(Model.Namespace).@(Model.DirectoryName).DomainService
+{
+    public interface I@(Model.ClassName)Manager : IDomainService
+    {
+    }
+}
