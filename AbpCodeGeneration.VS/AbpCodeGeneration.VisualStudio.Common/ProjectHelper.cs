@@ -169,12 +169,13 @@ namespace AbpCodeGeneration.VisualStudio.Common
             var applicationDtoFolder = applicationNewFolder.ProjectItems.Item("Dto") ?? applicationNewFolder.ProjectItems.AddFolder("Dto");
             CreateDtoFile(model, applicationDtoFolder);
             //设置Autompper映射
-            ProjectItem customDtoMapperProjectItem = applicationProjectItem.SubProject.ProjectItems.Item("CustomDtoMapper.cs");
+            ProjectItem customDtoMapperProjectItem = applicationProjectItem.SubProject.ProjectItems.Item(model.AbsoluteNamespace + "DtoMapper.cs");
             if (customDtoMapperProjectItem == null)
             {   //没有则创建文件
                 CreateCustomDtoMapper(model, applicationProjectItem);
+                customDtoMapperProjectItem = applicationProjectItem.SubProject.ProjectItems.Item(model.AbsoluteNamespace + "DtoMapper.cs");
             }
-            SetMapper(applicationProjectItem.SubProject, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
+            SetMapper(customDtoMapperProjectItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
             //添加Validator
             if (model.ExistValidation)
             {
@@ -185,6 +186,8 @@ namespace AbpCodeGeneration.VisualStudio.Common
             //添加权限
             if (model.ExistAuthorization)
             {
+                // TODO:自行选择单文件或追加
+                //ProjectItem coreAuthorization = GetDeepProjectItem();
                 var coreAuthorizationFolder = currentProjectItem.ProjectItems.Item("Authorization")
                     ?? currentProjectItem.ProjectItems.AddFolder("Authorization");
                 CreateAuthorizationFile(model, coreAuthorizationFolder);
@@ -500,9 +503,8 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="applicationProject"></param>
         /// <param name="className"></param>
         /// <param name="classCnName"></param>
-        private void SetMapper(Project applicationProject, string nameSpace, string className, string classCnName)
+        private void SetMapper(ProjectItem customDtoMapperProjectItem, string nameSpace, string className, string classCnName)
         {
-            ProjectItem customDtoMapperProjectItem = applicationProject.ProjectItems.Item("CustomDtoMapper.cs");            
             if (customDtoMapperProjectItem != null)
             {
                 CodeClass codeClass = GetClass(customDtoMapperProjectItem.FileCodeModel.CodeElements);

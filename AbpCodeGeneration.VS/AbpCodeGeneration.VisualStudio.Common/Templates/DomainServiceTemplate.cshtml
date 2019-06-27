@@ -5,14 +5,14 @@ using Abp.Domain.Repositories;
 
 namespace @(Model.Namespace).@(Model.DirectoryName).DomainService
 {
-    public class @(Model.ClassName)Manager : @(Model.AbsoluteNamespace)DomainServiceBase, IBookManager
+    public class @(Model.ClassName)Manager : @(Model.AbsoluteNamespace)DomainServiceBase, I@(Model.ClassName)Manager
     {
         private readonly IRepository<@(Model.ClassName), @(Model.KeyType)> _@(Model.CamelClassName)Repository;
 
 		/// <summary>
 		/// @(Model.ClassName)的构造方法
 		///</summary>
-		public BookManager(
+		public @(Model.ClassName)Manager(
 			IRepository<@(Model.ClassName), @(Model.KeyType)> repository)
 		{
 			_@(Model.CamelClassName)Repository =  repository;

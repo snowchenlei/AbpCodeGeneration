@@ -1,8 +1,8 @@
 ﻿@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using System;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using @(Model.Namespace).Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using @Model.Namespace.@(Model.DirectoryName).Dto;
@@ -33,11 +33,11 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 删除@(Model.LocalName)
         /// </summary>
-        Task Delete@(Model.ClassName)(EntityDto<long> input);
+        Task Delete@(Model.ClassName)(EntityDto<@Model.KeyType> input);
 
         /// <summary>
         /// 批量删除@(Model.LocalName)
         /// </summary>
-        Task BatchDelete@(Model.ClassName)s(List<long> input);
+        Task BatchDelete@(Model.ClassName)s(List<@Model.KeyType> input);
     }
 }
