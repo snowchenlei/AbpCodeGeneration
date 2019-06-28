@@ -188,15 +188,14 @@ namespace AbpCodeGeneration.VisualStudio.Common
             {
                 CreatePermission(model);
             }
+            //添加服务
+            CreateServiceFile(model, applicationNewFolder);
             if (model.ExistDomainService)
             {
                 var coreDomainServiceFolder = currentProjectItem.ProjectItems.Item("DomainService")
                     ?? currentProjectItem.ProjectItems.AddFolder("DomainService");
                 CreateDomainServiceFile(model, coreDomainServiceFolder);
-            }
-            //添加服务
-            CreateServiceFile(model, applicationNewFolder);
-            
+            }            
         }
         #region 获取项目信息
         private ProjectItem GetDeepProjectItem(Project project)
@@ -266,6 +265,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             }
             return null;
         }
+
         private CodeImport GetImport(CodeElements codeElements)
         {
             List<CodeElement2> elements = codeElements.Cast<CodeElement2>().ToList();
@@ -359,11 +359,18 @@ namespace AbpCodeGeneration.VisualStudio.Common
             // TODO:自行选择单文件或追加。
             // 单文件项目原授权不存在administration则需手动添加
             // 多文件需在“”配置
-            EditPermission(topProject, model);            
-            //var coreAuthorizationFolder = currentProjectItem.ProjectItems.Item("Authorization")
-            //    ?? currentProjectItem.ProjectItems.AddFolder("Authorization");
-            //CreateAuthorizationFile(model, coreAuthorizationFolder);
+            if (model.IsAppend)
+            {
+                EditPermission(topProject, model);
+            }
+            else
+            {
+                var coreAuthorizationFolder = currentProjectItem.ProjectItems.Item("Authorization")
+                    ?? currentProjectItem.ProjectItems.AddFolder("Authorization");
+                CreateAuthorizationFile(model, coreAuthorizationFolder);
+            }
         }
+
         #region 创建文件
         /// <summary>
         /// 创建授权文件
@@ -380,6 +387,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileNamePermissionName = model.ClassName + "PermissionName.cs";
             AddFileToProjectItem(coreFolder, contentPermissionName, fileNamePermissionName);
         }
+
         /// <summary>
         /// 创建领域服务文件
         /// </summary>
@@ -411,6 +419,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_Paged = $"PagedInputDto.cs";
             AddFileToProjectItem(dtoFolder, content_Paged, fileName_Paged);
         }
+
         /// <summary>
         /// 创建Dto文件
         /// </summary>
@@ -438,6 +447,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_GetsInput = $"Get{model.ClassName}sInput.cs";
             AddFileToProjectItem(dtoFolder, content_GetsInput, fileName_GetsInput);
         }
+
         /// <summary>
         /// 创建验证文件
         /// </summary>
@@ -449,6 +459,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_Edit = $"{model.ClassName}EditValidator.cs";
             AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
         }
+
         /// <summary>
         /// 创建Service类
         /// </summary>
@@ -466,6 +477,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_Service = $"{model.ClassName}AppService.cs";
             AddFileToProjectItem(dtoFolder, content_Service, fileName_Service);
         } 
+
         /// <summary>
         /// 创建自定义Automapper映射
         /// </summary>
@@ -477,6 +489,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_Edit = model.AbsoluteNamespace + "DtoMapper.cs";
             AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
         }
+
         /// <summary>
         /// 创建验证基类
         /// </summary>
@@ -489,6 +502,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
         }
         #endregion
+
         /// <summary>
         /// 编辑AppConst文件
         /// </summary>
@@ -505,6 +519,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 customAppConstProjectItem.Save();
             }
         }
+
         /// <summary>
         /// 编辑CustomDtoMapper.cs,添加映射
         /// </summary>
@@ -538,6 +553,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 customDtoMapperProjectItem.Save();
             }
         }
+
         /// <summary>
         /// 编辑PermissionNames.cs\AuthorizationProvider.cs
         /// </summary>
@@ -578,6 +594,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 }
             }
         }
+
         /// <summary>
         /// 添加文件到项目中
         /// </summary>

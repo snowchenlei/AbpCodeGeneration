@@ -16,14 +16,34 @@ using Abp.Authorization;
 using Abp.Linq.Extensions;
 using Abp.Collections.Extensions;
 using Abp.Extensions;
-using @(Model.Namespace).@(Model.DirectoryName).Authorization;
+@if (Model.ExistAuthorization)
+{
+    if (Model.IsAppend)
+    {
+<text>using @(Model.Namespace).Authorization;</text>
+    }
+    else
+    {
+<text>using @(Model.Namespace).@(Model.DirectoryName).Authorization;</text>
+    }
+}
 
 namespace @Model.Namespace.@Model.DirectoryName
 {
     /// <summary>
     /// @(Model.LocalName)服务
     /// </summary>
-    @*[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]*@
+    @if (Model.ExistAuthorization)
+    {
+        if (Model.IsAppend)
+        {
+    <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+        }
+        else
+        {
+    <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+        }
+    }
     public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppServiceBase, I@(Model.ClassName)AppService
     {
         private readonly IMapper _mapper;
@@ -39,23 +59,21 @@ namespace @Model.Namespace.@Model.DirectoryName
             _mapper = mapper;
             _repository = repository;
         }
-
-        /// <summary>
-        /// 拼接查询条件
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        private IQueryable<@(Model.ClassName)> Get@(Model.ClassName)sFilteredQuery(Get@(Model.ClassName)sInput input)
-        {
-            var query = _repository.GetAll();
-            //TODO:此处写自己的查询条件
-            return query;
-        }
-
+            
         /// <summary>
         /// 获取@(Model.LocalName)列表
         /// </summary>
-        @*[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]*@
+        @if (Model.ExistAuthorization)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+            }
+        }
         public async Task<PagedResultDto<@(Model.ClassName)ListDto>> Get@(Model.ClassName)s(Get@(Model.ClassName)sInput input)
         {
             var query = Get@(Model.ClassName)sFilteredQuery(input);
@@ -75,8 +93,19 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 获取更新@(Model.LocalName)的数据
         /// </summary>
-        @*[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
-            PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]*@
+        @if (Model.ExistAuthorization)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
+            PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+            else
+            {            
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
+            @(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+        }
         public async Task<Get@(Model.ClassName)ForEditOutput> Get@(Model.ClassName)ForEdit(NullableIdDto<long> input)
         {
             var output = new Get@(Model.ClassName)ForEditOutput();
@@ -99,8 +128,19 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 创建或编辑@(Model.LocalName)
         /// </summary>
-        @*[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
-            @(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]*@
+        @if (Model.ExistAuthorization)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
+            PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
+            @(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+        }
         public async Task CreateOrUpdate@(Model.ClassName)(CreateOrUpdate@(Model.ClassName)Input input)
         {
             if (!input.@(Model.ClassName).Id.HasValue)
@@ -118,7 +158,17 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        @*[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create)]*@
+        @if (Model.ExistAuthorization)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Create)]</text>
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create)]</text>
+            }
+        }
         protected virtual async Task Create@(Model.ClassName)Async(CreateOrUpdate@(Model.ClassName)Input input)
         {
             var entity = _mapper.Map<@(Model.ClassName)>(input.@(Model.ClassName));
@@ -130,7 +180,17 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        @*[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]*@
+        @if (Model.ExistAuthorization)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+        }
         protected virtual async Task Update@(Model.ClassName)Async(CreateOrUpdate@(Model.ClassName)Input input)
         {
             Debug.Assert(input.@(Model.ClassName).Id != null, "input.@(Model.ClassName).Id != null");
@@ -142,7 +202,17 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 删除@(Model.LocalName)
         /// </summary>
-        @*[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Delete)]*@
+        @if (Model.ExistAuthorization)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Delete)]</text>
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Delete)]</text>
+            }
+        }
         public async Task Delete@(Model.ClassName)(EntityDto<@Model.KeyType> input)
         {
             await _repository.DeleteAsync(input.Id);
@@ -151,10 +221,33 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 批量删除@(Model.LocalName)
         /// </summary>
-        @*[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_BatchDelete)]*@
+        @if (Model.ExistAuthorization)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_BatchDelete)]</text>
+
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_BatchDelete)]</text>
+            }
+        }
         public async Task BatchDelete@(Model.ClassName)s(List<@Model.KeyType> input)
         {
             await _repository.DeleteAsync(a => input.Contains(a.Id));
+        }
+
+        /// <summary>
+        /// 拼接查询条件
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private IQueryable<@(Model.ClassName)> Get@(Model.ClassName)sFilteredQuery(Get@(Model.ClassName)sInput input)
+        {
+            var query = _repository.GetAll();
+            //TODO:此处写自己的查询条件
+            return query;
         }
     }
 }
