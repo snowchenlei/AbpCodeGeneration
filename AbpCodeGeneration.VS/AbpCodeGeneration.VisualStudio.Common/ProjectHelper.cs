@@ -175,7 +175,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateCustomDtoMapper(model, applicationProjectItem);
                 customDtoMapperProjectItem = applicationProjectItem.SubProject.ProjectItems.Item(model.AbsoluteNamespace + "DtoMapper.cs");
             }
-            SetMapper(customDtoMapperProjectItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
+            EditMapper(customDtoMapperProjectItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
             //添加Validator
             if (model.ExistValidation)
             {
@@ -186,11 +186,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             //添加权限
             if (model.ExistAuthorization)
             {
-                // TODO:自行选择单文件或追加
-                //ProjectItem coreAuthorization = GetDeepProjectItem();
-                var coreAuthorizationFolder = currentProjectItem.ProjectItems.Item("Authorization")
-                    ?? currentProjectItem.ProjectItems.AddFolder("Authorization");
-                CreateAuthorizationFile(model, coreAuthorizationFolder);
+                CreatePermission(model);
             }
             if (model.ExistDomainService)
             {
@@ -356,6 +352,18 @@ namespace AbpCodeGeneration.VisualStudio.Common
             return dirPath.Substring(1);
         }
 
+        private void CreatePermission(CreateFileInput model)
+        {
+            Project topProject = SelectProjectItem.ContainingProject;
+            ProjectItem currentProjectItem = GetDeepProjectItem(topProject);
+            // TODO:自行选择单文件或追加。
+            // 单文件项目原授权不存在administration则需手动添加
+            // 多文件需在“”配置
+            EditPermission(topProject, model);            
+            //var coreAuthorizationFolder = currentProjectItem.ProjectItems.Item("Authorization")
+            //    ?? currentProjectItem.ProjectItems.AddFolder("Authorization");
+            //CreateAuthorizationFile(model, coreAuthorizationFolder);
+        }
         #region 创建文件
         /// <summary>
         /// 创建授权文件
@@ -503,7 +511,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="applicationProject"></param>
         /// <param name="className"></param>
         /// <param name="classCnName"></param>
-        private void SetMapper(ProjectItem customDtoMapperProjectItem, string nameSpace, string className, string classCnName)
+        private void EditMapper(ProjectItem customDtoMapperProjectItem, string nameSpace, string className, string classCnName)
         {
             if (customDtoMapperProjectItem != null)
             {
@@ -528,6 +536,46 @@ namespace AbpCodeGeneration.VisualStudio.Common
                     }
                 }
                 customDtoMapperProjectItem.Save();
+            }
+        }
+        /// <summary>
+        /// 编辑PermissionNames.cs\AuthorizationProvider.cs
+        /// </summary>
+        /// <param name="topProject"></param>
+        /// <param name="model"></param>
+        private void EditPermission(Project topProject, CreateFileInput model)
+        {
+            ProjectItem permissionNameItem = topProject.ProjectItems.Item("Authorization").ProjectItems.Item("PermissionNames.cs");
+            ProjectItem authorizationProviderNameItem = topProject.ProjectItems.Item("Authorization").ProjectItems.Item(model.AbsoluteNamespace + "AuthorizationProvider.cs");
+            if (permissionNameItem != null)
+            {
+                CodeClass permissionCodeClass = GetClass(permissionNameItem.FileCodeModel.CodeElements);
+                EditPoint permissionPoint = permissionCodeClass.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
+                permissionPoint.Insert("\r\n");
+                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s = \"Pages.Administration.{model.ClassName}s\";\r\n");
+                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s_Create = \"Pages.Administration.{model.ClassName}s.Create\";\r\n");
+                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s_Edit = \"Pages.Administration.{model.ClassName}s.Edit\";\r\n");
+                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s_Delete = \"Pages.Administration.{model.ClassName}s.Delete\";\r\n");
+                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s_BatchDelete = \"Pages.Administration.{model.ClassName}s.BatchDelete\";\r\n");
+
+                if (authorizationProviderNameItem != null)
+                {
+                    CodeClass authorizationCodeClass = GetClass(authorizationProviderNameItem.FileCodeModel.CodeElements);
+                    var codeChilds = authorizationCodeClass.Members;
+                    foreach (CodeElement codeChild in codeChilds)
+                    {
+                        if (codeChild.Kind == vsCMElement.vsCMElementFunction && codeChild.Name == "SetPermissions")
+                        {
+                            EditPoint authorizationPoint = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
+                            authorizationPoint.Insert("\r\n");
+                            authorizationPoint.Insert($"var {model.CamelClassName}s = administration.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s, L(\"{model.ClassName}s\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s_Create, L(\"CreatingNew{model.ClassName}\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s_Edit, L(\"Editing{model.ClassName}\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s_Delete, L(\"Deleting{model.ClassName}\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s_BatchDelete, L(\"BatchDeleting{model.ClassName}\"));\r\n");
+                        }
+                    }
+                }
             }
         }
         /// <summary>
