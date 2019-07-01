@@ -19,9 +19,10 @@ namespace AbpCodeGeneration.VisualStudio.Common
         private string ClassName;
         private string ClassNameLocal;
         private string ClassNamespace;
-
+        /// <summary>
+        /// 选中类在下面中的相对路径
+        /// </summary>
         private string ClassAbsolutePathInProject;
-        private string ClassPathInProject;
         private string ApplicationRootNamespace;
         private ProjectItem SelectProjectItem;
         private List<ProjectItem> SolutionProjectItems;
@@ -145,10 +146,6 @@ namespace AbpCodeGeneration.VisualStudio.Common
         public void CreateFile(CreateFileInput model)
         {
             InitRazorEngine();
-            //获取当前点击的类所在的项目
-            Project topProject = SelectProjectItem.ContainingProject;
-            //当前类在当前项目中的目录结构
-            string dirPath = ClassPathInProject = GetSelectFileDirPath(topProject, SelectProjectItem);           
 
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application");
             //首次使用
@@ -163,8 +160,12 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateValidationBase(model, applicationProjectItem);
             }
 
+            //获取当前点击的类所在的项目
+            Project topProject = SelectProjectItem.ContainingProject;         
+
             //添加项目目录结构
-            var applicationNewFolder = GetDeepProjectItem(applicationProjectItem) ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(dirPath);
+            var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject) 
+                ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
             //添加Dto
             var applicationDtoFolder = applicationNewFolder.ProjectItems.Item("Dto") ?? applicationNewFolder.ProjectItems.AddFolder("Dto");
             CreateDtoFile(model, applicationDtoFolder);
@@ -176,20 +177,18 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 customDtoMapperProjectItem = applicationProjectItem.SubProject.ProjectItems.Item(model.AbsoluteNamespace + "DtoMapper.cs");
             }
             EditMapper(customDtoMapperProjectItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
-            //添加Validator
-            if (model.ExistValidation)
-            {
-                var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
-                CreateValidatorFile(model, applicationValidatorFolder);
-            }
-            ProjectItem currentProjectItem = GetDeepProjectItem(topProject);
-            //添加权限
+            //参数验证
+            var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
+            CreateValidatorFile(model, applicationValidatorFolder);
+            //权限
             if (model.ExistAuthorization)
             {
                 CreatePermission(model);
             }
-            //添加服务
+            //应用服务
             CreateServiceFile(model, applicationNewFolder);
+            //领域服务
+            ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);
             if (model.ExistDomainService)
             {
                 var coreDomainServiceFolder = currentProjectItem.ProjectItems.Item("DomainService")
@@ -197,10 +196,20 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateDomainServiceFile(model, coreDomainServiceFolder);
             }            
         }
-        #region 获取项目信息
-        private ProjectItem GetDeepProjectItem(Project project)
+
+        private void InitRazorEngine()
         {
-            string[] classAbsolutePaths = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            var config = new TemplateServiceConfiguration
+            {
+                TemplateManager = new EmbeddedResourceTemplateManager(typeof(Template))
+            };
+            RazorEngine.Engine.Razor = RazorEngineService.Create(config);
+        }
+
+        #region 获取项目信息
+        private ProjectItem GetDeepProjectItem(Project project, string path)
+        {
+            string[] classAbsolutePaths = path.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             ProjectItem projectItem = project.ProjectItems.Item(classAbsolutePaths[0]);
             for (int i = 1; i < classAbsolutePaths.Length; i++)
             {
@@ -212,9 +221,10 @@ namespace AbpCodeGeneration.VisualStudio.Common
             }
             return projectItem;
         }
-        private ProjectItem GetDeepProjectItem(ProjectItem project)
+
+        private ProjectItem GetDeepProjectItem(ProjectItem project, string path)
         {
-            string[] classAbsolutePaths = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] classAbsolutePaths = path.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             ProjectItem projectItem = project;
             foreach (string item in classAbsolutePaths)
             {
@@ -232,14 +242,6 @@ namespace AbpCodeGeneration.VisualStudio.Common
             return projectItem;
         } 
         #endregion
-        private void InitRazorEngine()
-        {
-            var config = new TemplateServiceConfiguration
-            {
-                TemplateManager = new EmbeddedResourceTemplateManager(typeof(Template))
-            };
-            RazorEngine.Engine.Razor = RazorEngineService.Create(config);
-        }
 
         /// <summary>
         /// 获取类
@@ -355,7 +357,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
         private void CreatePermission(CreateFileInput model)
         {
             Project topProject = SelectProjectItem.ContainingProject;
-            ProjectItem currentProjectItem = GetDeepProjectItem(topProject);
+            ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);
             // TODO:自行选择单文件或追加。
             // 单文件项目原授权不存在administration则需手动添加
             // 多文件需在“”配置

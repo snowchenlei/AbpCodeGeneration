@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="AbpCodeGeneration.VisualStudio.UI.Welcome"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AbpCodeGeneration.VisualStudio.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources\Resource.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="基础选项" Grid.Row="0" Grid.Column="0" Style="{DynamicResource TitleStyle}"/>
+        <TextBlock Text="应用服务层" Grid.Row="0" Grid.Column="1" Style="{DynamicResource TitleStyle}"/>
+        <TextBlock Text="领域层" Grid.Row="0" Grid.Column="2" Style="{DynamicResource TitleStyle}"/>
+
+        <CheckBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            第一次使用
+        </CheckBox>
+        <ComboBox Grid.Row="2" Grid.Column="0" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ComboBoxItem Content="FluentApi"/>
+            <ComboBoxItem Content="DataAnnotation(数据注解)"/>
+        </ComboBox>
+
+        <CheckBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            生成应用服务
+        </CheckBox>
+        <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            启用Excel导入导出
+        </CheckBox>
+        <CheckBox Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            启用图片上传
+        </CheckBox>
+
+        <CheckBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+            生成领域服务
+        </CheckBox>
+        <CheckBox Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+            生成权限服务
+        </CheckBox>
+
+    </Grid>
+</UserControl>
