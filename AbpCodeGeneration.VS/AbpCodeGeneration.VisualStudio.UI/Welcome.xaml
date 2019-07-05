@@ -33,9 +33,9 @@
         <CheckBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
             第一次使用
         </CheckBox>
-        <ComboBox Grid.Row="2" Grid.Column="0" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <ComboBoxItem Content="FluentApi"/>
-            <ComboBoxItem Content="DataAnnotation(数据注解)"/>
+        <ComboBox ItemsSource="{Binding ValidationTypes}" DisplayMemberPath="Value" SelectedValuePath="Key"  Grid.Row="2" Grid.Column="0" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <!--<ComboBoxItem Content="FluentApi"/>
+            <ComboBoxItem Content="DataAnnotation(数据注解)"/>-->
         </ComboBox>
 
         <CheckBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">

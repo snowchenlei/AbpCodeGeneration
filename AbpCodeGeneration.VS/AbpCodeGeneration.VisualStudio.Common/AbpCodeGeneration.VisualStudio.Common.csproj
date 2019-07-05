@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnumHelper.cs" />
     <Compile Include="Model\CreateFileInput.cs" />
     <Compile Include="Model\DtoFileModel.cs" />
     <Compile Include="Model\DtoPropertyInfo.cs" />

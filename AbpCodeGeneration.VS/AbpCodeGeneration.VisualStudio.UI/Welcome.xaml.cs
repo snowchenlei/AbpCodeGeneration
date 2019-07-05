@@ -1,6 +1,9 @@
-﻿using System;
+﻿using AbpCodeGeneration.VisualStudio.Common;
+using AbpCodeGeneration.VisualStudio.UI.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,9 +23,18 @@ namespace AbpCodeGeneration.VisualStudio.UI
     /// </summary>
     public partial class Welcome : UserControl
     {
+        public Dictionary<int, string> ValidationTypes;
         public Welcome()
         {
             InitializeComponent();
+            ValidationTypes = EnumHelper.EnumToDictionary<ValidationType>(-1, "请选择验证类型");
+            //ValidationTypes.ItemsSource = 
+            //ValidationTypes.SelectedValuePath = "key";
+            //ValidationTypes.DisplayMemberPath = "Value";
+            //ValidationTypes.SelectedIndex = 0;
+
         }
+
+        
     }
 }
