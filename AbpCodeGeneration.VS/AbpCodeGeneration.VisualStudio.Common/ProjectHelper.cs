@@ -149,7 +149,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
 
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application");
             //首次使用
-            if (model.IsFirst)
+            if (model.FirstUse)
             {
                 //首次初始化，添加通用Dto
                 var applicationBasicFolder = applicationProjectItem.SubProject.ProjectItems.Item("Dto") ?? applicationProjectItem.SubProject.ProjectItems.AddFolder("Dto");
@@ -181,16 +181,19 @@ namespace AbpCodeGeneration.VisualStudio.Common
             var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
             CreateValidatorFile(model, applicationValidatorFolder);
             //权限
-            if (model.ExistAuthorization)
+            if (model.AuthorizationService)
             {
                 CreatePermission(model);
             }
             //应用服务
-            CreateServiceFile(model, applicationNewFolder);
-            //领域服务
-            ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);
-            if (model.ExistDomainService)
+            if (model.ApplicationService)
             {
+                CreateServiceFile(model, applicationNewFolder);
+            }
+            //领域服务
+            if (model.DomainService)
+            {
+                ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);     
                 var coreDomainServiceFolder = currentProjectItem.ProjectItems.Item("DomainService")
                     ?? currentProjectItem.ProjectItems.AddFolder("DomainService");
                 CreateDomainServiceFile(model, coreDomainServiceFolder);

@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AbpCodeGeneration.VisualStudio.UI.Enums
+namespace AbpCodeGeneration.VisualStudio.Common.Enums
 {
     public enum ValidationType
     {
+        //[Description("没有")]
+        //Normal,
         [Description("FluentApi")]
         FluentApi,
         [Description("数据注解")]

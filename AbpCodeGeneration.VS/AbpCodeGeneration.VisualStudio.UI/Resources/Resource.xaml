@@ -4,6 +4,6 @@
     <Style x:Key="TitleStyle">
         <Setter Property="TextBlock.Padding" Value="10"/>
         <Setter Property="TextBlock.VerticalAlignment" Value="Center"/>
-        <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
+        <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>        
     </Style>
 </ResourceDictionary>

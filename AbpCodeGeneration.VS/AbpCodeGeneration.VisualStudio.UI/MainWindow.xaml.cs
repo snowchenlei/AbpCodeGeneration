@@ -28,11 +28,13 @@ namespace AbpCodeGeneration.VisualStudio.UI
     public partial class MainWindow : UserControl
     {
         private ObservableCollection<DtoPropertyInfo> DataList = new ObservableCollection<DtoPropertyInfo>();
+        private readonly Setting _setting;
         private readonly ProjectHelper projectHelper;
 
-        public MainWindow(DTE2 _dte)
+        public MainWindow(DTE2 _dte, Setting setting)
         {
             InitializeComponent();
+            _setting = setting;
             projectHelper = new ProjectHelper(_dte);
             DtoFileModel dto = projectHelper.GetDtoModel();
             foreach (var item in dto.ClassPropertys)
@@ -67,7 +69,14 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 KeyType = ClassKeyType.Text,
                 LocalName = ClassLocalName.Text,
                 DirectoryName = dto.DirName,
-                PropertyInfos = DataList
+                PropertyInfos = DataList,
+                FirstUse = _setting.FirstUse,
+                ValidationType = _setting.ValidationType,
+                ApplicationService = _setting.ApplicationService,
+                DomainService = _setting.DomainService,
+                AuthorizationService = _setting.AuthorizationService,
+                ExcelImportAndExport = _setting.ExcelImportAndExport,
+                PictureUpload = _setting.PictureUpload
             });
             MessageBoxResult result = MessageBox.Show("代码生成成功", "提示", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
             if (result == MessageBoxResult.OK)

@@ -16,7 +16,7 @@ using Abp.Authorization;
 using Abp.Linq.Extensions;
 using Abp.Collections.Extensions;
 using Abp.Extensions;
-@if (Model.ExistAuthorization)
+@if (Model.AuthorizationService)
 {
     if (Model.IsAppend)
     {
@@ -33,7 +33,7 @@ namespace @Model.Namespace.@Model.DirectoryName
     /// <summary>
     /// @(Model.LocalName)服务
     /// </summary>
-    @if (Model.ExistAuthorization)
+    @if (Model.AuthorizationService)
     {
         if (Model.IsAppend)
         {
@@ -63,7 +63,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 获取@(Model.LocalName)列表
         /// </summary>
-        @if (Model.ExistAuthorization)
+        @if (Model.AuthorizationService)
         {
             if (Model.IsAppend)
             {
@@ -93,7 +93,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 获取更新@(Model.LocalName)的数据
         /// </summary>
-        @if (Model.ExistAuthorization)
+        @if (Model.AuthorizationService)
         {
             if (Model.IsAppend)
             {
@@ -128,7 +128,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 创建或编辑@(Model.LocalName)
         /// </summary>
-        @if (Model.ExistAuthorization)
+        @if (Model.AuthorizationService)
         {
             if (Model.IsAppend)
             {
@@ -158,7 +158,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        @if (Model.ExistAuthorization)
+        @if (Model.AuthorizationService)
         {
             if (Model.IsAppend)
             {
@@ -180,7 +180,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        @if (Model.ExistAuthorization)
+        @if (Model.AuthorizationService)
         {
             if (Model.IsAppend)
             {
@@ -202,7 +202,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 删除@(Model.LocalName)
         /// </summary>
-        @if (Model.ExistAuthorization)
+        @if (Model.AuthorizationService)
         {
             if (Model.IsAppend)
             {
@@ -221,7 +221,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 批量删除@(Model.LocalName)
         /// </summary>
-        @if (Model.ExistAuthorization)
+        @if (Model.AuthorizationService)
         {
             if (Model.IsAppend)
             {

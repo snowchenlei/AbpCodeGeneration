@@ -1,5 +1,7 @@
 ﻿using AbpCodeGeneration.VisualStudio.Common;
-using AbpCodeGeneration.VisualStudio.UI.Enums;
+using AbpCodeGeneration.VisualStudio.Common.Enums;
+using AbpCodeGeneration.VisualStudio.Common.Model;
+using EnvDTE80;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +26,13 @@ namespace AbpCodeGeneration.VisualStudio.UI
     public partial class Welcome : UserControl
     {
         public Dictionary<int, string> ValidationTypes;
-        public Welcome()
+        private readonly DTE2 _dte;
+        public Welcome(DTE2 dte)
         {
+            _dte = dte;
             InitializeComponent();
             ValidationTypes = EnumHelper.EnumToDictionary<ValidationType>(-1, "请选择验证类型");
+            Validations.ItemsSource = ValidationTypes;
             //ValidationTypes.ItemsSource = 
             //ValidationTypes.SelectedValuePath = "key";
             //ValidationTypes.DisplayMemberPath = "Value";
@@ -35,6 +40,19 @@ namespace AbpCodeGeneration.VisualStudio.UI
 
         }
 
-        
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+            Setting setting = new Setting
+            {
+                FirstUse = FirstUse.IsChecked ?? false,
+                ValidationType = (int)Validations.SelectedValue,
+                ApplicationService = ApplicationService.IsChecked ?? false,
+                DomainService = DomainService.IsChecked ?? false,
+                AuthorizationService = AuthorizationService.IsChecked ?? false,
+                ExcelImportAndExport = ExcelImportAndExport.IsChecked ?? false,
+                PictureUpload = PictureUpload.IsChecked ?? false
+            };
+            this.Content = new MainWindow(_dte, setting);
+        }
     }
 }

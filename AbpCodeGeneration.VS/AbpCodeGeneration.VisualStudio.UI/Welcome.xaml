@@ -13,47 +13,62 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="30" />
-            <RowDefinition Height="30" />
-            <RowDefinition Height="30" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <TextBlock Text="基础选项" Grid.Row="0" Grid.Column="0" Style="{DynamicResource TitleStyle}"/>
-        <TextBlock Text="应用服务层" Grid.Row="0" Grid.Column="1" Style="{DynamicResource TitleStyle}"/>
-        <TextBlock Text="领域层" Grid.Row="0" Grid.Column="2" Style="{DynamicResource TitleStyle}"/>
+    <StackPanel Orientation="Vertical" Margin="10">
+        <Label Content="基本配置信息，当所有不勾选时将仅生成Dto文件" />
+        <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="187*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="258*"/>
+                    <!--<ColumnDefinition Width="140"/>-->
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="基础" Grid.Row="0" Grid.Column="0" Style="{DynamicResource TitleStyle}" Margin="44,2,42,2"/>
+                <TextBlock Text="框架" Grid.Row="0" Grid.Column="1" Style="{DynamicResource TitleStyle}" Margin="30,2,26,2"/>
+                <TextBlock Text="功能" Grid.Row="0" Grid.Column="2" Style="{DynamicResource TitleStyle}" Margin="30,2,26,2"/>
+                <!--<TextBlock Text="前端" Grid.Row="0" Grid.Column="3" Style="{DynamicResource TitleStyle}"/>-->
 
-        <CheckBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            第一次使用
-        </CheckBox>
-        <ComboBox ItemsSource="{Binding ValidationTypes}" DisplayMemberPath="Value" SelectedValuePath="Key"  Grid.Row="2" Grid.Column="0" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <!--<ComboBoxItem Content="FluentApi"/>
-            <ComboBoxItem Content="DataAnnotation(数据注解)"/>-->
-        </ComboBox>
+                <CheckBox x:Name="FirstUse" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="0,8">
+                    第一次使用
+                </CheckBox>
+                <ComboBox x:Name="Validations" DisplayMemberPath="Value" SelectedValuePath="Key"
+                      Grid.Row="2" Grid.Column="0" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,4">
+                </ComboBox>
+                <!--<CheckBox x:Name="Dto" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Checked="Dto_Checked">
+                    Dto
+                </CheckBox>-->
 
-        <CheckBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            生成应用服务
-        </CheckBox>
-        <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            启用Excel导入导出
-        </CheckBox>
-        <CheckBox Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            启用图片上传
-        </CheckBox>
+                <CheckBox x:Name="ApplicationService" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">
+                    应用服务
+                </CheckBox>
+                <CheckBox x:Name="DomainService" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">
+                    领域服务
+                </CheckBox>
+                <CheckBox x:Name="AuthorizationService" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">
+                    权限服务
+                </CheckBox>
 
-        <CheckBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-            生成领域服务
-        </CheckBox>
-        <CheckBox Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-            生成权限服务
-        </CheckBox>
+                <CheckBox x:Name="ExcelImportAndExport" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="2,8,0,8">
+                    Excel导入导出
+                </CheckBox>
+                <CheckBox x:Name="PictureUpload" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="2,8,0,8">
+                    图片上传
+                </CheckBox>
 
-    </Grid>
+            </Grid>
+        </StackPanel>
+        <Separator/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="next" Click="Next_Click">下一步</Button>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

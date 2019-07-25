@@ -62,9 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumHelper.cs" />
+    <Compile Include="Enums\ValidationType.cs" />
     <Compile Include="Model\CreateFileInput.cs" />
     <Compile Include="Model\DtoFileModel.cs" />
     <Compile Include="Model\DtoPropertyInfo.cs" />
+    <Compile Include="Model\Setting.cs" />
     <Compile Include="ProjectHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\Template.cs" />
