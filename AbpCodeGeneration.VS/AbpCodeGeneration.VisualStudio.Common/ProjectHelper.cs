@@ -145,20 +145,11 @@ namespace AbpCodeGeneration.VisualStudio.Common
 
         public void CreateFile(CreateFileInput model)
         {
+            // TODO:区分Contracts
             InitRazorEngine();
+            //CompileTemplate();
 
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application");
-            //首次使用
-            if (model.FirstUse)
-            {
-                //首次初始化，添加通用Dto
-                var applicationBasicFolder = applicationProjectItem.SubProject.ProjectItems.Item("Dto") ?? applicationProjectItem.SubProject.ProjectItems.AddFolder("Dto");
-                CreateBasicDto(model, applicationBasicFolder);
-                //编辑AppConst
-                SetConst(applicationProjectItem.SubProject);
-                //创建验证模板
-                CreateValidationBase(model, applicationProjectItem);
-            }
 
             //获取当前点击的类所在的项目
             Project topProject = SelectProjectItem.ContainingProject;         
@@ -167,16 +158,19 @@ namespace AbpCodeGeneration.VisualStudio.Common
             var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject) 
                 ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
             //添加Dto
-            var applicationDtoFolder = applicationNewFolder.ProjectItems.Item("Dto") ?? applicationNewFolder.ProjectItems.AddFolder("Dto");
+            var applicationDtoFolder = applicationNewFolder.ProjectItems.Item("Dtos") ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
             CreateDtoFile(model, applicationDtoFolder);
             //设置Autompper映射
-            ProjectItem customDtoMapperProjectItem = applicationProjectItem.SubProject.ProjectItems.Item(model.AbsoluteNamespace + "DtoMapper.cs");
-            if (customDtoMapperProjectItem == null)
-            {   //没有则创建文件
-                CreateCustomDtoMapper(model, applicationProjectItem);
-                customDtoMapperProjectItem = applicationProjectItem.SubProject.ProjectItems.Item(model.AbsoluteNamespace + "DtoMapper.cs");
+            string moduleName = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[0];
+            model.ModuleName = moduleName;
+            ProjectItem moduleItem = applicationProjectItem.SubProject.ProjectItems.Item(moduleName);
+            ProjectItem mapperItem = moduleItem.ProjectItems.Item(moduleName+ "ApplicationAutoMapperProfile.cs");
+            if(mapperItem == null)
+            {
+                CreateMapperFile(model, moduleItem);
             }
-            EditMapper(customDtoMapperProjectItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
+            mapperItem = moduleItem.ProjectItems.Item(moduleName + "ApplicationAutoMapperProfile.cs");
+            EditMapper(mapperItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
             //参数验证
             var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
             CreateValidatorFile(model, applicationValidatorFolder);
@@ -200,11 +194,31 @@ namespace AbpCodeGeneration.VisualStudio.Common
             }            
         }
 
+        /// <summary>
+        /// 缓存模板
+        /// </summary>
+        private void CompileTemplate()
+        {
+            RazorEngine.Engine.Razor.Compile("EditDtoTemplate");
+            RazorEngine.Engine.Razor.Compile("ListDtoTemplate");
+            RazorEngine.Engine.Razor.Compile("CreateOrUpdateInputDtoTemplate");
+            RazorEngine.Engine.Razor.Compile("GetForEditOutputDtoTemplate");
+            RazorEngine.Engine.Razor.Compile("GetsInputTemplate");
+
+            RazorEngine.Engine.Razor.Compile("IServiceTemplate");
+            RazorEngine.Engine.Razor.Compile("ServiceTemplate");
+            RazorEngine.Engine.Razor.Compile("IDomainServiceTemplate");
+            RazorEngine.Engine.Razor.Compile("DomainServiceTemplate");
+
+            RazorEngine.Engine.Razor.Compile("MapperTemplate");
+            
+        }
         private void InitRazorEngine()
         {
             var config = new TemplateServiceConfiguration
             {
-                TemplateManager = new EmbeddedResourceTemplateManager(typeof(Template))
+                TemplateManager = new EmbeddedResourceTemplateManager(typeof(Template)),
+                CachingProvider = new DefaultCachingProvider()
             };
             RazorEngine.Engine.Razor = RazorEngineService.Create(config);
         }
@@ -408,22 +422,6 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileNamePermissionName = model.ClassName + "Manager.cs";
             AddFileToProjectItem(coreFolder, contentPermissionName, fileNamePermissionName);
         }
-        
-        /// <summary>
-        /// 创建基础Dto
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="dtoFolder"></param>
-        private void CreateBasicDto(CreateFileInput model, ProjectItem dtoFolder)
-        {
-            string content_PagedAndSorted = RazorEngine.Engine.Razor.RunCompile("PagedAndSortedTemplate", typeof(CreateFileInput), model);
-            string fileName_PagedAndSorted = $"PagedAndSortedInputDto.cs";
-            AddFileToProjectItem(dtoFolder, content_PagedAndSorted, fileName_PagedAndSorted);
-
-            string content_Paged = RazorEngine.Engine.Razor.RunCompile("PagedInputTemplate", typeof(CreateFileInput), model);
-            string fileName_Paged = $"PagedInputDto.cs";
-            AddFileToProjectItem(dtoFolder, content_Paged, fileName_Paged);
-        }
 
         /// <summary>
         /// 创建Dto文件
@@ -488,42 +486,13 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// </summary>
         /// <param name="model"></param>
         /// <param name="dtoFolder"></param>
-        private void CreateCustomDtoMapper(CreateFileInput model, ProjectItem dtoFolder)
+        private void CreateMapperFile(CreateFileInput model, ProjectItem dtoFolder)
         {
-            string content_Edit = RazorEngine.Engine.Razor.RunCompile("CustomDtoTemplate", typeof(CreateFileInput), model);
-            string fileName_Edit = model.AbsoluteNamespace + "DtoMapper.cs";
-            AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
-        }
-
-        /// <summary>
-        /// 创建验证基类
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="dtoFolder"></param>
-        private void CreateValidationBase(CreateFileInput model, ProjectItem dtoFolder)
-        {
-            string content_Edit = RazorEngine.Engine.Razor.RunCompile("ValidationBaseTemplate", typeof(CreateFileInput), model);
-            string fileName_Edit = model.AbsoluteNamespace + "Validator.cs";
+            string content_Edit = RazorEngine.Engine.Razor.RunCompile("MapperTemplate", typeof(CreateFileInput), model);
+            string fileName_Edit = model.ModuleName + "ApplicationAutoMapperProfile.cs";
             AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
         }
         #endregion
-
-        /// <summary>
-        /// 编辑AppConst文件
-        /// </summary>
-        /// <param name="applicationProject"></param>
-        private void SetConst(Project applicationProject)
-        {
-            ProjectItem customAppConstProjectItem = applicationProject.ProjectItems.Item("AppConsts.cs");
-            if(customAppConstProjectItem != null)
-            {
-                CodeClass codeClass = GetClass(customAppConstProjectItem.FileCodeModel.CodeElements);
-                var insertCode = codeClass.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
-                insertCode.Insert("            public const int MaxPageSize = 1000;\r\n");
-                insertCode.Insert("            public const int DefaultPageSize = 10;\r\n");
-                customAppConstProjectItem.Save();
-            }
-        }
 
         /// <summary>
         /// 编辑CustomDtoMapper.cs,添加映射
@@ -531,11 +500,11 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="applicationProject"></param>
         /// <param name="className"></param>
         /// <param name="classCnName"></param>
-        private void EditMapper(ProjectItem customDtoMapperProjectItem, string nameSpace, string className, string classCnName)
+        private void EditMapper(ProjectItem mapperItem, string nameSpace, string className, string classCnName)
         {
-            if (customDtoMapperProjectItem != null)
+            if (mapperItem != null)
             {
-                CodeClass codeClass = GetClass(customDtoMapperProjectItem.FileCodeModel.CodeElements);
+                CodeClass codeClass = GetClass(mapperItem.FileCodeModel.CodeElements);
                 var insertUsingCode = codeClass.StartPoint.CreateEditPoint();//codeClass.GetStartPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                 insertUsingCode.MoveToLineAndOffset(1, 1);
                 insertUsingCode.Insert($"using {nameSpace};\r\n");
@@ -544,7 +513,8 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 var codeChilds = codeClass.Members;
                 foreach (CodeElement codeChild in codeChilds)
                 {
-                    if (codeChild.Kind == vsCMElement.vsCMElementFunction && codeChild.Name == "CreateMappings")
+                    if (codeChild.Kind == vsCMElement.vsCMElementFunction 
+                        && codeChild.Name == mapperItem.Name.Substring(0, mapperItem.Name.IndexOf('.')))
                     {
                         var insertCode = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                         insertCode.Insert("            // " + classCnName ?? className + "\r\n");
@@ -555,7 +525,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                         insertCode.Insert("\r\n");
                     }
                 }
-                customDtoMapperProjectItem.Save();
+                mapperItem.Save();
             }
         }
 

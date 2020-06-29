@@ -17,6 +17,8 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         }
         public string Namespace { get; set; }
         public string ClassName { get; set; }
+
+        public string ModuleName { get; set; }
         public string CamelClassName
         {
             get

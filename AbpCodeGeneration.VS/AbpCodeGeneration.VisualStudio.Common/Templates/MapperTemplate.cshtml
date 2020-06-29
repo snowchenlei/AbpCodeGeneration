@@ -1,0 +1,14 @@
+﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using AutoMapper;
+
+namespace @Model.Namespace.@Model.ModuleName
+{
+    public class @(Model.ModuleName)ApplicationAutoMapperProfile : Profile
+    {
+        public @(Model.ModuleName)ApplicationAutoMapperProfile()
+        {
+
+        }
+    }
+}

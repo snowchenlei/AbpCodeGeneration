@@ -60,7 +60,6 @@ namespace AbpCodeGeneration.VisualStudio.UI
         {
             
             DtoFileModel dto = projectHelper.GetDtoModel();
-
             projectHelper.CreateFile(new CreateFileInput()
             {
                 AbsoluteNamespace = dto.Namespace.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Last(),
