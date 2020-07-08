@@ -1,21 +1,15 @@
 ﻿@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
 using System;
-using System.Diagnostics;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using AutoMapper;
-using Abp.Application.Services.Dto;
 using @Model.Namespace.@(Model.DirectoryName).Dto;
-using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Abp.Authorization;
-using Abp.Linq.Extensions;
-using Abp.Collections.Extensions;
-using Abp.Extensions;
+using Volo.Abp;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Domain.Repositories;
 @if (Model.AuthorizationService)
 {
     if (Model.IsAppend)
@@ -31,7 +25,7 @@ using Abp.Extensions;
 namespace @Model.Namespace.@Model.DirectoryName
 {
     /// <summary>
-    /// @(Model.LocalName)服务
+    /// @(Model.LocalName)管理
     /// </summary>
     @if (Model.AuthorizationService)
     {
@@ -46,23 +40,43 @@ namespace @Model.Namespace.@Model.DirectoryName
     }
     public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppServiceBase, I@(Model.ClassName)AppService
     {
-        private readonly IMapper _mapper;
         private readonly IRepository<@(Model.ClassName), @Model.KeyType> _repository;
 
         /// <summary>
-        /// 构造函数
+        /// .ctor
         /// </summary>
         /// <param name="repository"></param>
-        public @(Model.ClassName)AppService(IMapper mapper
-            , IRepository<@(Model.ClassName), @Model.KeyType> repository)
+        public @(Model.ClassName)AppService(IRepository<@(Model.ClassName), @Model.KeyType> repository)
         {
-            _mapper = mapper;
             _repository = repository;
         }
             
         /// <summary>
-        /// 获取@(Model.LocalName)列表
+        /// 获取信息
         /// </summary>
+        @if (Model.AuthorizationService)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+            }
+            else
+            {            
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+            }
+        }
+        public async Task<@(Model.ClassName)ListDto> GetEditAsync(@(Model.KeyType) id)
+        {
+            @(Model.ClassName) entity = await _repository.GetAsync(e => e.Id == id);
+
+            return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="input">查询条件</param>
+        /// <returns></returns>
         @if (Model.AuthorizationService)
         {
             if (Model.IsAppend)
@@ -74,24 +88,27 @@ namespace @Model.Namespace.@Model.DirectoryName
         <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
             }
         }
-        public async Task<PagedResultDto<@(Model.ClassName)ListDto>> Get@(Model.ClassName)s(Get@(Model.ClassName)sInput input)
+        public async Task<PagedResultDto<@(Model.ClassName)ListDto>> GetPagedAsync(Get@(Model.ClassName)sInput input)
         {
-            var query = Get@(Model.ClassName)sFilteredQuery(input);
+            await NormalizeMaxResultCountAsync(input);
 
-            var count = await query.CountAsync();
+            var tempQuery = _repository;
 
-            var entityList = await query
-            .OrderBy(input.Sorting).AsNoTracking()
-            .PageBy(input)
-            .ToListAsync();
+            long totalCount = await tempQuery.GetCountAsync();
+            
+            var entities = await tempQuery
+                .OrderBy(input.Sorting ?? "Id DESC")
+                .Skip(input.SkipCount)
+                .Take(input.MaxResultCount)
+                .ToListAsync();
 
-            var entityListDtos =_mapper.Map<List<@(Model.ClassName)ListDto>>(entityList);
+            var dtos = ObjectMapper.Map<List<@(Model.ClassName)>, List<@(Model.ClassName)ListDto>>(entities);
 
-            return new PagedResultDto<@(Model.ClassName)ListDto>(count, entityListDtos);
+            return new PagedResultDto<@(Model.ClassName)ListDto>(totalCount, dtos);
         }
 
         /// <summary>
-        /// 获取更新@(Model.LocalName)的数据
+        /// 获取修改信息
         /// </summary>
         @if (Model.AuthorizationService)
         {
@@ -106,53 +123,16 @@ namespace @Model.Namespace.@Model.DirectoryName
             @(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
             }
         }
-        public async Task<Get@(Model.ClassName)ForEditOutput> Get@(Model.ClassName)ForEdit(NullableIdDto<long> input)
+        public async Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id)
         {
-            var output = new Get@(Model.ClassName)ForEditOutput();
-            @(Model.ClassName)EditDto editDto;
-            if (input.Id.HasValue)
-            {
-                var entity = await _repository.GetAsync(input.Id.Value);
-                editDto = _mapper.Map<@(Model.ClassName)EditDto>(entity);
-            }
-            else
-            {
-                editDto = new @(Model.ClassName)EditDto();
-            }
+            Get@(Model.ClassName)ForEditOutput output = new Get@(Model.ClassName)ForEditOutput();
 
-            output.@(Model.ClassName) = editDto;
+            @(Model.ClassName) entity = await _repository.GetAsync(e => e.Id == id);
 
+            output.Store = ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)EditDto>(entity);
             return output;
         }
-
-        /// <summary>
-        /// 创建或编辑@(Model.LocalName)
-        /// </summary>
-        @if (Model.AuthorizationService)
-        {
-            if (Model.IsAppend)
-            {
-        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
-            PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
-            }
-            else
-            {
-        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
-            @(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
-            }
-        }
-        public async Task CreateOrUpdate@(Model.ClassName)(CreateOrUpdate@(Model.ClassName)Input input)
-        {
-            if (!input.@(Model.ClassName).Id.HasValue)
-            {
-                await Create@(Model.ClassName)Async(input);
-            }
-            else
-            {
-                await Update@(Model.ClassName)Async(input);
-            }
-        }
-
+    
         /// <summary>
         /// 新建
         /// </summary>
@@ -169,10 +149,11 @@ namespace @Model.Namespace.@Model.DirectoryName
         <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create)]</text>
             }
         }
-        protected virtual async Task Create@(Model.ClassName)Async(CreateOrUpdate@(Model.ClassName)Input input)
+        public virtual async Task<@(Model.ClassName)ListDto> CreateAsync(@(Model.ClassName)CreateDto input)
         {
             var entity = _mapper.Map<@(Model.ClassName)>(input.@(Model.ClassName));
             await _repository.InsertAsync(entity);
+            return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
 
         /// <summary>
@@ -191,12 +172,12 @@ namespace @Model.Namespace.@Model.DirectoryName
         <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
             }
         }
-        protected virtual async Task Update@(Model.ClassName)Async(CreateOrUpdate@(Model.ClassName)Input input)
+        public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(@(Model.KeyType) id, @(Model.ClassName)UpdateDto input)
         {
-            Debug.Assert(input.@(Model.ClassName).Id != null, "input.@(Model.ClassName).Id != null");
-            @(Model.ClassName) entity = await _repository.GetAsync(input.@(Model.ClassName).Id.Value);
-            entity = _mapper.Map(input.@(Model.ClassName), entity);
+            @(Model.ClassName) entity = await _repository.GetAsync(s => s.Id == id);
+            entity = ObjectMapper.Map(input, entity);
             await _repository.UpdateAsync(entity);
+            return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
 
         /// <summary>
@@ -213,12 +194,12 @@ namespace @Model.Namespace.@Model.DirectoryName
         <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Delete)]</text>
             }
         }
-        public async Task Delete@(Model.ClassName)(EntityDto<@Model.KeyType> input)
+        public async Task DeleteAsync(@Model.KeyType id)
         {
-            await _repository.DeleteAsync(input.Id);
+            await _repository.DeleteAsync(s => s.Id == id);
         }
 
-        /// <summary>
+        @*/// <summary>
         /// 批量删除@(Model.LocalName)
         /// </summary>
         @if (Model.AuthorizationService)
@@ -236,18 +217,20 @@ namespace @Model.Namespace.@Model.DirectoryName
         public async Task BatchDelete@(Model.ClassName)s(List<@Model.KeyType> input)
         {
             await _repository.DeleteAsync(a => input.Contains(a.Id));
-        }
+        }*@
 
         /// <summary>
-        /// 拼接查询条件
+        /// 规范最大记录数
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="input">参数</param>
         /// <returns></returns>
-        private IQueryable<@(Model.ClassName)> Get@(Model.ClassName)sFilteredQuery(Get@(Model.ClassName)sInput input)
+        private async Task NormalizeMaxResultCountAsync(PagedAndSortedResultRequestDto input)
         {
-            var query = _repository.GetAll();
-            //TODO:此处写自己的查询条件
-            return query;
+            var maxPageSize = (await SettingProvider.GetOrNullAsync(@(Model.ClassName)Setings.MaxPageSize))?.To<int>();
+            if (maxPageSize.HasValue && input.MaxResultCount > maxPageSize.Value)
+            {
+                input.MaxResultCount = maxPageSize.Value;
+            }
         }
     }
 }

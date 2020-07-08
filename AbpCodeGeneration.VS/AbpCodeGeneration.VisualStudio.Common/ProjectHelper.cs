@@ -157,6 +157,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             //添加项目目录结构
             var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject) 
                 ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
+            goto a;
             //添加Dto
             var applicationDtoFolder = applicationNewFolder.ProjectItems.Item("Dtos") ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
             CreateDtoFile(model, applicationDtoFolder);
@@ -179,9 +180,11 @@ namespace AbpCodeGeneration.VisualStudio.Common
             {
                 CreatePermission(model);
             }
+            a:
             //应用服务
             if (model.ApplicationService)
             {
+                CreateSettingFile(model, applicationNewFolder);
                 CreateServiceFile(model, applicationNewFolder);
             }
             //领域服务
@@ -464,6 +467,22 @@ namespace AbpCodeGeneration.VisualStudio.Common
         }
 
         /// <summary>
+        /// 创建Setting相关类
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="dtoFolder"></param>
+        private void CreateSettingFile(CreateFileInput model, ProjectItem dtoFolder)
+        {
+            string content_IService = RazorEngine.Engine.Razor.RunCompile("SettingsTemplate", typeof(CreateFileInput), model);
+            string fileName_IService = $"{model.ClassName}Settings.cs";
+            AddFileToProjectItem(dtoFolder, content_IService, fileName_IService);
+
+            string content_Service = RazorEngine.Engine.Razor.RunCompile("SettingDefinitionProviderTemplate", typeof(CreateFileInput), model);
+            string fileName_Service = $"{model.ClassName}SettingDefinitionProvider.cs";
+            AddFileToProjectItem(dtoFolder, content_Service, fileName_Service);
+        }
+
+        /// <summary>
         /// 创建Service类
         /// </summary>
         /// <param name="applicationStr">根命名空间</param>
@@ -475,7 +494,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string content_IService = RazorEngine.Engine.Razor.RunCompile("IServiceTemplate", typeof(CreateFileInput), model);
             string fileName_IService = $"I{model.ClassName}AppService.cs";
             AddFileToProjectItem(dtoFolder, content_IService, fileName_IService);
-
+            // TODO:ServiceTemplate创建及之后
             string content_Service = RazorEngine.Engine.Razor.RunCompile("ServiceTemplate", typeof(CreateFileInput), model);
             string fileName_Service = $"{model.ClassName}AppService.cs";
             AddFileToProjectItem(dtoFolder, content_Service, fileName_Service);
@@ -518,10 +537,9 @@ namespace AbpCodeGeneration.VisualStudio.Common
                     {
                         var insertCode = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                         insertCode.Insert("            // " + classCnName ?? className + "\r\n");
-                        insertCode.Insert("            configuration.CreateMap<" + className + ", " + className + "EditDto>();\r\n");
-                        insertCode.Insert("            configuration.CreateMap<" + className + ", " + className + "ListDto>();\r\n");
-                        insertCode.Insert("            configuration.CreateMap<" + className + "EditDto, " + className + ">();\r\n");
-                        insertCode.Insert("            configuration.CreateMap<" + className + "ListDto, " + className + ">();\r\n");
+                        insertCode.Insert("            CreateMap<" + className + ", " + className + "EditDto>();\r\n");
+                        insertCode.Insert("            CreateMap<" + className + ", " + className + "ListDto>();\r\n");
+                        insertCode.Insert("            CreateMap<" + className + "EditDto, " + className + ">();\r\n");
                         insertCode.Insert("\r\n");
                     }
                 }

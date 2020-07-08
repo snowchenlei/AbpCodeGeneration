@@ -155,6 +155,8 @@
     <EmbeddedResource Include="Templates\AppPermissionName.cshtml" />
     <EmbeddedResource Include="Templates\DomainServiceTemplate.cshtml" />
     <EmbeddedResource Include="Templates\IDomainServiceTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\SettingsTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\SettingDefinitionProviderTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0-rc2\tools\analyzers\C#\Microsoft.CodeAnalysis.Analyzers.dll" />

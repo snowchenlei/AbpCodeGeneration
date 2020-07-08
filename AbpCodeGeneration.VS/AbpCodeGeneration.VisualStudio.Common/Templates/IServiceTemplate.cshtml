@@ -1,43 +1,52 @@
 ﻿@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
-using System;
-using Abp.Application.Services;
-using Abp.Application.Services.Dto;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
 using @Model.Namespace.@(Model.DirectoryName).Dto;
 
 namespace @Model.Namespace.@Model.DirectoryName
 {
     /// <summary>
-    /// @(Model.LocalName)服务接口
+    /// @(Model.LocalName)管理
     /// </summary>
     public interface I@(Model.ClassName)AppService: IApplicationService
     {
 
         /// <summary>
-        /// 获取@(Model.LocalName)列表
+        /// 分页
         /// </summary>
-        Task<PagedResultDto<@(Model.ClassName)ListDto>> Get@(Model.ClassName)s(Get@(Model.ClassName)sInput input);
+        /// <param name="input">查询条件</param>
+        /// <returns></returns>
+        Task<PagedResultDto<@(Model.ClassName)ListDto>> GetPagedAsync(Get@(Model.ClassName)sInput input);
 
         /// <summary>
-        /// 获取@(Model.LocalName)
+        /// 获取修改信息
         /// </summary>
-        Task<Get@(Model.ClassName)ForEditOutput> Get@(Model.ClassName)ForEdit(NullableIdDto<long> input);
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id);
 
         /// <summary>
-        /// 创建或编辑@(Model.LocalName)
+        /// 创建
         /// </summary>
-        Task CreateOrUpdate@(Model.ClassName)(CreateOrUpdate@(Model.ClassName)Input input);
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task CreateAsync(CreateOrUpdate@(Model.ClassName)Input input);
 
         /// <summary>
-        /// 删除@(Model.LocalName)
+        /// 创建
         /// </summary>
-        Task Delete@(Model.ClassName)(EntityDto<@Model.KeyType> input);
+        /// <param name="id">主键</param>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdateAsync(int id, CreateOrUpdate@(Model.ClassName)Input input);
 
         /// <summary>
-        /// 批量删除@(Model.LocalName)
+        /// 删除
         /// </summary>
-        Task BatchDelete@(Model.ClassName)s(List<@Model.KeyType> input);
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        Task DeleteAsync(@(Model.KeyType) id);
     }
 }
