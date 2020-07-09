@@ -12,13 +12,19 @@ namespace @Model.Namespace.@Model.DirectoryName
     /// </summary>
     public interface I@(Model.ClassName)AppService: IApplicationService
     {
+        /// <summary>
+        /// 获取
+        /// </summary>
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        Task<@(Model.ClassName)ListDto> GetAsync(@(Model.KeyType) id);
 
         /// <summary>
         /// 分页
         /// </summary>
         /// <param name="input">查询条件</param>
         /// <returns></returns>
-        Task<PagedResultDto<@(Model.ClassName)ListDto>> GetPagedAsync(Get@(Model.ClassName)sInput input);
+        Task<PagedResultDto<@(Model.ClassName)ListDto>> GetListAsync(Get@(Model.ClassName)sInput input);
 
         /// <summary>
         /// 获取修改信息
@@ -32,15 +38,15 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateAsync(CreateOrUpdate@(Model.ClassName)Input input);
+        Task<@(Model.ClassName)ListDto> CreateAsync(@(Model.ClassName)CreateDto input);
 
         /// <summary>
-        /// 创建
+        /// 更新
         /// </summary>
         /// <param name="id">主键</param>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task UpdateAsync(int id, CreateOrUpdate@(Model.ClassName)Input input);
+        Task<@(Model.ClassName)ListDto> UpdateAsync(int id, @(Model.ClassName)UpdateDto input);
 
         /// <summary>
         /// 删除

@@ -1,4 +1,5 @@
-﻿@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
 using Volo.Abp.Settings;
 
 namespace @Model.Namespace.@Model.DirectoryName
@@ -6,7 +7,7 @@ namespace @Model.Namespace.@Model.DirectoryName
     /// <summary>
     /// SettingDefinitionProvider
     /// </summary>
-    public class @(Model.LocalName)SettingDefinitionProvider : SettingDefinitionProvider
+    public class @(Model.ClassName)SettingDefinitionProvider : SettingDefinitionProvider
     {
     /// <summary>
         /// 
@@ -16,7 +17,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         {
             context.Add(
                 new SettingDefinition(
-                    @(Model.LocalName)Settings.MaxPageSize,
+                    @(Model.ClassName)Settings.MaxPageSize,
                     "100",
                     isVisibleToClients: true
                 )

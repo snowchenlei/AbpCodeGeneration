@@ -38,7 +38,7 @@ namespace @Model.Namespace.@Model.DirectoryName
     <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
         }
     }
-    public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppServiceBase, I@(Model.ClassName)AppService
+    public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppService, I@(Model.ClassName)AppService
     {
         private readonly IRepository<@(Model.ClassName), @Model.KeyType> _repository;
 
@@ -52,7 +52,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
             
         /// <summary>
-        /// 获取信息
+        /// 获取
         /// </summary>
         @if (Model.AuthorizationService)
         {
@@ -65,9 +65,9 @@ namespace @Model.Namespace.@Model.DirectoryName
         <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
             }
         }
-        public async Task<@(Model.ClassName)ListDto> GetEditAsync(@(Model.KeyType) id)
+        public async Task<@(Model.ClassName)ListDto> GetAsync(@(Model.KeyType) id)
         {
-            @(Model.ClassName) entity = await _repository.GetAsync(e => e.Id == id);
+            @(Model.ClassName) entity = await _repository.GetAsync(id);
 
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
@@ -88,7 +88,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
             }
         }
-        public async Task<PagedResultDto<@(Model.ClassName)ListDto>> GetPagedAsync(Get@(Model.ClassName)sInput input)
+        public async Task<PagedResultDto<@(Model.ClassName)ListDto>> GetListAsync(Get@(Model.ClassName)sInput input)
         {
             await NormalizeMaxResultCountAsync(input);
 
@@ -125,12 +125,9 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
         public async Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id)
         {
-            Get@(Model.ClassName)ForEditOutput output = new Get@(Model.ClassName)ForEditOutput();
+            @(Model.ClassName) entity = await _repository.GetAsync(id);
 
-            @(Model.ClassName) entity = await _repository.GetAsync(e => e.Id == id);
-
-            output.Store = ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)EditDto>(entity);
-            return output;
+            return ObjectMapper.Map<@(Model.ClassName), Get@(Model.ClassName)ForEditOutput>(entity);
         }
     
         /// <summary>
@@ -151,8 +148,8 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
         public virtual async Task<@(Model.ClassName)ListDto> CreateAsync(@(Model.ClassName)CreateDto input)
         {
-            var entity = _mapper.Map<@(Model.ClassName)>(input.@(Model.ClassName));
-            await _repository.InsertAsync(entity);
+            var entity = ObjectMapper.Map<BookCreateDto, @(Model.ClassName)>(input);
+            entity = await _repository.InsertAsync(entity);
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
 
@@ -174,9 +171,9 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
         public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(@(Model.KeyType) id, @(Model.ClassName)UpdateDto input)
         {
-            @(Model.ClassName) entity = await _repository.GetAsync(s => s.Id == id);
+            @(Model.ClassName) entity = await _repository.GetAsync(id);
             entity = ObjectMapper.Map(input, entity);
-            await _repository.UpdateAsync(entity);
+            entity = await _repository.UpdateAsync(entity);
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
 
@@ -226,7 +223,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <returns></returns>
         private async Task NormalizeMaxResultCountAsync(PagedAndSortedResultRequestDto input)
         {
-            var maxPageSize = (await SettingProvider.GetOrNullAsync(@(Model.ClassName)Setings.MaxPageSize))?.To<int>();
+            var maxPageSize = (await SettingProvider.GetOrNullAsync(@(Model.ClassName)Settings.MaxPageSize))?.To<int>();
             if (maxPageSize.HasValue && input.MaxResultCount > maxPageSize.Value)
             {
                 input.MaxResultCount = maxPageSize.Value;

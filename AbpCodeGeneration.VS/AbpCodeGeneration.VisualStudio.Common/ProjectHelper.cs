@@ -179,14 +179,14 @@ namespace AbpCodeGeneration.VisualStudio.Common
             if (model.AuthorizationService)
             {
                 CreatePermission(model);
-            }
-            a:
+            }            
             //应用服务
             if (model.ApplicationService)
             {
                 CreateSettingFile(model, applicationNewFolder);
                 CreateServiceFile(model, applicationNewFolder);
             }
+            a:
             //领域服务
             if (model.DomainService)
             {
