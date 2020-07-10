@@ -148,7 +148,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
         public virtual async Task<@(Model.ClassName)ListDto> CreateAsync(@(Model.ClassName)CreateDto input)
         {
-            var entity = ObjectMapper.Map<BookCreateDto, @(Model.ClassName)>(input);
+            var entity = ObjectMapper.Map<@(Model.ClassName)CreateDto, @(Model.ClassName)>(input);
             entity = await _repository.InsertAsync(entity);
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }

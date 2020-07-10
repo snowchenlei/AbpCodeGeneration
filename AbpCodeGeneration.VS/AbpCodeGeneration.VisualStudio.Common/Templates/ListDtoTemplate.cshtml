@@ -1,10 +1,13 @@
 ﻿@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
 using System;
-using Abp.Application.Services.Dto;
+using Volo.Abp.Application.Dtos;
 
 namespace @(Model.Namespace).@(Model.DirectoryName).Dto
 {
+    /// <summary>
+    /// 列表
+    /// </summary>
     public class @(Model.ClassName)ListDto: EntityDto<@Model.KeyType>
     {
     @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)

@@ -4,10 +4,10 @@
 
 /AbpCodeGeneration.VisualStudio.Common/obj
 /AbpCodeGeneration.VS/.vs/AbpCodeGeneration.VS
-/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio/bin/Debug
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio/bin
 /AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio/obj
-/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.Common/bin/Debug
-/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.Common/obj/Debug
-/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.UI/bin/Debug
-/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.UI/obj/Debug
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.Common/bin
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.Common/obj
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.UI/bin
+/AbpCodeGeneration.VS/AbpCodeGeneration.VisualStudio.UI/obj
 /AbpCodeGeneration.VS/packages

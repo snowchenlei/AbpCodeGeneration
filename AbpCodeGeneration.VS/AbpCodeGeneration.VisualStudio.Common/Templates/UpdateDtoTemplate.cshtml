@@ -3,8 +3,10 @@
 
 namespace @(Model.Namespace).@(Model.DirectoryName).Dto
 {
-    public class CreateOrUpdate@(Model.ClassName)Input
+    /// <summary>
+    /// 更新
+    /// </summary>
+    public class @(Model.ClassName)UpdateDto : @(Model.ClassName)CreateOrUpdateDtoBase
     {
-        public @(Model.ClassName)EditDto @(Model.ClassName) { get; set; }
     }
 }

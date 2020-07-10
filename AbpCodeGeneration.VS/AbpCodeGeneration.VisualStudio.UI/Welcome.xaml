@@ -37,7 +37,7 @@
                 <TextBlock Text="功能" Grid.Row="0" Grid.Column="2" Style="{DynamicResource TitleStyle}" Margin="30,2,26,2"/>
                 <!--<TextBlock Text="前端" Grid.Row="0" Grid.Column="3" Style="{DynamicResource TitleStyle}"/>-->
 
-                <CheckBox x:Name="FirstUse" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="0,8">
+                <CheckBox x:Name="FirstUse" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,8">
                     第一次使用
                 </CheckBox>
                 <ComboBox x:Name="Validations" DisplayMemberPath="Value" SelectedValuePath="Key"
@@ -50,17 +50,17 @@
                 <CheckBox x:Name="ApplicationService" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">
                     应用服务
                 </CheckBox>
-                <CheckBox x:Name="DomainService" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">
+                <CheckBox x:Name="DomainService" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
                     领域服务
                 </CheckBox>
-                <CheckBox x:Name="AuthorizationService" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">
+                <CheckBox x:Name="AuthorizationService" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
                     权限服务
                 </CheckBox>
 
-                <CheckBox x:Name="ExcelImportAndExport" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="2,8,0,8">
+                <CheckBox x:Name="ExcelImportAndExport" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,8,0,8">
                     Excel导入导出
                 </CheckBox>
-                <CheckBox x:Name="PictureUpload" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="2,8,0,8">
+                <CheckBox x:Name="PictureUpload" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,8,0,8">
                     图片上传
                 </CheckBox>
 

@@ -157,7 +157,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             //添加项目目录结构
             var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject) 
                 ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
-            goto a;
+            
             //添加Dto
             var applicationDtoFolder = applicationNewFolder.ProjectItems.Item("Dtos") ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
             CreateDtoFile(model, applicationDtoFolder);
@@ -172,9 +172,9 @@ namespace AbpCodeGeneration.VisualStudio.Common
             }
             mapperItem = moduleItem.ProjectItems.Item(moduleName + "ApplicationAutoMapperProfile.cs");
             EditMapper(mapperItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
-            //参数验证
-            var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
-            CreateValidatorFile(model, applicationValidatorFolder);
+            // TODO:参数验证
+            //var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
+            //CreateValidatorFile(model, applicationValidatorFolder);
             //权限
             if (model.AuthorizationService)
             {
@@ -186,7 +186,6 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateSettingFile(model, applicationNewFolder);
                 CreateServiceFile(model, applicationNewFolder);
             }
-            a:
             //领域服务
             if (model.DomainService)
             {
@@ -433,25 +432,32 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="dtoFolder"></param>
         private void CreateDtoFile(CreateFileInput model, ProjectItem dtoFolder)
         {
-            string content_Edit = RazorEngine.Engine.Razor.RunCompile("EditDtoTemplate", typeof(CreateFileInput), model);
-            string fileName_Edit = $"{model.ClassName}EditDto.cs";
-            AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
+            // TODO:读取页面选择属性.并支持创建/修改包含独立属性
+            string content_GetsInput = RazorEngine.Engine.Razor.RunCompile("GetsInputTemplate", typeof(DtoFileModel), model);
+            string fileName_GetsInput = $"Get{model.ClassName}sInput.cs";
+            AddFileToProjectItem(dtoFolder, content_GetsInput, fileName_GetsInput);
 
             string content_List = RazorEngine.Engine.Razor.RunCompile("ListDtoTemplate", typeof(DtoFileModel), model);
             string fileName_List = $"{model.ClassName}ListDto.cs";
             AddFileToProjectItem(dtoFolder, content_List, fileName_List);
 
-            string content_CreateAndUpdate = RazorEngine.Engine.Razor.RunCompile("CreateOrUpdateInputDtoTemplate", typeof(DtoFileModel), model);
-            string fileName_CreateAndUpdate = $"CreateOrUpdate{model.ClassName}Input.cs";
+            string content_CreateAndUpdate = RazorEngine.Engine.Razor.RunCompile("CreateOrUpdateDtoBaseTemplate", typeof(DtoFileModel), model);
+            string fileName_CreateAndUpdate = $"{model.ClassName}CreateOrUpdateDtoBase.cs";
             AddFileToProjectItem(dtoFolder, content_CreateAndUpdate, fileName_CreateAndUpdate);
+
+            string content_Create = RazorEngine.Engine.Razor.RunCompile("CreateDtoTemplate", typeof(DtoFileModel), model);
+            string fileName_Create = $"{model.ClassName}CreateDto.cs";
+            AddFileToProjectItem(dtoFolder, content_Create, fileName_Create);
+
+            string content_Update = RazorEngine.Engine.Razor.RunCompile("UpdateDtoTemplate", typeof(DtoFileModel), model);
+            string fileName_Update = $"{model.ClassName}UpdateDto.cs";
+            AddFileToProjectItem(dtoFolder, content_Update, fileName_Update);
 
             string content_GetForUpdate = RazorEngine.Engine.Razor.RunCompile("GetForEditOutputDtoTemplate", typeof(DtoFileModel), model);
             string fileName_GetForUpdate = $"Get{model.ClassName}ForEditOutput.cs";
             AddFileToProjectItem(dtoFolder, content_GetForUpdate, fileName_GetForUpdate);
 
-            string content_GetsInput = RazorEngine.Engine.Razor.RunCompile("GetsInputTemplate", typeof(DtoFileModel), model);
-            string fileName_GetsInput = $"Get{model.ClassName}sInput.cs";
-            AddFileToProjectItem(dtoFolder, content_GetsInput, fileName_GetsInput);
+            
         }
 
         /// <summary>
@@ -536,10 +542,12 @@ namespace AbpCodeGeneration.VisualStudio.Common
                         && codeChild.Name == mapperItem.Name.Substring(0, mapperItem.Name.IndexOf('.')))
                     {
                         var insertCode = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
-                        insertCode.Insert("            // " + classCnName ?? className + "\r\n");
-                        insertCode.Insert("            CreateMap<" + className + ", " + className + "EditDto>();\r\n");
-                        insertCode.Insert("            CreateMap<" + className + ", " + className + "ListDto>();\r\n");
-                        insertCode.Insert("            CreateMap<" + className + "EditDto, " + className + ">();\r\n");
+                        insertCode.Insert("             #region " + (String.IsNullOrEmpty(classCnName) ? className + "\r\n" : classCnName+ "\r\n"));
+                        insertCode.Insert($"            CreateMap<{className}, Get{className}yForEditOutput>();\r\n");
+                        insertCode.Insert($"            CreateMap<{className}, {className}ListDto>();\r\n");
+                        insertCode.Insert($"            CreateMap<{className}CreateDto, {className}>();\r\n");
+                        insertCode.Insert($"            CreateMap<{className}UpdateDto, {className}>();\r\n");
+                        insertCode.Insert($"            #endregion");
                         insertCode.Insert("\r\n");
                     }
                 }

@@ -1,19 +1,13 @@
 ﻿@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
-using Abp.Extensions;
-using Abp.Runtime.Validation;
-using @(Model.Namespace).Dto;
+using Volo.Abp.Application.Dtos;
 
 namespace @(Model.Namespace).@(Model.DirectoryName).Dto
 {
-    public class Get@(Model.ClassName)sInput: PagedAndSortedInputDto, IShouldNormalize
+    /// <summary>
+    /// 查询条件
+    /// </summary>
+    public class Get@(Model.ClassName)sInput: PagedAndSortedResultRequestDto
     {
-        public void Normalize()
-        {
-            if (Sorting.IsNullOrWhiteSpace())
-            {
-                Sorting = "Id DESC";
-            }
-        }
     }
 }

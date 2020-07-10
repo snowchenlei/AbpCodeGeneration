@@ -133,8 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Templates\AppAuthorizationProviderTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\CreateOrUpdateInputDtoTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\EditDtoTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\CreateOrUpdateDtoBaseTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Front_Edit_HtmlTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Front_Edit_TsTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Front_List_HtmlTemplate.cshtml" />
@@ -157,6 +156,8 @@
     <EmbeddedResource Include="Templates\IDomainServiceTemplate.cshtml" />
     <EmbeddedResource Include="Templates\SettingsTemplate.cshtml" />
     <EmbeddedResource Include="Templates\SettingDefinitionProviderTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\CreateDtoTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\UpdateDtoTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0-rc2\tools\analyzers\C#\Microsoft.CodeAnalysis.Analyzers.dll" />

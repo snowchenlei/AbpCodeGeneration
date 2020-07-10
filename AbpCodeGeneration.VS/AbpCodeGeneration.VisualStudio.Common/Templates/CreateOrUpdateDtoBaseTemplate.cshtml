@@ -1,12 +1,10 @@
-﻿@using RazorEngine
-@using AbpCodeGeneration.VisualStudio.Common.Model
+﻿@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
-using System;
-using Abp.Application.Services.Dto;
+using Volo.Abp.ObjectExtending;
 
 namespace @(Model.Namespace).@(Model.DirectoryName).Dto
 {
-    public class @(Model.ClassName)EditDto : NullableIdDto<@Model.KeyType>
+    public class @(Model.ClassName)CreateOrUpdateDtoBase : ExtensibleObject
     {
     @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
     {
