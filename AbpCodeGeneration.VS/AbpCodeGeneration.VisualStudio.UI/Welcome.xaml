@@ -37,11 +37,8 @@
                 <TextBlock Text="功能" Grid.Row="0" Grid.Column="2" Style="{DynamicResource TitleStyle}" Margin="30,2,26,2"/>
                 <!--<TextBlock Text="前端" Grid.Row="0" Grid.Column="3" Style="{DynamicResource TitleStyle}"/>-->
 
-                <CheckBox x:Name="FirstUse" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,8">
-                    第一次使用
-                </CheckBox>
                 <ComboBox x:Name="Validations" DisplayMemberPath="Value" SelectedValuePath="Key"
-                      Grid.Row="2" Grid.Column="0" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,4">
+                      Grid.Row="1" Grid.Column="0" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,4">
                 </ComboBox>
                 <!--<CheckBox x:Name="Dto" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Checked="Dto_Checked">
                     Dto

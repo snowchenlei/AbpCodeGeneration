@@ -57,8 +57,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
         }
 
         private void Query_Click(object sender, RoutedEventArgs e)
-        {
-            
+        {            
             DtoFileModel dto = projectHelper.GetDtoModel();
             projectHelper.CreateFile(new CreateFileInput()
             {
@@ -69,7 +68,6 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 LocalName = ClassLocalName.Text,
                 DirectoryName = dto.DirName,
                 PropertyInfos = DataList,
-                FirstUse = _setting.FirstUse,
                 ValidationType = _setting.ValidationType,
                 ApplicationService = _setting.ApplicationService,
                 DomainService = _setting.DomainService,

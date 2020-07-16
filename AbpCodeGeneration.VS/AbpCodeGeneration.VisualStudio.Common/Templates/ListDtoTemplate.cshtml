@@ -12,7 +12,10 @@ namespace @(Model.Namespace).@(Model.DirectoryName).Dto
     {
     @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
     {
+        if (classProperty.IsList) 
+        { 
         <text>public @Raw(classProperty.PropertyType) @Raw(classProperty.PropertyName) { get; set; }</text>
+        }
     }
     }
 }

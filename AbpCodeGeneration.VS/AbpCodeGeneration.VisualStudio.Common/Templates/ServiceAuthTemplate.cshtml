@@ -10,12 +10,34 @@ using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
+@if (Model.AuthorizationService)
+{
+    if (Model.IsAppend)
+    {
+<text>using @(Model.Namespace).Authorization;</text>
+    }
+    else
+    {
+<text>using @(Model.Namespace).@(Model.DirectoryName).Authorization;</text>
+    }
+}
 
 namespace @Model.Namespace.@Model.DirectoryName
 {
     /// <summary>
     /// @(Model.LocalName)管理
     /// </summary>
+    @if (Model.AuthorizationService)
+    {
+        if (Model.IsAppend)
+        {
+    <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+        }
+        else
+        {
+    <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+        }
+    }
     public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppService, I@(Model.ClassName)AppService
     {
         private readonly IRepository<@(Model.ClassName), @Model.KeyType> _repository;
@@ -32,6 +54,17 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 获取
         /// </summary>
+        @if (Model.AuthorizationService)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+            }
+            else
+            {            
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+            }
+        }
         public async Task<@(Model.ClassName)ListDto> GetAsync(@(Model.KeyType) id)
         {
             @(Model.ClassName) entity = await _repository.GetAsync(id);
@@ -44,6 +77,17 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input">查询条件</param>
         /// <returns></returns>
+        @if (Model.AuthorizationService)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+            }
+        }
         public async Task<PagedResultDto<@(Model.ClassName)ListDto>> GetListAsync(Get@(Model.ClassName)sInput input)
         {
             await NormalizeMaxResultCountAsync(input);
@@ -66,6 +110,19 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 获取修改信息
         /// </summary>
+        @if (Model.AuthorizationService)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
+            PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+            else
+            {            
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create,
+            @(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+        }
         public async Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id)
         {
             @(Model.ClassName) entity = await _repository.GetAsync(id);
@@ -78,6 +135,17 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        @if (Model.AuthorizationService)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Create)]</text>
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create)]</text>
+            }
+        }
         public virtual async Task<@(Model.ClassName)ListDto> CreateAsync(@(Model.ClassName)CreateDto input)
         {
             var entity = ObjectMapper.Map<@(Model.ClassName)CreateDto, @(Model.ClassName)>(input);
@@ -90,6 +158,17 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        @if (Model.AuthorizationService)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+            }
+        }
         public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(@(Model.KeyType) id, @(Model.ClassName)UpdateDto input)
         {
             @(Model.ClassName) entity = await _repository.GetAsync(id);
@@ -101,6 +180,17 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 删除@(Model.LocalName)
         /// </summary>
+        @if (Model.AuthorizationService)
+        {
+            if (Model.IsAppend)
+            {
+        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Delete)]</text>
+            }
+            else
+            {
+        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Delete)]</text>
+            }
+        }
         public async Task DeleteAsync(@Model.KeyType id)
         {
             await _repository.DeleteAsync(s => s.Id == id);

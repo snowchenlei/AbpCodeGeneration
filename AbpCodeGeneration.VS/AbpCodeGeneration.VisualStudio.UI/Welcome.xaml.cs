@@ -44,7 +44,6 @@ namespace AbpCodeGeneration.VisualStudio.UI
         {
             Setting setting = new Setting
             {
-                FirstUse = FirstUse.IsChecked ?? false,
                 ValidationType = (int)Validations.SelectedValue,
                 ApplicationService = ApplicationService.IsChecked ?? false,
                 DomainService = DomainService.IsChecked ?? false,

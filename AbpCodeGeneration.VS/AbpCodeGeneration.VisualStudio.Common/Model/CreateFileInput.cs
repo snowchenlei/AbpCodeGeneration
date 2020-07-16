@@ -29,7 +29,6 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         public string LocalName { get; set; }
         public string DirectoryName { get; set; }
 
-        public bool FirstUse { get; set; }
         /// <summary>
         /// 验证方式
         /// </summary>

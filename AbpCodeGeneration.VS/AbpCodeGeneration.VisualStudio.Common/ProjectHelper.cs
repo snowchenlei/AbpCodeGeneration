@@ -147,7 +147,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
         {
             // TODO:区分Contracts
             InitRazorEngine();
-            //CompileTemplate();
+            CompileTemplate();
 
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application");
 
@@ -201,14 +201,20 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// </summary>
         private void CompileTemplate()
         {
-            RazorEngine.Engine.Razor.Compile("EditDtoTemplate");
+            RazorEngine.Engine.Razor.Compile("CreateDtoTemplate");
+            RazorEngine.Engine.Razor.Compile("UpdateDtoTemplate");
             RazorEngine.Engine.Razor.Compile("ListDtoTemplate");
-            RazorEngine.Engine.Razor.Compile("CreateOrUpdateInputDtoTemplate");
+            RazorEngine.Engine.Razor.Compile("CreateOrUpdateDtoBaseTemplate");
             RazorEngine.Engine.Razor.Compile("GetForEditOutputDtoTemplate");
             RazorEngine.Engine.Razor.Compile("GetsInputTemplate");
 
             RazorEngine.Engine.Razor.Compile("IServiceTemplate");
             RazorEngine.Engine.Razor.Compile("ServiceTemplate");
+            RazorEngine.Engine.Razor.Compile("ServiceAuthTemplate");
+
+            RazorEngine.Engine.Razor.Compile("SettingsTemplate");
+            RazorEngine.Engine.Razor.Compile("SettingDefinitionProviderTemplate");
+
             RazorEngine.Engine.Razor.Compile("IDomainServiceTemplate");
             RazorEngine.Engine.Razor.Compile("DomainServiceTemplate");
 
@@ -501,7 +507,16 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_IService = $"I{model.ClassName}AppService.cs";
             AddFileToProjectItem(dtoFolder, content_IService, fileName_IService);
             // TODO:ServiceTemplate创建及之后
-            string content_Service = RazorEngine.Engine.Razor.RunCompile("ServiceTemplate", typeof(CreateFileInput), model);
+            string content_Service = String.Empty;
+
+            if (model.AuthorizationService)
+            {
+                content_Service = RazorEngine.Engine.Razor.RunCompile("ServiceAuthTemplate", typeof(CreateFileInput), model);
+            }
+            else
+            {
+                content_Service = RazorEngine.Engine.Razor.RunCompile("ServiceTemplate", typeof(CreateFileInput), model);
+            }
             string fileName_Service = $"{model.ClassName}AppService.cs";
             AddFileToProjectItem(dtoFolder, content_Service, fileName_Service);
         } 
@@ -543,7 +558,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                     {
                         var insertCode = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                         insertCode.Insert("             #region " + (String.IsNullOrEmpty(classCnName) ? className + "\r\n" : classCnName+ "\r\n"));
-                        insertCode.Insert($"            CreateMap<{className}, Get{className}yForEditOutput>();\r\n");
+                        insertCode.Insert($"            CreateMap<{className}, Get{className}ForEditOutput>();\r\n");
                         insertCode.Insert($"            CreateMap<{className}, {className}ListDto>();\r\n");
                         insertCode.Insert($"            CreateMap<{className}CreateDto, {className}>();\r\n");
                         insertCode.Insert($"            CreateMap<{className}UpdateDto, {className}>();\r\n");

@@ -1,14 +1,16 @@
 ﻿@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
-using Volo.Abp.ObjectExtending;
 
 namespace @(Model.Namespace).@(Model.DirectoryName).Dto
 {
-    public class @(Model.ClassName)CreateOrUpdateDtoBase : ExtensibleObject
+    public class @(Model.ClassName)CreateOrUpdateDtoBase
     {
     @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
     {
+        if (classProperty.IsEdit)
+        {
         <text>public @Raw(classProperty.PropertyType) @Raw(classProperty.PropertyName) { get; set; }</text>
+        }
     }
     }
 }
