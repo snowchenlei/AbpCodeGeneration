@@ -132,37 +132,40 @@
     <Compile Include="Templates\Template.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Templates\AppAuthorizationProviderTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\CreateOrUpdateDtoBaseTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Auth\AppAuthorizationProviderTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Dto\CreateOrUpdateDtoBaseTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Front_Edit_HtmlTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Front_Edit_TsTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Front_List_HtmlTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Front_List_TsTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\GetForEditOutputDtoTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\GetsInputTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\IServiceTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\ListDtoTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\PermissionsTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\ServiceTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Dto\GetForEditOutputDtoTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Dto\GetsInputTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\ApplicationService\IServiceTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Dto\ListDtoTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Auth\PermissionsTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\ApplicationService\ServiceTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Templates\MapperTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\ValidationTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\ValidationBaseTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\AppPermissionName.cshtml" />
-    <EmbeddedResource Include="Templates\DomainServiceTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\IDomainServiceTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\SettingsTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\SettingDefinitionProviderTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\CreateDtoTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\UpdateDtoTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\ServiceAuthTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Validation\ValidationTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Validation\ValidationBaseTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Auth\AppPermissionName.cshtml" />
+    <EmbeddedResource Include="Templates\DomainService\DomainServiceTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\DomainService\IDomainServiceTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\ApplicationService\SettingsTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\ApplicationService\SettingDefinitionProviderTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Dto\CreateDtoTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Dto\UpdateDtoTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\ApplicationService\ServiceAuthTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0-rc2\tools\analyzers\C#\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0-rc2\tools\analyzers\C#\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Templates\Repository\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.16\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.16\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets')" />

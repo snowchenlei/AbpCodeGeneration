@@ -147,7 +147,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
         {
             // TODO:区分Contracts
             InitRazorEngine();
-            CompileTemplate();
+            //CompileTemplate();
 
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application");
 
@@ -422,11 +422,11 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="coreFolder"></param>
         private void CreateDomainServiceFile(CreateFileInput model, ProjectItem coreFolder)
         {
-            string contentAuthorizationProvider = RazorEngine.Engine.Razor.RunCompile("IDomainServiceTemplate", typeof(CreateFileInput), model);
+            string contentAuthorizationProvider = RazorEngine.Engine.Razor.RunCompile("DomainService.IDomainServiceTemplate", typeof(CreateFileInput), model);
             string fileNameAuthorizationProvider = $"I{model.ClassName}Manager.cs";
             AddFileToProjectItem(coreFolder, contentAuthorizationProvider, fileNameAuthorizationProvider);
 
-            string contentPermissionName = RazorEngine.Engine.Razor.RunCompile("DomainServiceTemplate", typeof(CreateFileInput), model);
+            string contentPermissionName = RazorEngine.Engine.Razor.RunCompile("DomainService.DomainServiceTemplate", typeof(CreateFileInput), model);
             string fileNamePermissionName = model.ClassName + "Manager.cs";
             AddFileToProjectItem(coreFolder, contentPermissionName, fileNamePermissionName);
         }
@@ -439,27 +439,27 @@ namespace AbpCodeGeneration.VisualStudio.Common
         private void CreateDtoFile(CreateFileInput model, ProjectItem dtoFolder)
         {
             // TODO:读取页面选择属性.并支持创建/修改包含独立属性
-            string content_GetsInput = RazorEngine.Engine.Razor.RunCompile("GetsInputTemplate", typeof(DtoFileModel), model);
+            string content_GetsInput = RazorEngine.Engine.Razor.RunCompile("Dto.GetsInputTemplate", typeof(DtoFileModel), model);
             string fileName_GetsInput = $"Get{model.ClassName}sInput.cs";
             AddFileToProjectItem(dtoFolder, content_GetsInput, fileName_GetsInput);
 
-            string content_List = RazorEngine.Engine.Razor.RunCompile("ListDtoTemplate", typeof(DtoFileModel), model);
+            string content_List = RazorEngine.Engine.Razor.RunCompile("Dto.ListDtoTemplate", typeof(DtoFileModel), model);
             string fileName_List = $"{model.ClassName}ListDto.cs";
             AddFileToProjectItem(dtoFolder, content_List, fileName_List);
 
-            string content_CreateAndUpdate = RazorEngine.Engine.Razor.RunCompile("CreateOrUpdateDtoBaseTemplate", typeof(DtoFileModel), model);
+            string content_CreateAndUpdate = RazorEngine.Engine.Razor.RunCompile("Dto.CreateOrUpdateDtoBaseTemplate", typeof(DtoFileModel), model);
             string fileName_CreateAndUpdate = $"{model.ClassName}CreateOrUpdateDtoBase.cs";
             AddFileToProjectItem(dtoFolder, content_CreateAndUpdate, fileName_CreateAndUpdate);
 
-            string content_Create = RazorEngine.Engine.Razor.RunCompile("CreateDtoTemplate", typeof(DtoFileModel), model);
+            string content_Create = RazorEngine.Engine.Razor.RunCompile("Dto.CreateDtoTemplate", typeof(DtoFileModel), model);
             string fileName_Create = $"{model.ClassName}CreateDto.cs";
             AddFileToProjectItem(dtoFolder, content_Create, fileName_Create);
 
-            string content_Update = RazorEngine.Engine.Razor.RunCompile("UpdateDtoTemplate", typeof(DtoFileModel), model);
+            string content_Update = RazorEngine.Engine.Razor.RunCompile("Dto.UpdateDtoTemplate", typeof(DtoFileModel), model);
             string fileName_Update = $"{model.ClassName}UpdateDto.cs";
             AddFileToProjectItem(dtoFolder, content_Update, fileName_Update);
 
-            string content_GetForUpdate = RazorEngine.Engine.Razor.RunCompile("GetForEditOutputDtoTemplate", typeof(DtoFileModel), model);
+            string content_GetForUpdate = RazorEngine.Engine.Razor.RunCompile("Dto.GetForEditOutputDtoTemplate", typeof(DtoFileModel), model);
             string fileName_GetForUpdate = $"Get{model.ClassName}ForEditOutput.cs";
             AddFileToProjectItem(dtoFolder, content_GetForUpdate, fileName_GetForUpdate);
 
@@ -485,11 +485,11 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="dtoFolder"></param>
         private void CreateSettingFile(CreateFileInput model, ProjectItem dtoFolder)
         {
-            string content_IService = RazorEngine.Engine.Razor.RunCompile("SettingsTemplate", typeof(CreateFileInput), model);
+            string content_IService = RazorEngine.Engine.Razor.RunCompile("ApplicationService.SettingsTemplate", typeof(CreateFileInput), model);
             string fileName_IService = $"{model.ClassName}Settings.cs";
             AddFileToProjectItem(dtoFolder, content_IService, fileName_IService);
 
-            string content_Service = RazorEngine.Engine.Razor.RunCompile("SettingDefinitionProviderTemplate", typeof(CreateFileInput), model);
+            string content_Service = RazorEngine.Engine.Razor.RunCompile("ApplicationService.SettingDefinitionProviderTemplate", typeof(CreateFileInput), model);
             string fileName_Service = $"{model.ClassName}SettingDefinitionProvider.cs";
             AddFileToProjectItem(dtoFolder, content_Service, fileName_Service);
         }
@@ -503,7 +503,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="dirName">类所在文件夹目录</param>
         private void CreateServiceFile(CreateFileInput model, ProjectItem dtoFolder)
         {
-            string content_IService = RazorEngine.Engine.Razor.RunCompile("IServiceTemplate", typeof(CreateFileInput), model);
+            string content_IService = RazorEngine.Engine.Razor.RunCompile("ApplicationService.IServiceTemplate", typeof(CreateFileInput), model);
             string fileName_IService = $"I{model.ClassName}AppService.cs";
             AddFileToProjectItem(dtoFolder, content_IService, fileName_IService);
             // TODO:ServiceTemplate创建及之后
@@ -511,11 +511,11 @@ namespace AbpCodeGeneration.VisualStudio.Common
 
             if (model.AuthorizationService)
             {
-                content_Service = RazorEngine.Engine.Razor.RunCompile("ServiceAuthTemplate", typeof(CreateFileInput), model);
+                content_Service = RazorEngine.Engine.Razor.RunCompile("ApplicationService.ServiceAuthTemplate", typeof(CreateFileInput), model);
             }
             else
             {
-                content_Service = RazorEngine.Engine.Razor.RunCompile("ServiceTemplate", typeof(CreateFileInput), model);
+                content_Service = RazorEngine.Engine.Razor.RunCompile("ApplicationService.ServiceTemplate", typeof(CreateFileInput), model);
             }
             string fileName_Service = $"{model.ClassName}AppService.cs";
             AddFileToProjectItem(dtoFolder, content_Service, fileName_Service);

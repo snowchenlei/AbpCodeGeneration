@@ -12,9 +12,9 @@ using @(Model.Namespace).@(Model.DirectoryName).Dto;
 
 namespace @(Model.Namespace).@(Model.DirectoryName).Validators
 {
-    public class @(Model.ClassName)EditValidator : @(Model.AbsoluteNamespace)Validator<@(Model.ClassName)EditDto>
+    public class CreateUpdate@(Model.ClassName)Validator : AbstractValidator<CreateUpdate@(Model.ClassName)Dto>
     {
-        public @(Model.ClassName)EditValidator()
+        public CreateUpdate@(Model.ClassName)Validator()
         {
             @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
             {
