@@ -30,13 +30,15 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
             
         /// <summary>
-        /// 获取
+        /// 单个
         /// </summary>
-        public async Task<@(Model.ClassName)ListDto> GetAsync(@(Model.KeyType) id)
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        public async Task<@(Model.ClassName)DetailDto> GetAsync(@(Model.KeyType) id)
         {
             @(Model.ClassName) entity = await _repository.GetAsync(id);
 
-            return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
+            return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)DetailDto>(entity);
         }
 
         /// <summary>
@@ -64,8 +66,10 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
 
         /// <summary>
-        /// 获取修改信息
+        /// 获取修改
         /// </summary>
+        /// <param name="id">主键</param>
+        /// <returns></returns>
         public async Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id)
         {
             @(Model.ClassName) entity = await _repository.GetAsync(id);
@@ -74,7 +78,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
     
         /// <summary>
-        /// 新建
+        /// 创建
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -88,6 +92,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 编辑
         /// </summary>
+        /// <param name="id">主键</param>
         /// <param name="input"></param>
         /// <returns></returns>
         public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(@(Model.KeyType) id, @(Model.ClassName)UpdateDto input)
@@ -101,6 +106,8 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// 删除@(Model.LocalName)
         /// </summary>
+        /// <param name="id">主键</param>
+        /// <returns></returns>
         public async Task DeleteAsync(@Model.KeyType id)
         {
             await _repository.DeleteAsync(s => s.Id == id);
@@ -109,18 +116,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         @*/// <summary>
         /// 批量删除@(Model.LocalName)
         /// </summary>
-        @if (Model.AuthorizationService)
-        {
-            if (Model.IsAppend)
-            {
-        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_BatchDelete)]</text>
-
-            }
-            else
-            {
-        <text>[AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_BatchDelete)]</text>
-            }
-        }
+        /// <returns></returns>
         public async Task BatchDelete@(Model.ClassName)s(List<@Model.KeyType> input)
         {
             await _repository.DeleteAsync(a => input.Contains(a.Id));

@@ -1,14 +1,19 @@
 ﻿@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using System;
+using Volo.Abp.Application.Dtos;
 
 namespace @(Model.Namespace).@(Model.DirectoryName).Dtos
 {
-    public class @(Model.ClassName)CreateOrUpdateDtoBase
+    /// <summary>
+    /// 列表
+    /// </summary>
+    public class @(Model.ClassName)DetailDto: EntityDto<@Model.KeyType>
     {
     @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
     {
-        if (classProperty.IsEdit)
-        {
+        if (classProperty.IsList) 
+        { 
         <text>public @Raw(classProperty.PropertyType) @Raw(classProperty.PropertyName) { get; set; }</text>
         }
     }

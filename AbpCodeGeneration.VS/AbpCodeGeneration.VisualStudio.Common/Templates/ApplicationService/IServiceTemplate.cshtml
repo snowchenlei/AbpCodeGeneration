@@ -13,11 +13,11 @@ namespace @Model.Namespace.@Model.DirectoryName
     public interface I@(Model.ClassName)AppService: IApplicationService
     {
         /// <summary>
-        /// 获取
+        /// 单个
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        Task<@(Model.ClassName)ListDto> GetAsync(@(Model.KeyType) id);
+        Task<@(Model.ClassName)DetailDto> GetAsync(@(Model.KeyType) id);
 
         /// <summary>
         /// 分页
@@ -27,7 +27,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         Task<PagedResultDto<@(Model.ClassName)ListDto>> GetListAsync(Get@(Model.ClassName)sInput input);
 
         /// <summary>
-        /// 获取修改信息
+        /// 获取修改
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
