@@ -378,26 +378,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
 
             return dirPath.Substring(1);
         }
-
-        private void CreatePermission(CreateFileInput model)
-        {
-            Project topProject = SelectProjectItem.ContainingProject;
-            ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);
-            // TODO:自行选择单文件或追加。
-            // 单文件项目原授权不存在administration则需手动添加
-            // 多文件需在“”配置
-            if (model.IsAppend)
-            {
-                EditPermission(topProject, model);
-            }
-            else
-            {
-                var coreAuthorizationFolder = currentProjectItem.ProjectItems.Item("Authorization")
-                    ?? currentProjectItem.ProjectItems.AddFolder("Authorization");
-                CreateAuthorizationFile(model, coreAuthorizationFolder);
-            }
-        }
-
+                
         #region 创建文件
         /// <summary>
         /// 创建授权文件
@@ -438,7 +419,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="dtoFolder"></param>
         private void CreateDtoFile(CreateFileInput model, ProjectItem dtoFolder)
         {
-            // TODO:读取页面选择属性.并支持创建/修改包含独立属性
+            // TODO:支持创建/修改包含独立属性
             string content_GetsInput = RazorEngine.Engine.Razor.RunCompile("Dto.GetsInputTemplate", typeof(DtoFileModel), model);
             string fileName_GetsInput = $"Get{model.ClassName}sInput.cs";
             AddFileToProjectItem(dtoFolder, content_GetsInput, fileName_GetsInput);
@@ -506,7 +487,6 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string content_IService = RazorEngine.Engine.Razor.RunCompile("ApplicationService.IServiceTemplate", typeof(CreateFileInput), model);
             string fileName_IService = $"I{model.ClassName}AppService.cs";
             AddFileToProjectItem(dtoFolder, content_IService, fileName_IService);
-            // TODO:ServiceTemplate创建及之后
             string content_Service = String.Empty;
 
             if (model.AuthorizationService)
@@ -575,36 +555,42 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// </summary>
         /// <param name="topProject"></param>
         /// <param name="model"></param>
-        private void EditPermission(Project topProject, CreateFileInput model)
+        private void CreatePermission(CreateFileInput model)
         {
-            ProjectItem permissionNameItem = topProject.ProjectItems.Item("Authorization").ProjectItems.Item("PermissionNames.cs");
-            ProjectItem authorizationProviderNameItem = topProject.ProjectItems.Item("Authorization").ProjectItems.Item(model.AbsoluteNamespace + "AuthorizationProvider.cs");
-            if (permissionNameItem != null)
+            ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application.Contracts");
+
+            string permissionPrefix = ApplicationRootNamespace.Split('.').Last();
+            ProjectItem permissionStatement = applicationContractsProjectItem.SubProject.ProjectItems.Item("Permissions").ProjectItems.Item(permissionPrefix + "Permissions.cs");
+            ProjectItem permissionDefinition = applicationContractsProjectItem.SubProject.ProjectItems.Item("Permissions").ProjectItems.Item(permissionPrefix + "PermissionDefinitionProvider.cs");
+
+            if (permissionStatement != null)
             {
-                CodeClass permissionCodeClass = GetClass(permissionNameItem.FileCodeModel.CodeElements);
+                CodeClass permissionCodeClass = GetClass(permissionStatement.FileCodeModel.CodeElements);
                 EditPoint permissionPoint = permissionCodeClass.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                 permissionPoint.Insert("\r\n");
-                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s = \"Pages.Administration.{model.ClassName}s\";\r\n");
-                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s_Create = \"Pages.Administration.{model.ClassName}s.Create\";\r\n");
-                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s_Edit = \"Pages.Administration.{model.ClassName}s.Edit\";\r\n");
-                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s_Delete = \"Pages.Administration.{model.ClassName}s.Delete\";\r\n");
-                permissionPoint.Insert($"public const string Pages_Administration_{model.ClassName}s_BatchDelete = \"Pages.Administration.{model.ClassName}s.BatchDelete\";\r\n");
+                permissionPoint.Insert($"public static class {model.ClassName}s\r\n");
+                permissionPoint.Insert("{\r\n");
+                permissionPoint.Insert($"public const string Default = GroupName + \".{model.ClassName}\";\r\n");
+                permissionPoint.Insert($"public const string Create = Default + \".Create\";\r\n");
+                permissionPoint.Insert($"public const string Edit = Default + \".Edit\";\r\n");
+                permissionPoint.Insert($"public const string Delete = Default + \".Delete\";\r\n");
+                permissionPoint.Insert("}\r\n");
 
-                if (authorizationProviderNameItem != null)
+                if(permissionDefinition != null)
                 {
-                    CodeClass authorizationCodeClass = GetClass(authorizationProviderNameItem.FileCodeModel.CodeElements);
+                    CodeClass authorizationCodeClass = GetClass(permissionDefinition.FileCodeModel.CodeElements);
                     var codeChilds = authorizationCodeClass.Members;
                     foreach (CodeElement codeChild in codeChilds)
                     {
-                        if (codeChild.Kind == vsCMElement.vsCMElementFunction && codeChild.Name == "SetPermissions")
+                        if (codeChild.Kind == vsCMElement.vsCMElementFunction && codeChild.Name == "Define")
                         {
                             EditPoint authorizationPoint = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                             authorizationPoint.Insert("\r\n");
-                            authorizationPoint.Insert($"var {model.CamelClassName}s = administration.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s, L(\"{model.ClassName}s\"));\r\n");
-                            authorizationPoint.Insert($"{model.CamelClassName}s.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s_Create, L(\"CreatingNew{model.ClassName}\"));\r\n");
-                            authorizationPoint.Insert($"{model.CamelClassName}s.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s_Edit, L(\"Editing{model.ClassName}\"));\r\n");
-                            authorizationPoint.Insert($"{model.CamelClassName}s.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s_Delete, L(\"Deleting{model.ClassName}\"));\r\n");
-                            authorizationPoint.Insert($"{model.CamelClassName}s.CreateChildPermission(PermissionNames.Pages_Administration_{model.ClassName}s_BatchDelete, L(\"BatchDeleting{model.ClassName}\"));\r\n");
+                            authorizationPoint.Insert($"var {model.CamelClassName}s = {permissionPrefix}Group.AddPermission({permissionPrefix}Permissions.{model.ClassName}s.Default, L(\"Permission:{model.ClassName}s\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({permissionPrefix}Permissions.{model.ClassName}s.Create, L(\"Permission:Create\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({permissionPrefix}Permissions.{model.ClassName}s.Edit, L(\"Permission:Edit\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({permissionPrefix}Permissions.{model.ClassName}s.Delete, L(\"Permission:Delete\"));\r\n");
+                            authorizationPoint.Insert("\r\n");
                         }
                     }
                 }

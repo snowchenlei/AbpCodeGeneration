@@ -12,7 +12,7 @@ using @(Model.Namespace).@(Model.DirectoryName).Dto;
 
 namespace @(Model.Namespace).@(Model.DirectoryName).Validators
 {
-    public class CreateUpdate@(Model.ClassName)Validator : AbstractValidator<CreateUpdate@(Model.ClassName)Dto>
+    public class CreateUpdate@(Model.ClassName)Validator : @(Model.AbsoluteNamespace)Validator<CreateUpdate@(Model.ClassName)Dto>
     {
         public CreateUpdate@(Model.ClassName)Validator()
         {
