@@ -66,6 +66,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 ClassName = dto.Name,
                 KeyType = ClassKeyType.Text,
                 LocalName = ClassLocalName.Text,
+                Prefix = NamespacePrefix.Text,
                 DirectoryName = dto.DirName,
                 PropertyInfos = DataList,
                 ValidationType = _setting.ValidationType,
@@ -73,7 +74,8 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 DomainService = _setting.DomainService,
                 AuthorizationService = _setting.AuthorizationService,
                 ExcelImportAndExport = _setting.ExcelImportAndExport,
-                PictureUpload = _setting.PictureUpload
+                PictureUpload = _setting.PictureUpload,
+                IsStandardProject = _setting.IsStandardProject
             });
             MessageBoxResult result = MessageBox.Show("代码生成成功", "提示", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
             if (result == MessageBoxResult.OK)

@@ -11,6 +11,8 @@
             <TextBox x:Name="ClassLocalName" Width="50"/>
             <Label>类主键</Label>
             <TextBox x:Name="ClassKeyType" Width="50"/>
+            <Label>命名空间前缀</Label>
+            <TextBox x:Name="NamespacePrefix" Width="80"/>
         </StackPanel>
         <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" SelectionUnit="CellOrRowHeader" LoadingRow="DataGrid_LoadingRow">
             <DataGrid.Columns>

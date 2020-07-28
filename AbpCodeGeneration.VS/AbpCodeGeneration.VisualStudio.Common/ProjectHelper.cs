@@ -149,7 +149,8 @@ namespace AbpCodeGeneration.VisualStudio.Common
             InitRazorEngine();
             //CompileTemplate();
 
-            ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application");
+            ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix+ ".Application");
+            ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix+ ".Application.Contracts");
 
             //获取当前点击的类所在的项目
             Project topProject = SelectProjectItem.ContainingProject;         
@@ -157,10 +158,16 @@ namespace AbpCodeGeneration.VisualStudio.Common
             //添加项目目录结构
             var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject) 
                 ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
-            
+            var applicationContractsNewFolder = GetDeepProjectItem(applicationContractsProjectItem, ClassAbsolutePathInProject)
+                ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
+
             //添加Dto
-            var applicationDtoFolder = applicationNewFolder.ProjectItems.Item("Dtos") ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
-            CreateDtoFile(model, applicationDtoFolder);
+            var dtoFolder = model.IsStandardProject 
+                ? (applicationContractsNewFolder.ProjectItems.Item("Dtos") 
+                    ?? applicationContractsNewFolder.ProjectItems.AddFolder("Dtos")) 
+                : (applicationNewFolder.ProjectItems.Item("Dtos") 
+                    ?? applicationNewFolder.ProjectItems.AddFolder("Dtos"));
+            CreateDtoFile(model, dtoFolder);
             //设置Autompper映射
             string moduleName = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[0];
             model.ModuleName = moduleName;
@@ -178,21 +185,27 @@ namespace AbpCodeGeneration.VisualStudio.Common
             //权限
             if (model.AuthorizationService)
             {
-                CreatePermission(model);
-            }            
+                CreatePermission(model, applicationContractsProjectItem);
+            }
             //应用服务
             if (model.ApplicationService)
             {
                 CreateSettingFile(model, applicationNewFolder);
-                CreateServiceFile(model, applicationNewFolder);
+                CreateServiceClass(model, applicationNewFolder);
+                if (model.IsStandardProject)
+                {
+                    CreateServiceInterface(model, applicationContractsNewFolder);
+                }
+                else
+                {
+                    CreateServiceInterface(model, applicationNewFolder);
+                }
             }
             //领域服务
             if (model.DomainService)
             {
-                ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);     
-                var coreDomainServiceFolder = currentProjectItem.ProjectItems.Item("DomainService")
-                    ?? currentProjectItem.ProjectItems.AddFolder("DomainService");
-                CreateDomainServiceFile(model, coreDomainServiceFolder);
+                ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);
+                CreateDomainServiceFile(model, currentProjectItem);
             }            
         }
 
@@ -480,13 +493,10 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// </summary>
         /// <param name="applicationStr">根命名空间</param>
         /// <param name="name">类名</param>
-        /// <param name="dtoFolder">父文件夹</param>
+        /// <param name="project">父文件夹</param>
         /// <param name="dirName">类所在文件夹目录</param>
-        private void CreateServiceFile(CreateFileInput model, ProjectItem dtoFolder)
+        private void CreateServiceClass(CreateFileInput model, ProjectItem project)
         {
-            string content_IService = RazorEngine.Engine.Razor.RunCompile("ApplicationService.IServiceTemplate", typeof(CreateFileInput), model);
-            string fileName_IService = $"I{model.ClassName}AppService.cs";
-            AddFileToProjectItem(dtoFolder, content_IService, fileName_IService);
             string content_Service = String.Empty;
 
             if (model.AuthorizationService)
@@ -498,8 +508,19 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 content_Service = RazorEngine.Engine.Razor.RunCompile("ApplicationService.ServiceTemplate", typeof(CreateFileInput), model);
             }
             string fileName_Service = $"{model.ClassName}AppService.cs";
-            AddFileToProjectItem(dtoFolder, content_Service, fileName_Service);
-        } 
+            AddFileToProjectItem(project, content_Service, fileName_Service);
+        }
+        /// <summary>
+        /// 创建Service接口
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="project"></param>
+        private void CreateServiceInterface(CreateFileInput model, ProjectItem project)
+        {
+            string content_IService = RazorEngine.Engine.Razor.RunCompile("ApplicationService.IServiceTemplate", typeof(CreateFileInput), model);
+            string fileName_IService = $"I{model.ClassName}AppService.cs";
+            AddFileToProjectItem(project, content_IService, fileName_IService);
+        }
 
         /// <summary>
         /// 创建自定义Automapper映射
@@ -555,10 +576,8 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// </summary>
         /// <param name="topProject"></param>
         /// <param name="model"></param>
-        private void CreatePermission(CreateFileInput model)
+        private void CreatePermission(CreateFileInput model, ProjectItem applicationContractsProjectItem)
         {
-            ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application.Contracts");
-
             string permissionPrefix = ApplicationRootNamespace.Split('.').Last();
             ProjectItem permissionStatement = applicationContractsProjectItem.SubProject.ProjectItems.Item("Permissions").ProjectItems.Item(permissionPrefix + "Permissions.cs");
             ProjectItem permissionDefinition = applicationContractsProjectItem.SubProject.ProjectItems.Item("Permissions").ProjectItems.Item(permissionPrefix + "PermissionDefinitionProvider.cs");

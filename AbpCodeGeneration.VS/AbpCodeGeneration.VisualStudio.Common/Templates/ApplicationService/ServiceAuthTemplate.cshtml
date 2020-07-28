@@ -7,27 +7,29 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using @Model.Namespace.@(Model.DirectoryName).Dto;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
+using @(Model.Namespace).@(Model.DirectoryName).Authorization
 
 namespace @Model.Namespace.@Model.DirectoryName
 {
     /// <summary>
     /// @(Model.LocalName)管理
     /// </summary>
-    <text>[Authorize(PermissionNames.Pages_Administration_@(Model.ClassName)s)]</text>
+    [Authorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s)]
     public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppService, I@(Model.ClassName)AppService
     {
-        private readonly IRepository<@(Model.ClassName), @Model.KeyType> _repository;
+        private readonly IRepository<@(Model.ClassName), @Model.KeyType> _@(Model.CamelClassName)Repository;
 
         /// <summary>
         /// .ctor
         /// </summary>
         /// <param name="repository"></param>
-        public @(Model.ClassName)AppService(IRepository<@(Model.ClassName), @Model.KeyType> repository)
+        public @(Model.ClassName)AppService(IRepository<@(Model.ClassName), @Model.KeyType> @(Model.CamelClassName)Repository)
         {
-            _repository = repository;
+            _@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
         }
             
         /// <summary>
@@ -37,7 +39,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <returns></returns>
         public async Task<@(Model.ClassName)DetailDto> GetAsync(@(Model.KeyType) id)
         {
-            @(Model.ClassName) entity = await _repository.GetAsync(id);
+            @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
 
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)DetailDto>(entity);
         }
@@ -51,7 +53,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         {
             await NormalizeMaxResultCountAsync(input);
 
-            var tempQuery = _repository;
+            var tempQuery = _@(Model.CamelClassName)Repository;
 
             long totalCount = await tempQuery.GetCountAsync();
             
@@ -73,7 +75,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <returns></returns>
         public async Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id)
         {
-            @(Model.ClassName) entity = await _repository.GetAsync(id);
+            @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
 
             return ObjectMapper.Map<@(Model.ClassName), Get@(Model.ClassName)ForEditOutput>(entity);
         }
@@ -83,11 +85,11 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        <text>[Authorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Create)]</text>
+        [Authorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Create)]
         public virtual async Task<@(Model.ClassName)ListDto> CreateAsync(@(Model.ClassName)CreateDto input)
         {
             var entity = ObjectMapper.Map<@(Model.ClassName)CreateDto, @(Model.ClassName)>(input);
-            entity = await _repository.InsertAsync(entity);
+            entity = await _@(Model.CamelClassName)Repository.InsertAsync(entity);
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
 
@@ -97,12 +99,12 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <param name="id">主键</param>
         /// <param name="input"></param>
         /// <returns></returns>
-        <text>[Authorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]</text>
+        [Authorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Edit)]
         public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(@(Model.KeyType) id, @(Model.ClassName)UpdateDto input)
         {
-            @(Model.ClassName) entity = await _repository.GetAsync(id);
+            @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
             entity = ObjectMapper.Map(input, entity);
-            entity = await _repository.UpdateAsync(entity);
+            entity = await _@(Model.CamelClassName)Repository.UpdateAsync(entity);
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
 
@@ -111,19 +113,19 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        <text>[Authorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_Delete)]</text>
+        [Authorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_Delete)]
         public async Task DeleteAsync(@Model.KeyType id)
         {
-            await _repository.DeleteAsync(s => s.Id == id);
+            await _@(Model.CamelClassName)Repository.DeleteAsync(s => s.Id == id);
         }
 
         @*/// <summary>
         /// 批量删除@(Model.LocalName)
         /// </summary>
-        <text>[AbpAuthorize(PermissionNames.Pages_Administration_@(Model.ClassName)s_BatchDelete)]</text>
+        [AbpAuthorize(@(Model.ClassName)PermissionNames.Pages_Administration_@(Model.ClassName)s_BatchDelete)]
         public async Task BatchDelete@(Model.ClassName)s(List<@Model.KeyType> input)
         {
-            await _repository.DeleteAsync(a => input.Contains(a.Id));
+            await _@(Model.CamelClassName)Repository.DeleteAsync(a => input.Contains(a.Id));
         }*@
 
         /// <summary>

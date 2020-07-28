@@ -40,6 +40,11 @@
                 <ComboBox x:Name="Validations" DisplayMemberPath="Value" SelectedValuePath="Key"
                       Grid.Row="1" Grid.Column="0" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,4">
                 </ComboBox>
+                <StackPanel Grid.Row="2" Grid.Column="0">
+                    <RadioButton x:Name="SimplificationDDD" GroupName="ProjectLayout" IsChecked="True">简化DDD</RadioButton>
+                    <RadioButton x:Name="StandardDDD" GroupName="ProjectLayout">标准DDD</RadioButton>                    
+                </StackPanel>
+                
                 <!--<CheckBox x:Name="Dto" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Checked="Dto_Checked">
                     Dto
                 </CheckBox>-->

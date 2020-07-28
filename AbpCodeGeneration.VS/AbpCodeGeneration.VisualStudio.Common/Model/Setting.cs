@@ -37,5 +37,10 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         /// 图片上传
         /// </summary>
         public bool PictureUpload { get; set; }
+
+        /// <summary>
+        /// 标准项目
+        /// </summary>
+        public bool IsStandardProject { get; set; }
     }
 }

@@ -18,15 +18,15 @@ namespace @Model.Namespace.@Model.DirectoryName
     /// </summary>
     public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppService, I@(Model.ClassName)AppService
     {
-        private readonly IRepository<@(Model.ClassName), @Model.KeyType> _repository;
+        private readonly IRepository<@(Model.ClassName), @Model.KeyType> _@(Model.CamelClassName)Repository;
 
         /// <summary>
         /// .ctor
         /// </summary>
         /// <param name="repository"></param>
-        public @(Model.ClassName)AppService(IRepository<@(Model.ClassName), @Model.KeyType> repository)
+        public @(Model.ClassName)AppService(IRepository<@(Model.ClassName), @Model.KeyType> @(Model.CamelClassName)Repository)
         {
-            _repository = repository;
+            _@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
         }
             
         /// <summary>
@@ -36,7 +36,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <returns></returns>
         public async Task<@(Model.ClassName)DetailDto> GetAsync(@(Model.KeyType) id)
         {
-            @(Model.ClassName) entity = await _repository.GetAsync(id);
+            @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
 
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)DetailDto>(entity);
         }
@@ -50,7 +50,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         {
             await NormalizeMaxResultCountAsync(input);
 
-            var tempQuery = _repository;
+            var tempQuery = _@(Model.CamelClassName)Repository;
 
             long totalCount = await tempQuery.GetCountAsync();
             
@@ -72,7 +72,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <returns></returns>
         public async Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id)
         {
-            @(Model.ClassName) entity = await _repository.GetAsync(id);
+            @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
 
             return ObjectMapper.Map<@(Model.ClassName), Get@(Model.ClassName)ForEditOutput>(entity);
         }
@@ -85,7 +85,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         public virtual async Task<@(Model.ClassName)ListDto> CreateAsync(@(Model.ClassName)CreateDto input)
         {
             var entity = ObjectMapper.Map<@(Model.ClassName)CreateDto, @(Model.ClassName)>(input);
-            entity = await _repository.InsertAsync(entity);
+            entity = await _@(Model.CamelClassName)Repository.InsertAsync(entity);
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
 
@@ -97,9 +97,9 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <returns></returns>
         public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(@(Model.KeyType) id, @(Model.ClassName)UpdateDto input)
         {
-            @(Model.ClassName) entity = await _repository.GetAsync(id);
+            @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
             entity = ObjectMapper.Map(input, entity);
-            entity = await _repository.UpdateAsync(entity);
+            entity = await _@(Model.CamelClassName)Repository.UpdateAsync(entity);
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
 
@@ -110,7 +110,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <returns></returns>
         public async Task DeleteAsync(@Model.KeyType id)
         {
-            await _repository.DeleteAsync(s => s.Id == id);
+            await _@(Model.CamelClassName)Repository.DeleteAsync(s => s.Id == id);
         }
 
         @*/// <summary>
@@ -119,7 +119,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <returns></returns>
         public async Task BatchDelete@(Model.ClassName)s(List<@Model.KeyType> input)
         {
-            await _repository.DeleteAsync(a => input.Contains(a.Id));
+            await _@(Model.CamelClassName)Repository.DeleteAsync(a => input.Contains(a.Id));
         }*@
 
         /// <summary>

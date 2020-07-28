@@ -46,10 +46,6 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         /// </summary>
         public bool AuthorizationService { get; set; }
         /// <summary>
-        /// TODO:授权模式——追加、新建
-        /// </summary>
-        public bool IsAppend { get; set; } = true;
-        /// <summary>
         /// Excel导入导出
         /// </summary>
         public bool ExcelImportAndExport { get; set; }
@@ -58,6 +54,16 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         /// </summary>
         public bool PictureUpload { get; set; }
 
+        /// <summary>
+        /// 命名空间前缀
+        /// </summary>
+        public string Prefix { get; set; }
+
+
+        /// <summary>
+        /// 标准项目
+        /// </summary>
+        public bool IsStandardProject { get; set; }
 
         public string KeyType { get; set; }
         public ICollection<DtoPropertyInfo> PropertyInfos { get; set; }

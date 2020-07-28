@@ -1,21 +1,22 @@
 ﻿@using RazorEngine
 @using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
-using Abp.Domain.Repositories;
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Domain.Services;
 
-namespace @(Model.Namespace).@(Model.DirectoryName).DomainService
+namespace @(Model.Namespace).@(Model.DirectoryName)
 {
-    public class @(Model.ClassName)Manager : @(Model.AbsoluteNamespace)DomainServiceBase, I@(Model.ClassName)Manager
+    public class @(Model.ClassName)Manager : DomainService, I@(Model.ClassName)Manager
     {
         private readonly IRepository<@(Model.ClassName), @(Model.KeyType)> _@(Model.CamelClassName)Repository;
 
 		/// <summary>
-		/// @(Model.ClassName)的构造方法
+		/// .ctor
 		///</summary>
 		public @(Model.ClassName)Manager(
-			IRepository<@(Model.ClassName), @(Model.KeyType)> repository)
+			IRepository<@(Model.ClassName), @(Model.KeyType)> @(Model.CamelClassName)Repository)
 		{
-			_@(Model.CamelClassName)Repository =  repository;
+			_@(Model.CamelClassName)Repository =  @(Model.CamelClassName)Repository;
 		}
         // TODO:编写领域业务代码
     }

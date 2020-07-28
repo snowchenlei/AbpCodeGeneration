@@ -49,7 +49,8 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 DomainService = DomainService.IsChecked ?? false,
                 AuthorizationService = AuthorizationService.IsChecked ?? false,
                 ExcelImportAndExport = ExcelImportAndExport.IsChecked ?? false,
-                PictureUpload = PictureUpload.IsChecked ?? false
+                PictureUpload = PictureUpload.IsChecked ?? false,
+                IsStandardProject = (StandardDDD.IsChecked ?? false) ? true : false
             };
             this.Content = new MainWindow(_dte, setting);
         }
