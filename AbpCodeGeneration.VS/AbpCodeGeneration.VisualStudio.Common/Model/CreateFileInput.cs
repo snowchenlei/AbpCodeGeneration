@@ -59,7 +59,10 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         /// </summary>
         public string Prefix { get; set; }
 
-
+        /// <summary>
+        /// 项目名称
+        /// </summary>
+        public string ProjectName { get; set; }
         /// <summary>
         /// 标准项目
         /// </summary>

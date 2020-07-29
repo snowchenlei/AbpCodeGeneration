@@ -149,36 +149,24 @@ namespace AbpCodeGeneration.VisualStudio.Common
             InitRazorEngine();
             //CompileTemplate();
 
-            ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix+ ".Application");
-            ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix+ ".Application.Contracts");
-
-            //获取当前点击的类所在的项目
-            Project topProject = SelectProjectItem.ContainingProject;         
-
-            //添加项目目录结构
-            var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject) 
-                ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
-            var applicationContractsNewFolder = GetDeepProjectItem(applicationContractsProjectItem, ClassAbsolutePathInProject)
-                ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
-
-            //添加Dto
-            var dtoFolder = model.IsStandardProject 
-                ? (applicationContractsNewFolder.ProjectItems.Item("Dtos") 
-                    ?? applicationContractsNewFolder.ProjectItems.AddFolder("Dtos")) 
-                : (applicationNewFolder.ProjectItems.Item("Dtos") 
-                    ?? applicationNewFolder.ProjectItems.AddFolder("Dtos"));
-            CreateDtoFile(model, dtoFolder);
-            //设置Autompper映射
+            ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application");
+            ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application.Contracts");
             string moduleName = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[0];
             model.ModuleName = moduleName;
-            ProjectItem moduleItem = applicationProjectItem.SubProject.ProjectItems.Item(moduleName);
-            ProjectItem mapperItem = moduleItem.ProjectItems.Item(moduleName+ "ApplicationAutoMapperProfile.cs");
-            if(mapperItem == null)
+            //获取当前点击的类所在的项目
+            Project topProject = SelectProjectItem.ContainingProject;
+
+            //添加项目目录结构
+            var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject)
+                ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
+            ProjectItem applicationContractsNewFolder = null;
+            ProjectItem dtoFolder;
+            if (model.IsStandardProject)
             {
-                CreateMapperFile(model, moduleItem);
+                applicationContractsNewFolder = GetDeepProjectItem(applicationContractsProjectItem, ClassAbsolutePathInProject)
+                    ?? applicationContractsProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);                
             }
-            mapperItem = moduleItem.ProjectItems.Item(moduleName + "ApplicationAutoMapperProfile.cs");
-            EditMapper(mapperItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
+
             // TODO:参数验证
             //var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
             //CreateValidatorFile(model, applicationValidatorFolder);
@@ -195,18 +183,44 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 if (model.IsStandardProject)
                 {
                     CreateServiceInterface(model, applicationContractsNewFolder);
+                    dtoFolder = applicationContractsNewFolder.ProjectItems.Item("Dtos")
+                        ?? applicationContractsNewFolder.ProjectItems.AddFolder("Dtos");
                 }
                 else
                 {
                     CreateServiceInterface(model, applicationNewFolder);
+                    dtoFolder = applicationNewFolder.ProjectItems.Item("Dtos")
+                        ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
                 }
+                CreateDtos(model, applicationProjectItem, dtoFolder);
             }
             //领域服务
             if (model.DomainService)
             {
                 ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);
                 CreateDomainServiceFile(model, currentProjectItem);
-            }            
+            }
+        }
+
+        /// <summary>
+        /// 创建Dto
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="applicationProjectItem"></param>
+        /// <param name="dtoFolder"></param>
+        private void CreateDtos(CreateFileInput model, ProjectItem applicationProjectItem, ProjectItem dtoFolder)
+        {
+            CreateDtoFile(model, dtoFolder);
+            //设置Autompper映射
+            
+            ProjectItem moduleItem = applicationProjectItem.SubProject.ProjectItems.Item(model.ModuleName);
+            ProjectItem mapperItem = moduleItem.ProjectItems.Item(model.ModuleName + "ApplicationAutoMapperProfile.cs");
+            if (mapperItem == null)
+            {
+                CreateMapperFile(model, moduleItem);
+            }
+            mapperItem = moduleItem.ProjectItems.Item(model.ModuleName + "ApplicationAutoMapperProfile.cs");
+            EditMapper(mapperItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
         }
 
         /// <summary>
@@ -441,6 +455,10 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_List = $"{model.ClassName}ListDto.cs";
             AddFileToProjectItem(dtoFolder, content_List, fileName_List);
 
+            string content_Detail = RazorEngine.Engine.Razor.RunCompile("Dto.DetailDtoTemplate", typeof(DtoFileModel), model);
+            string fileName_Detail = $"{model.ClassName}DetailDto.cs";
+            AddFileToProjectItem(dtoFolder, content_Detail, fileName_Detail);
+
             string content_CreateAndUpdate = RazorEngine.Engine.Razor.RunCompile("Dto.CreateOrUpdateDtoBaseTemplate", typeof(DtoFileModel), model);
             string fileName_CreateAndUpdate = $"{model.ClassName}CreateOrUpdateDtoBase.cs";
             AddFileToProjectItem(dtoFolder, content_CreateAndUpdate, fileName_CreateAndUpdate);
@@ -578,9 +596,8 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="model"></param>
         private void CreatePermission(CreateFileInput model, ProjectItem applicationContractsProjectItem)
         {
-            string permissionPrefix = ApplicationRootNamespace.Split('.').Last();
-            ProjectItem permissionStatement = applicationContractsProjectItem.SubProject.ProjectItems.Item("Permissions").ProjectItems.Item(permissionPrefix + "Permissions.cs");
-            ProjectItem permissionDefinition = applicationContractsProjectItem.SubProject.ProjectItems.Item("Permissions").ProjectItems.Item(permissionPrefix + "PermissionDefinitionProvider.cs");
+            ProjectItem permissionStatement = applicationContractsProjectItem.SubProject.ProjectItems.Item("Permissions").ProjectItems.Item(model.AbsoluteNamespace + "Permissions.cs");
+            ProjectItem permissionDefinition = applicationContractsProjectItem.SubProject.ProjectItems.Item("Permissions").ProjectItems.Item(model.AbsoluteNamespace + "PermissionDefinitionProvider.cs");
 
             if (permissionStatement != null)
             {
@@ -605,10 +622,10 @@ namespace AbpCodeGeneration.VisualStudio.Common
                         {
                             EditPoint authorizationPoint = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                             authorizationPoint.Insert("\r\n");
-                            authorizationPoint.Insert($"var {model.CamelClassName}s = {permissionPrefix}Group.AddPermission({permissionPrefix}Permissions.{model.ClassName}s.Default, L(\"Permission:{model.ClassName}s\"));\r\n");
-                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({permissionPrefix}Permissions.{model.ClassName}s.Create, L(\"Permission:Create\"));\r\n");
-                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({permissionPrefix}Permissions.{model.ClassName}s.Edit, L(\"Permission:Edit\"));\r\n");
-                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({permissionPrefix}Permissions.{model.ClassName}s.Delete, L(\"Permission:Delete\"));\r\n");
+                            authorizationPoint.Insert($"var {model.CamelClassName}s = {model.AbsoluteNamespace}Group.AddPermission({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Default, L(\"Permission:{model.ClassName}s\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Create, L(\"Permission:Create\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Edit, L(\"Permission:Edit\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Delete, L(\"Permission:Delete\"));\r\n");
                             authorizationPoint.Insert("\r\n");
                         }
                     }
