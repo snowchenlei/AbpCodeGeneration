@@ -151,6 +151,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
 
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application");
             ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application.Contracts");
+            ProjectItem applicationContractsSharedProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application.Contracts.Shared");
             string moduleName = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[0];
             model.ModuleName = moduleName;
             //获取当前点击的类所在的项目
@@ -173,7 +174,14 @@ namespace AbpCodeGeneration.VisualStudio.Common
             //权限
             if (model.AuthorizationService)
             {
-                CreatePermission(model, applicationContractsProjectItem);
+                if (String.IsNullOrEmpty(model.Prefix))
+                {
+                    CreatePermission(model, applicationContractsProjectItem);
+                }
+                else
+                {
+                    CreatePermission(model, applicationContractsSharedProjectItem);                    
+                }
             }
             //应用服务
             if (model.ApplicationService)
@@ -233,7 +241,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             RazorEngine.Engine.Razor.Compile("ListDtoTemplate");
             RazorEngine.Engine.Razor.Compile("CreateOrUpdateDtoBaseTemplate");
             RazorEngine.Engine.Razor.Compile("GetForEditOutputDtoTemplate");
-            RazorEngine.Engine.Razor.Compile("GetsInputTemplate");
+            RazorEngine.Engine.Razor.Compile("Dto.GetsInputTemplate");
 
             RazorEngine.Engine.Razor.Compile("IServiceTemplate");
             RazorEngine.Engine.Razor.Compile("ServiceTemplate");
@@ -408,22 +416,6 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 
         #region 创建文件
         /// <summary>
-        /// 创建授权文件
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="coreFolder"></param>
-        private void CreateAuthorizationFile(CreateFileInput model, ProjectItem coreFolder)
-        {
-            string contentAuthorizationProvider = RazorEngine.Engine.Razor.RunCompile("AppAuthorizationProviderTemplate", typeof(CreateFileInput), model);
-            string fileNameAuthorizationProvider = model.ClassName + "AuthorizationProvider.cs";
-            AddFileToProjectItem(coreFolder, contentAuthorizationProvider, fileNameAuthorizationProvider);
-
-            string contentPermissionName = RazorEngine.Engine.Razor.RunCompile("AppPermissionName", typeof(CreateFileInput), model);
-            string fileNamePermissionName = model.ClassName + "PermissionName.cs";
-            AddFileToProjectItem(coreFolder, contentPermissionName, fileNamePermissionName);
-        }
-
-        /// <summary>
         /// 创建领域服务文件
         /// </summary>
         /// <param name="model"></param>
@@ -473,9 +465,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
 
             string content_GetForUpdate = RazorEngine.Engine.Razor.RunCompile("Dto.GetForEditOutputDtoTemplate", typeof(DtoFileModel), model);
             string fileName_GetForUpdate = $"Get{model.ClassName}ForEditOutput.cs";
-            AddFileToProjectItem(dtoFolder, content_GetForUpdate, fileName_GetForUpdate);
-
-            
+            AddFileToProjectItem(dtoFolder, content_GetForUpdate, fileName_GetForUpdate);            
         }
 
         /// <summary>
@@ -622,7 +612,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                         {
                             EditPoint authorizationPoint = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                             authorizationPoint.Insert("\r\n");
-                            authorizationPoint.Insert($"var {model.CamelClassName}s = {model.AbsoluteNamespace}Group.AddPermission({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Default, L(\"Permission:{model.ClassName}s\"));\r\n");
+                            authorizationPoint.Insert($"var {model.CamelClassName}s = {model.CamelAbsoluteNamespace}Group.AddPermission({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Default, L(\"Permission:{model.ClassName}s\"));\r\n");
                             authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Create, L(\"Permission:Create\"));\r\n");
                             authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Edit, L(\"Permission:Edit\"));\r\n");
                             authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Delete, L(\"Permission:Delete\"));\r\n");

@@ -15,6 +15,14 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
             //    return Namespace.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Last();
             //}
         }
+        public string CamelAbsoluteNamespace
+        {
+            get
+            {
+                return AbsoluteNamespace.Substring(0, 1).ToLower() + AbsoluteNamespace.Substring(1);
+            }
+        }
+
         public string Namespace { get; set; }
         public string ClassName { get; set; }
 
