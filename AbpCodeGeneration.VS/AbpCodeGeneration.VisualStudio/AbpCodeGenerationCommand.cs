@@ -3,6 +3,7 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using AbpCodeGeneration.VisualStudio.Common;
 using AbpCodeGeneration.VisualStudio.Services;
 using AbpCodeGeneration.VisualStudio.Shared;
 using AbpCodeGeneration.VisualStudio.UI;
@@ -80,6 +81,8 @@ namespace AbpCodeGeneration.VisualStudio
         {
             // Switch to the main thread - the call to AddCommand in AbpCodeGenerationCommand's constructor requires
             // the UI thread.
+            System.Threading.Thread thread = new System.Threading.Thread(ProjectHelper.InitRazor);
+            thread.Start();
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
             _dte = dte;
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;

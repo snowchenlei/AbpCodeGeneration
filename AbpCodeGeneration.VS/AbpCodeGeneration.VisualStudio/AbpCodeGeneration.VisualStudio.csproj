@@ -95,6 +95,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AbpCodeGeneration.VisualStudio.Common\AbpCodeGeneration.VisualStudio.Common.csproj">
+      <Project>{6f613b3d-3320-4de8-809b-c636875686e8}</Project>
+      <Name>AbpCodeGeneration.VisualStudio.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AbpCodeGeneration.VisualStudio.UI\AbpCodeGeneration.VisualStudio.UI.csproj">
       <Project>{979A0C89-22D3-4247-9DD0-2915EC7357CA}</Project>
       <Name>AbpCodeGeneration.VisualStudio.UI</Name>

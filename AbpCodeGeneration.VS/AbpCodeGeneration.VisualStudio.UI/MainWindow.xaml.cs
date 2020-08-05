@@ -30,7 +30,6 @@ namespace AbpCodeGeneration.VisualStudio.UI
         private ObservableCollection<DtoPropertyInfo> DataList = new ObservableCollection<DtoPropertyInfo>();
         private readonly Setting _setting;
         private readonly ProjectHelper projectHelper;
-
         public MainWindow(DTE2 _dte, Setting setting)
         {
             InitializeComponent();

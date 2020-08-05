@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,6 +30,8 @@ namespace AbpCodeGeneration.VisualStudio.UI
         private readonly DTE2 _dte;
         public Welcome(DTE2 dte)
         {
+            //System.Threading.Thread thread = new System.Threading.Thread(ProjectHelper.InitRazor);
+            //thread.Start();
             _dte = dte;
             InitializeComponent();
             ValidationTypes = EnumHelper.EnumToDictionary<ValidationType>(-1, "请选择验证类型");
