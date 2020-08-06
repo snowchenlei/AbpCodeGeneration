@@ -55,14 +55,18 @@ namespace AbpCodeGeneration.VisualStudio.Common
             CodeClass = GetClass(SelectProjectItem.FileCodeModel.CodeElements);
         }
 
+        private static bool Cached => ThreadCount == 3;
+        private static int ThreadCount = 0;
         public static void InitRazor()
         {
             InitRazorEngine();
             // TODO:缓存完成提示
-            System.Threading.Thread dtoSThread = new System.Threading.Thread(CompileDtoTemplate);
-            System.Threading.Thread serviceThread = new System.Threading.Thread(CompileServiceTemplate);
-            dtoSThread.Start();
-            serviceThread.Start();
+            System.Threading.Thread thread1 = new System.Threading.Thread(Compile1Template);
+            System.Threading.Thread thread2 = new System.Threading.Thread(Compile2Template);
+                System.Threading.Thread thread3 = new System.Threading.Thread(Compile3Template);
+            thread1.Start();
+            thread2.Start();
+            thread3.Start();
         }
         /// <summary>
         /// 获取DtoModel
@@ -158,7 +162,10 @@ namespace AbpCodeGeneration.VisualStudio.Common
             // TODO:区分Contracts
             //InitRazorEngine();
             //CompileTemplate();
+            while(!Cached)
+            {
 
+            }
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application");
             ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application.Contracts");
             ProjectItem applicationContractsSharedProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application.Contracts.Shared");
@@ -244,27 +251,32 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <summary>
         /// 缓存模板
         /// </summary>
-        private static void CompileDtoTemplate()
+        private static void Compile1Template()
         {            
             CacheTemplate("Dto.GetsInputTemplate");
             CacheTemplate("Dto.ListDtoTemplate");
             CacheTemplate("Dto.DetailDtoTemplate");
             CacheTemplate("Dto.GetForEditOutputDtoTemplate");
             CacheTemplate("Dto.CreateDtoTemplate");
-            CacheTemplate("Dto.UpdateDtoTemplate");
-            CacheTemplate("Dto.CreateOrUpdateDtoBaseTemplate");
-            CacheTemplate("MapperTemplate");            
+            ThreadCount++;
         }
-        private static void CompileServiceTemplate()
+        private static void Compile2Template()
         {
             CacheTemplate("ApplicationService.SettingsTemplate");
             CacheTemplate("ApplicationService.SettingDefinitionProviderTemplate");
             CacheTemplate("ApplicationService.ServiceAuthTemplate");
             CacheTemplate("ApplicationService.ServiceTemplate");
             CacheTemplate("ApplicationService.IServiceTemplate");
-
+            ThreadCount++;
+        }
+        private static void Compile3Template()
+        {
+            CacheTemplate("Dto.UpdateDtoTemplate");
+            CacheTemplate("Dto.CreateOrUpdateDtoBaseTemplate");
+            CacheTemplate("MapperTemplate");
             CacheTemplate("DomainService.IDomainServiceTemplate");
             CacheTemplate("DomainService.DomainServiceTemplate");
+            ThreadCount++;
         }
         /// <summary>
         /// 缓存模板
