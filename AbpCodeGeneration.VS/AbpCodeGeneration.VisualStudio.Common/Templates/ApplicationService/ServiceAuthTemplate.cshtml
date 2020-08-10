@@ -26,7 +26,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// .ctor
         /// </summary>
-        /// <param name="repository"></param>
+        /// <param name="@(Model.CamelClassName)Repository"></param>
         public @(Model.ClassName)AppService(IRepository<@(Model.ClassName), @Model.KeyType> @(Model.CamelClassName)Repository)
         {
             _@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
@@ -37,7 +37,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        public async Task<@(Model.ClassName)DetailDto> GetAsync(@(Model.KeyType) id)
+        public virtual async Task<@(Model.ClassName)DetailDto> GetAsync(@(Model.KeyType) id)
         {
             @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
 
@@ -49,7 +49,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="input">查询条件</param>
         /// <returns>分页结果</returns>
-        public async Task<PagedResultDto<@(Model.ClassName)ListDto>> GetListAsync(Get@(Model.ClassName)sInput input)
+        public virtual async Task<PagedResultDto<@(Model.ClassName)ListDto>> GetListAsync(Get@(Model.ClassName)sInput input)
         {
             await NormalizeMaxResultCountAsync(input);
 
@@ -73,7 +73,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        public async Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id)
+        public virtual async Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id)
         {
             @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
 
@@ -114,7 +114,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <param name="id">主键</param>
         /// <returns></returns>
         [Authorize(@(Model.AbsoluteNamespace)Permissions.@(Model.ClassName)s.Delete)]
-        public async Task DeleteAsync(@Model.KeyType id)
+        public virtual async Task DeleteAsync(@Model.KeyType id)
         {
             await _@(Model.CamelClassName)Repository.DeleteAsync(s => s.Id == id);
         }
