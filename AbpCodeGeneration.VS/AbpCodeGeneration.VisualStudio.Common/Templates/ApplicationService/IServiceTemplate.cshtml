@@ -13,17 +13,17 @@ namespace @Model.Namespace.@Model.DirectoryName
     public interface I@(Model.ClassName)AppService: IApplicationService
     {
         /// <summary>
-        /// 单个
+        /// 详情
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
         Task<@(Model.ClassName)DetailDto> GetAsync(@(Model.KeyType) id);
 
         /// <summary>
-        /// 分页
+        /// 列表
         /// </summary>
         /// <param name="input">查询条件</param>
-        /// <returns></returns>
+        /// <returns>结果</returns>
         Task<PagedResultDto<@(Model.ClassName)ListDto>> GetListAsync(Get@(Model.ClassName)sInput input);
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id);
+        Task<Get@(Model.ClassName)ForEditOutput> GetEditorAsync(@(Model.KeyType) id);
 
         /// <summary>
         /// 创建

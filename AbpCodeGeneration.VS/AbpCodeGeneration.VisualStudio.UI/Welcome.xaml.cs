@@ -50,6 +50,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 ValidationType = (int)Validations.SelectedValue,
                 ApplicationService = ApplicationService.IsChecked ?? false,
                 DomainService = DomainService.IsChecked ?? false,
+                Controller = Controller.IsChecked ?? false,
                 AuthorizationService = AuthorizationService.IsChecked ?? false,
                 ExcelImportAndExport = ExcelImportAndExport.IsChecked ?? false,
                 PictureUpload = PictureUpload.IsChecked ?? false,

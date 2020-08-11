@@ -33,7 +33,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
             
         /// <summary>
-        /// 获取
+        /// 详情
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
@@ -45,10 +45,10 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
 
         /// <summary>
-        /// 分页
+        /// 列表
         /// </summary>
         /// <param name="input">查询条件</param>
-        /// <returns>分页结果</returns>
+        /// <returns>结果</returns>
         public virtual async Task<PagedResultDto<@(Model.ClassName)ListDto>> GetListAsync(Get@(Model.ClassName)sInput input)
         {
             await NormalizeMaxResultCountAsync(input);
@@ -73,7 +73,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        public virtual async Task<Get@(Model.ClassName)ForEditOutput> GetEditAsync(@(Model.KeyType) id)
+        public virtual async Task<Get@(Model.ClassName)ForEditOutput> GetEditorAsync(@(Model.KeyType) id)
         {
             @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
 
@@ -109,7 +109,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         }
 
         /// <summary>
-        /// 删除@(Model.LocalName)
+        /// 删除
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>

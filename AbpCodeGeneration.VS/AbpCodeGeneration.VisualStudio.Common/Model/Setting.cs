@@ -30,6 +30,10 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         /// </summary>
         public bool AuthorizationService { get; set; }
         /// <summary>
+        /// 控制器
+        /// </summary>
+        public bool Controller { get; set; }
+        /// <summary>
         /// Excel导入导出
         /// </summary>
         public bool ExcelImportAndExport { get; set; }

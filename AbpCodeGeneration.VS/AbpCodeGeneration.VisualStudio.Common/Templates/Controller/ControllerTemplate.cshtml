@@ -1,0 +1,88 @@
+﻿@inherits RazorEngine.Templating.TemplateBase<CodeBuilder.Models.TemplateModels.PermissionsFileModel>
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Volo.Abp.Application.Dtos;
+namespace @(Model.Namespace).Controllers
+{
+    /// <summary>
+    /// @(Model.LocalName)
+    /// </summary>
+    public static class @(Model.ClassName)Controller : @(AbsoluteNamespace)Controller, I@(Model.ClassName)AppService
+    {
+        private readonly I@(Model.ClassName)AppService _@(Model.CamelClassName)AppService;
+
+        public @(Model.ClassName)Controller(IQualificationAppService @(Model.CamelClassName)AppService)
+        {
+            _@(Model.CamelClassName)AppService = @(Model.CamelClassName)AppService;
+        }
+
+        /// <summary>
+        /// 详情
+        /// </summary>
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{id}")]
+        public virtual async Task<QualificationDetailDto> GetAsync(int id)
+        {
+            return await _@(Model.CamelClassName)AppService.GetAsync(id);
+        }
+
+        /// <summary>
+        /// 列表
+        /// </summary>
+        /// <param name="input">查询条件</param>
+        /// <returns>结果</returns>
+        [HttpGet]
+        public virtual async Task<PagedResultDto<QualificationListDto>> GetListAsync(Get@(Model.ClassName)sInput input)
+        {
+            return await _@(Model.CamelClassName)AppService.GetListAsync(input);
+        }
+
+        /// <summary>
+        /// 获取修改
+        /// </summary>
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{id}/editor")]
+        public virtual async Task<GetQualificationForEditOutput> GetEditorAsync(int id)
+        {
+            return await _@(Model.CamelClassName)AppService.GetEditorAsync(id);
+        }
+
+        /// <summary>
+        /// 创建
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public virtual async Task<QualificationListDto> CreateAsync(@(Model.ClassName)CreateDto input)
+        {
+            return await _@(Model.CamelClassName)AppService.CreateAsync(input);
+        }
+
+        /// <summary>
+        /// 编辑
+        /// </summary>
+        /// <param name="id">主键</param>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public virtual async Task<QualificationListDto> UpdateAsync(int id, @(Model.ClassName)UpdateDto input)
+        {
+            return await _@(Model.CamelClassName)AppService.UpdateAsync(id, input);
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        [HttpDelete]
+        public virtual async Task DeleteAsync(int id)
+        {
+            await _@(Model.CamelClassName)AppService.DeleteAsync(id);
+        }
+    }
+}

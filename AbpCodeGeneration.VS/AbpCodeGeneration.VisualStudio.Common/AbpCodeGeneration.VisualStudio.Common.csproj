@@ -160,6 +160,7 @@
     <EmbeddedResource Include="Templates\Dto\UpdateDtoTemplate.cshtml" />
     <EmbeddedResource Include="Templates\ApplicationService\ServiceAuthTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Dto\DetailDtoTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Controller\ControllerTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0-rc2\tools\analyzers\C#\Microsoft.CodeAnalysis.Analyzers.dll" />

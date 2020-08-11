@@ -22,6 +22,7 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="130"/>
@@ -57,6 +58,9 @@
                 </CheckBox>
                 <CheckBox x:Name="AuthorizationService" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
                     权限服务
+                </CheckBox>
+                <CheckBox x:Name="Controller" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
+                    控制器
                 </CheckBox>
 
                 <CheckBox x:Name="ExcelImportAndExport" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,8,0,8">

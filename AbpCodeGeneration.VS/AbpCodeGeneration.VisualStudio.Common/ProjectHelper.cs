@@ -7,9 +7,11 @@ using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Engine = RazorEngine.Engine;
 
 namespace AbpCodeGeneration.VisualStudio.Common
@@ -55,18 +57,31 @@ namespace AbpCodeGeneration.VisualStudio.Common
             CodeClass = GetClass(SelectProjectItem.FileCodeModel.CodeElements);
         }
 
-        private static bool Cached => ThreadCount == 3;
+        private static bool Cached { get; set; }
         private static int ThreadCount = 0;
         public static void InitRazor()
         {
             InitRazorEngine();
             // TODO:缓存完成提示
-            System.Threading.Thread thread1 = new System.Threading.Thread(Compile1Template);
-            System.Threading.Thread thread2 = new System.Threading.Thread(Compile2Template);
-                System.Threading.Thread thread3 = new System.Threading.Thread(Compile3Template);
-            thread1.Start();
-            thread2.Start();
-            thread3.Start();
+            string[] names = new string[]
+            {
+                "Dto.GetsInputTemplate","Dto.ListDtoTemplate","Dto.DetailDtoTemplate","Dto.GetForEditOutputDtoTemplate",
+                "Dto.CreateDtoTemplate","ApplicationService.SettingsTemplate","ApplicationService.SettingDefinitionProviderTemplate",
+                "ApplicationService.ServiceAuthTemplate","ApplicationService.ServiceTemplate","ApplicationService.IServiceTemplate",
+                "Dto.UpdateDtoTemplate","Dto.CreateOrUpdateDtoBaseTemplate","MapperTemplate","DomainService.IDomainServiceTemplate",
+                "DomainService.DomainServiceTemplate","Controller.ControllerTemplate"
+            };
+            Parallel.ForEach(names, n =>
+            {
+                CacheTemplate(n);
+            });
+            Cached = true;
+            //System.Threading.Thread thread1 = new System.Threading.Thread(Compile1Template);
+            //System.Threading.Thread thread2 = new System.Threading.Thread(Compile2Template);
+            //    System.Threading.Thread thread3 = new System.Threading.Thread(Compile3Template);
+            //thread1.Start();
+            //thread2.Start();
+            //thread3.Start();
         }
         /// <summary>
         /// 获取DtoModel
