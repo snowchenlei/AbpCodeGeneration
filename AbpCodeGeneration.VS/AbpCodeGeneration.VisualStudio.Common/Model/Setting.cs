@@ -10,9 +10,9 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
     public class Setting
     {
         /// <summary>
-        /// 首次使用
+        /// 共享权限
         /// </summary>
-        public bool FirstUse { get; set; }
+        public bool SharedPermission { get; set; }
         /// <summary>
         /// 验证方式
         /// </summary>

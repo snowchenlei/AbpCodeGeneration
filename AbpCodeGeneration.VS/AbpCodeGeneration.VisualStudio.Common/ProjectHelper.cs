@@ -62,14 +62,15 @@ namespace AbpCodeGeneration.VisualStudio.Common
         public static void InitRazor()
         {
             InitRazorEngine();
-            // TODO:缓存完成提示
-            string[] names = new string[]
-            {
-                "Dto.GetsInputTemplate","Dto.ListDtoTemplate","Dto.DetailDtoTemplate","Dto.GetForEditOutputDtoTemplate",
-                "Dto.CreateDtoTemplate","ApplicationService.SettingsTemplate","ApplicationService.SettingDefinitionProviderTemplate",
-                "ApplicationService.ServiceAuthTemplate","ApplicationService.ServiceTemplate","ApplicationService.IServiceTemplate",
-                "Dto.UpdateDtoTemplate","Dto.CreateOrUpdateDtoBaseTemplate","MapperTemplate","DomainService.IDomainServiceTemplate",
-                "DomainService.DomainServiceTemplate","Controller.ControllerTemplate"
+            string[] names = {
+                "Dto.GetsInputTemplate", "Dto.ListDtoTemplate", "Dto.DetailDtoTemplate",
+                "Dto.GetForEditOutputDtoTemplate", "Dto.CreateDtoTemplate",
+                "ApplicationService.SettingsTemplate", "Controller.ControllerTemplate",
+                "ApplicationService.SettingDefinitionProviderTemplate", "MapperTemplate",
+                "ApplicationService.ServiceAuthTemplate", "ApplicationService.ServiceTemplate",
+                "ApplicationService.IServiceTemplate", "Dto.CreateOrUpdateDtoBaseTemplate",
+                "DomainService.IDomainServiceTemplate", "DomainService.DomainServiceTemplate",
+                "Dto.UpdateDtoTemplate"
             };
             Parallel.ForEach(names, n =>
             {
@@ -182,6 +183,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
 
             }
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application");
+            ProjectItem apiProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".HttpApi");
             ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application.Contracts");
             ProjectItem applicationContractsSharedProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application.Contracts.Shared");
             string moduleName = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[0];
@@ -194,7 +196,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
             ProjectItem applicationContractsNewFolder = null;
             ProjectItem dtoFolder;
-            if (model.IsStandardProject)
+            if (model.Setting.IsStandardProject)
             {
                 applicationContractsNewFolder = GetDeepProjectItem(applicationContractsProjectItem, ClassAbsolutePathInProject)
                     ?? applicationContractsProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);                
@@ -204,23 +206,24 @@ namespace AbpCodeGeneration.VisualStudio.Common
             //var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
             //CreateValidatorFile(model, applicationValidatorFolder);
             //权限
-            if (model.AuthorizationService)
+            if (model.Setting.AuthorizationService)
             {
-                if (String.IsNullOrEmpty(model.Prefix))
-                {
-                    CreatePermission(model, applicationContractsProjectItem);
-                }
-                else
-                {
-                    CreatePermission(model, applicationContractsSharedProjectItem);                    
-                }
+                CreatePermission(model,
+                    model.Setting.SharedPermission
+                        ? applicationContractsSharedProjectItem
+                        : applicationContractsProjectItem);
+            }
+
+            if (model.Setting.Controller)
+            {
+                CreateController(model, apiProjectItem.SubProject.ProjectItems.Item("Controller"));
             }
             //应用服务
-            if (model.ApplicationService)
+            if (model.Setting.ApplicationService)
             {
                 CreateSettingFile(model, applicationNewFolder);
                 CreateServiceClass(model, applicationNewFolder);
-                if (model.IsStandardProject)
+                if (model.Setting.IsStandardProject)
                 {
                     CreateServiceInterface(model, applicationContractsNewFolder);
                     dtoFolder = applicationContractsNewFolder.ProjectItems.Item("Dtos")
@@ -235,7 +238,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateDtos(model, applicationProjectItem, dtoFolder);
             }
             //领域服务
-            if (model.DomainService)
+            if (model.Setting.DomainService)
             {
                 ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);
                 CreateDomainServiceFile(model, currentProjectItem);
@@ -559,6 +562,18 @@ namespace AbpCodeGeneration.VisualStudio.Common
         }
 
         /// <summary>
+        /// 创建控制器
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="project"></param>
+        private void CreateController(CreateFileInput model, ProjectItem project)
+        {
+            string content_Controller = RunTemplate("Controller.ControllerTemplate", model);
+            string fileName_Controller = $"I{model.ClassName}Controller.cs";
+            AddFileToProjectItem(project, content_Controller, fileName_Controller);
+        }
+
+        /// <summary>
         /// 创建Service类
         /// </summary>
         /// <param name="applicationStr">根命名空间</param>
@@ -569,7 +584,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
         {
             string content_Service = String.Empty;
 
-            if (model.AuthorizationService)
+            if (model.Setting.AuthorizationService)
             {
                 content_Service = RunTemplate("ApplicationService.ServiceAuthTemplate", model);
             }

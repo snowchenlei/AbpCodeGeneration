@@ -46,9 +46,9 @@
                     <RadioButton x:Name="StandardDDD" GroupName="ProjectLayout">标准DDD</RadioButton>                    
                 </StackPanel>
                 
-                <!--<CheckBox x:Name="Dto" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Checked="Dto_Checked">
+                <CheckBox x:Name="SharedPermission" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left">
                     Dto
-                </CheckBox>-->
+                </CheckBox>
 
                 <CheckBox x:Name="ApplicationService" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">
                     应用服务

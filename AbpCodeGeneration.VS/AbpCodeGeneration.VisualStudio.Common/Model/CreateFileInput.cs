@@ -38,9 +38,18 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         public string DirectoryName { get; set; }
 
         /// <summary>
+        /// 设置
+        /// </summary>
+        public Setting Setting { get; set; }
+        /// <summary>
         /// 验证方式
         /// </summary>
         public int ValidationType { get; set; }
+
+        /// <summary>
+        /// 控制器
+        /// </summary>
+        public bool Controller { get; set; }
         /// <summary>
         /// 应用服务
         /// </summary>

@@ -47,7 +47,8 @@ namespace AbpCodeGeneration.VisualStudio.UI
         {
             Setting setting = new Setting
             {
-                ValidationType = (int)Validations.SelectedValue,
+                ValidationType = (int) Validations.SelectedValue,
+                SharedPermission = SharedPermission.IsChecked ?? false,
                 ApplicationService = ApplicationService.IsChecked ?? false,
                 DomainService = DomainService.IsChecked ?? false,
                 Controller = Controller.IsChecked ?? false,
