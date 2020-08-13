@@ -2,7 +2,7 @@
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
 using Volo.Abp.Application.Dtos;
 
-namespace @(Model.Namespace).@(Model.DirectoryName).Dtos
+namespace @(Model.Namespace)@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@(Model.DirectoryName).Dtos
 {
     /// <summary>
     /// 查询条件

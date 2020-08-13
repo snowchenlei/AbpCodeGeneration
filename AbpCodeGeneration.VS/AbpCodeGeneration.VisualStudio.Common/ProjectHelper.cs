@@ -646,6 +646,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                         insertCode.Insert("             #region " + (String.IsNullOrEmpty(classCnName) ? className + "\r\n" : classCnName+ "\r\n"));
                         insertCode.Insert($"            CreateMap<{className}, Get{className}ForEditOutput>();\r\n");
                         insertCode.Insert($"            CreateMap<{className}, {className}ListDto>();\r\n");
+                        insertCode.Insert($"            CreateMap<{className}, {className}DetailDto>();\r\n");
                         insertCode.Insert($"            CreateMap<{className}CreateDto, {className}>();\r\n");
                         insertCode.Insert($"            CreateMap<{className}UpdateDto, {className}>();\r\n");
                         insertCode.Insert($"            #endregion");
@@ -675,7 +676,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 permissionPoint.Insert("{\r\n");
                 permissionPoint.Insert($"public const string Default = GroupName + \".{model.ClassName}\";\r\n");
                 permissionPoint.Insert($"public const string Create = Default + \".Create\";\r\n");
-                permissionPoint.Insert($"public const string Edit = Default + \".Edit\";\r\n");
+                permissionPoint.Insert($"public const string Update = Default + \".Edit\";\r\n");
                 permissionPoint.Insert($"public const string Delete = Default + \".Delete\";\r\n");
                 permissionPoint.Insert("}\r\n");
 
@@ -691,7 +692,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                             authorizationPoint.Insert("\r\n");
                             authorizationPoint.Insert($"var {model.CamelClassName}s = {model.CamelAbsoluteNamespace}Group.AddPermission({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Default, L(\"Permission:{model.ClassName}s\"));\r\n");
                             authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Create, L(\"Permission:Create\"));\r\n");
-                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Edit, L(\"Permission:Edit\"));\r\n");
+                            authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Update, L(\"Permission:Edit\"));\r\n");
                             authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Delete, L(\"Permission:Delete\"));\r\n");
                             authorizationPoint.Insert("\r\n");
                         }

@@ -1,4 +1,5 @@
-﻿@inherits RazorEngine.Templating.TemplateBase<CodeBuilder.Models.TemplateModels.PermissionsFileModel>
+﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.Application.Dtos;
@@ -7,7 +8,7 @@ namespace @(Model.Namespace).Controllers
     /// <summary>
     /// @(Model.LocalName)
     /// </summary>
-    public static class @(Model.ClassName)Controller : @(AbsoluteNamespace)Controller, I@(Model.ClassName)AppService
+    public static class @(Model.ClassName)Controller : @(Model.AbsoluteNamespace)Controller, I@(Model.ClassName)AppService
     {
         private readonly I@(Model.ClassName)AppService _@(Model.CamelClassName)AppService;
 

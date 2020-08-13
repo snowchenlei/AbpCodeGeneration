@@ -6,14 +6,14 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using @Model.Namespace.@(Model.DirectoryName).Dtos;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp;
+using Volo.Abp.Linq;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
 using @(Model.Namespace).Permissions;
 
-namespace @Model.Namespace.@Model.DirectoryName
+namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@Model.DirectoryName
 {
     /// <summary>
     /// @(Model.LocalName)管理
@@ -21,15 +21,20 @@ namespace @Model.Namespace.@Model.DirectoryName
     [Authorize(@(Model.AbsoluteNamespace)Permissions.@(Model.ClassName)s.Default)]
     public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppService, I@(Model.ClassName)AppService
     {
+        private readonly IAsyncQueryableExecuter _asyncExecuter;
         private readonly IRepository<@(Model.ClassName), @Model.KeyType> _@(Model.CamelClassName)Repository;
 
         /// <summary>
         /// .ctor
         /// </summary>
+        /// <param name="asyncExecuter"></param>
         /// <param name="@(Model.CamelClassName)Repository"></param>
-        public @(Model.ClassName)AppService(IRepository<@(Model.ClassName), @Model.KeyType> @(Model.CamelClassName)Repository)
+        public @(Model.ClassName)AppService(
+            IAsyncQueryableExecuter asyncExecuter,
+            IRepository<@(Model.ClassName), @Model.KeyType> @(Model.CamelClassName)Repository)
         {
-            _@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
+            _asyncExecuter = asyncExecuter;        
+            _@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;            
         }
             
         /// <summary>
@@ -55,13 +60,12 @@ namespace @Model.Namespace.@Model.DirectoryName
 
             var tempQuery = _@(Model.CamelClassName)Repository;
 
-            long totalCount = await tempQuery.GetCountAsync();
+             long totalCount = await _asyncExecuter.CountAsync(tempQuery);
             
-            var entities = await tempQuery
+            var entities = await _asyncExecuter.ToListAsync(tempQuery
                 .OrderBy(input.Sorting ?? "Id DESC")
                 .Skip(input.SkipCount)
-                .Take(input.MaxResultCount)
-                .ToListAsync();
+                .Take(input.MaxResultCount));
 
             var dtos = ObjectMapper.Map<List<@(Model.ClassName)>, List<@(Model.ClassName)ListDto>>(entities);
 
@@ -99,7 +103,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <param name="id">主键</param>
         /// <param name="input"></param>
         /// <returns></returns>
-        [Authorize(@(Model.AbsoluteNamespace)Permissions.@(Model.ClassName)s.Edit)]
+        [Authorize(@(Model.AbsoluteNamespace)Permissions.@(Model.ClassName)s.Update)]
         public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(@(Model.KeyType) id, @(Model.ClassName)UpdateDto input)
         {
             @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);

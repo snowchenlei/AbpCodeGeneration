@@ -47,7 +47,7 @@
                 </StackPanel>
                 
                 <CheckBox x:Name="SharedPermission" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    Dto
+                    分离服务共享权限
                 </CheckBox>
 
                 <CheckBox x:Name="ApplicationService" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">

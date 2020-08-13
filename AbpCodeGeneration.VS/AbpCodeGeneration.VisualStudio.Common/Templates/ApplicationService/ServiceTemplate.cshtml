@@ -6,12 +6,11 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using @Model.Namespace.@(Model.DirectoryName).Dtos;
-using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
 
-namespace @Model.Namespace.@Model.DirectoryName
+namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@Model.DirectoryName
 {
     /// <summary>
     /// @(Model.LocalName)管理
@@ -24,6 +23,7 @@ namespace @Model.Namespace.@Model.DirectoryName
         /// <summary>
         /// .ctor
         /// </summary>
+        /// <param name="asyncExecuter"></param>
         /// <param name="@(Model.CamelClassName)Repository"></param>
         public @(Model.ClassName)AppService(
             IAsyncQueryableExecuter asyncExecuter,

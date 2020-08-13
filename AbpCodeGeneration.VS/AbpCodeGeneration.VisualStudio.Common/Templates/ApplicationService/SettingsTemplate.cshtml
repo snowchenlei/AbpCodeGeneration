@@ -1,6 +1,6 @@
 ﻿@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
-namespace @Model.Namespace.@Model.DirectoryName
+namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@Model.DirectoryName
 {
     /// <summary>
     /// <see cref="@(Model.ClassName)Settings"/>
