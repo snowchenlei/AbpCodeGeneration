@@ -138,7 +138,7 @@
     <EmbeddedResource Include="Templates\Front_Edit_TsTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Front_List_HtmlTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Front_List_TsTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\Dto\GetForEditOutputDtoTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Dto\GetForEditorOutputDtoTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Dto\GetsInputTemplate.cshtml" />
     <EmbeddedResource Include="Templates\ApplicationService\IServiceTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Dto\ListDtoTemplate.cshtml" />

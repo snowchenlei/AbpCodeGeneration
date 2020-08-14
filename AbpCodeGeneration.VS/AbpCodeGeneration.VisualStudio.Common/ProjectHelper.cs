@@ -58,13 +58,12 @@ namespace AbpCodeGeneration.VisualStudio.Common
         }
 
         private static bool Cached { get; set; }
-        private static int ThreadCount = 0;
         public static void InitRazor()
         {
             InitRazorEngine();
             string[] names = {
                 "Dto.GetsInputTemplate", "Dto.ListDtoTemplate", "Dto.DetailDtoTemplate",
-                "Dto.GetForEditOutputDtoTemplate", "Dto.CreateDtoTemplate",
+                "Dto.GetForEditorOutputDtoTemplate", "Dto.CreateDtoTemplate",
                 "ApplicationService.SettingsTemplate", "Controller.ControllerTemplate",
                 "ApplicationService.SettingDefinitionProviderTemplate", "MapperTemplate",
                 "ApplicationService.ServiceAuthTemplate", "ApplicationService.ServiceTemplate",
@@ -77,12 +76,6 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CacheTemplate(n);
             });
             Cached = true;
-            //System.Threading.Thread thread1 = new System.Threading.Thread(Compile1Template);
-            //System.Threading.Thread thread2 = new System.Threading.Thread(Compile2Template);
-            //    System.Threading.Thread thread3 = new System.Threading.Thread(Compile3Template);
-            //thread1.Start();
-            //thread2.Start();
-            //thread3.Start();
         }
         /// <summary>
         /// 获取DtoModel
@@ -266,36 +259,6 @@ namespace AbpCodeGeneration.VisualStudio.Common
             EditMapper(mapperItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
         }
 
-        /// <summary>
-        /// 缓存模板
-        /// </summary>
-        private static void Compile1Template()
-        {            
-            CacheTemplate("Dto.GetsInputTemplate");
-            CacheTemplate("Dto.ListDtoTemplate");
-            CacheTemplate("Dto.DetailDtoTemplate");
-            CacheTemplate("Dto.GetForEditOutputDtoTemplate");
-            CacheTemplate("Dto.CreateDtoTemplate");
-            ThreadCount++;
-        }
-        private static void Compile2Template()
-        {
-            CacheTemplate("ApplicationService.SettingsTemplate");
-            CacheTemplate("ApplicationService.SettingDefinitionProviderTemplate");
-            CacheTemplate("ApplicationService.ServiceAuthTemplate");
-            CacheTemplate("ApplicationService.ServiceTemplate");
-            CacheTemplate("ApplicationService.IServiceTemplate");
-            ThreadCount++;
-        }
-        private static void Compile3Template()
-        {
-            CacheTemplate("Dto.UpdateDtoTemplate");
-            CacheTemplate("Dto.CreateOrUpdateDtoBaseTemplate");
-            CacheTemplate("MapperTemplate");
-            CacheTemplate("DomainService.IDomainServiceTemplate");
-            CacheTemplate("DomainService.DomainServiceTemplate");
-            ThreadCount++;
-        }
         /// <summary>
         /// 缓存模板
         /// </summary>
@@ -528,8 +491,8 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string fileName_Update = $"{model.ClassName}UpdateDto.cs";
             AddFileToProjectItem(dtoFolder, content_Update, fileName_Update);
 
-            string content_GetForUpdate = RunTemplate("Dto.GetForEditOutputDtoTemplate", model);
-            string fileName_GetForUpdate = $"Get{model.ClassName}ForEditOutput.cs";
+            string content_GetForUpdate = RunTemplate("Dto.GetForEditorOutputDtoTemplate", model);
+            string fileName_GetForUpdate = $"Get{model.ClassName}ForEditorOutput.cs";
             AddFileToProjectItem(dtoFolder, content_GetForUpdate, fileName_GetForUpdate);
         }
 
@@ -676,7 +639,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 permissionPoint.Insert("{\r\n");
                 permissionPoint.Insert($"public const string Default = GroupName + \".{model.ClassName}\";\r\n");
                 permissionPoint.Insert($"public const string Create = Default + \".Create\";\r\n");
-                permissionPoint.Insert($"public const string Update = Default + \".Edit\";\r\n");
+                permissionPoint.Insert($"public const string Update = Default + \".Update\";\r\n");
                 permissionPoint.Insert($"public const string Delete = Default + \".Delete\";\r\n");
                 permissionPoint.Insert("}\r\n");
 

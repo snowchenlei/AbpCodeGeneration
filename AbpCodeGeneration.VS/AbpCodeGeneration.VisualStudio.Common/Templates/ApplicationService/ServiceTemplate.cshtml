@@ -73,11 +73,11 @@ namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Pref
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        public virtual async Task<Get@(Model.ClassName)ForEditOutput> GetEditorAsync(@(Model.KeyType) id)
+        public virtual async Task<Get@(Model.ClassName)ForEditorOutput> GetEditorAsync(@(Model.KeyType) id)
         {
             @(Model.ClassName) entity = await _@(Model.CamelClassName)Repository.GetAsync(id);
 
-            return ObjectMapper.Map<@(Model.ClassName), Get@(Model.ClassName)ForEditOutput>(entity);
+            return ObjectMapper.Map<@(Model.ClassName), Get@(Model.ClassName)ForEditorOutput>(entity);
         }
     
         /// <summary>
@@ -88,7 +88,7 @@ namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Pref
         public virtual async Task<@(Model.ClassName)ListDto> CreateAsync(@(Model.ClassName)CreateDto input)
         {
             var entity = ObjectMapper.Map<@(Model.ClassName)CreateDto, @(Model.ClassName)>(input);
-            entity = await _@(Model.CamelClassName)Repository.InsertAsync(entity);
+            entity = await _@(Model.CamelClassName)Repository.InsertAsync(entity, true);
             return ObjectMapper.Map<@(Model.ClassName), @(Model.ClassName)ListDto>(entity);
         }
 
