@@ -256,7 +256,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateMapperFile(model, moduleItem);
             }
             mapperItem = moduleItem.ProjectItems.Item(model.ModuleName + "ApplicationAutoMapperProfile.cs");
-            EditMapper(mapperItem, $"{model.Namespace}.{model.DirectoryName}", model.ClassName, model.LocalName);
+            EditMapper(mapperItem, $"{model.Namespace}.{model.DirectoryName}", model.Prefix, model.ClassName, model.LocalName);
         }
 
         /// <summary>
@@ -586,10 +586,12 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <summary>
         /// 编辑CustomDtoMapper.cs,添加映射
         /// </summary>
-        /// <param name="applicationProject"></param>
+        /// <param name="prefix"></param>
         /// <param name="className"></param>
         /// <param name="classCnName"></param>
-        private void EditMapper(ProjectItem mapperItem, string nameSpace, string className, string classCnName)
+        /// <param name="mapperItem"></param>
+        /// <param name="nameSpace"></param>
+        private void EditMapper(ProjectItem mapperItem, string nameSpace, string prefix, string className, string classCnName)
         {
             if (mapperItem != null)
             {
@@ -597,7 +599,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 var insertUsingCode = codeClass.StartPoint.CreateEditPoint();//codeClass.GetStartPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                 insertUsingCode.MoveToLineAndOffset(1, 1);
                 insertUsingCode.Insert($"using {nameSpace};\r\n");
-                insertUsingCode.Insert($"using {nameSpace}.Dtos;\r\n");
+                insertUsingCode.Insert($"using {nameSpace}{prefix}.Dtos;\r\n");
 
                 var codeChilds = codeClass.Members;
                 foreach (CodeElement codeChild in codeChilds)
@@ -607,7 +609,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                     {
                         var insertCode = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                         insertCode.Insert("             #region " + (String.IsNullOrEmpty(classCnName) ? className + "\r\n" : classCnName+ "\r\n"));
-                        insertCode.Insert($"            CreateMap<{className}, Get{className}ForEditOutput>();\r\n");
+                        insertCode.Insert($"            CreateMap<{className}, Get{className}ForEditorOutput>();\r\n");
                         insertCode.Insert($"            CreateMap<{className}, {className}ListDto>();\r\n");
                         insertCode.Insert($"            CreateMap<{className}, {className}DetailDto>();\r\n");
                         insertCode.Insert($"            CreateMap<{className}CreateDto, {className}>();\r\n");

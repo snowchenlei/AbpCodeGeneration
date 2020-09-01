@@ -1,9 +1,10 @@
-﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+﻿@using System
+@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using @Model.Namespace.@(Model.DirectoryName).Dtos;
+using @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@(Model.DirectoryName).Dtos;
 
 namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@Model.DirectoryName
 {
@@ -31,7 +32,7 @@ namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Pref
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        Task<Get@(Model.ClassName)ForEditOutput> GetEditorAsync(@(Model.KeyType) id);
+        Task<Get@(Model.ClassName)ForEditorOutput> GetEditorAsync(@(Model.KeyType) id);
 
         /// <summary>
         /// 创建

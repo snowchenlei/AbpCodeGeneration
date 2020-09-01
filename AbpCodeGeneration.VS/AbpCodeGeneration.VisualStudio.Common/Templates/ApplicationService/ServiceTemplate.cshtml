@@ -1,11 +1,12 @@
-﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+﻿@using System
+@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using @Model.Namespace.@(Model.DirectoryName).Dtos;
+using @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@(Model.DirectoryName).Dtos;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
