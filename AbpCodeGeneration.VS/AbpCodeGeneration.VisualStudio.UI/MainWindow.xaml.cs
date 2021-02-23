@@ -52,7 +52,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
                     Local = item.Name
                 });
             }
-            dataGrid.ItemsSource = DataList;
+            PropertyGrid.ItemsSource = DataList;
         }
 
         private void Query_Click(object sender, RoutedEventArgs e)
@@ -65,9 +65,9 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 ClassName = dto.Name,
                 KeyType = ClassKeyType.Text,
                 LocalName = ClassLocalName.Text,
-                Prefix = NamespacePrefix.Text,
                 DirectoryName = dto.DirName,
                 PropertyInfos = DataList,
+                Prefix = _setting.NamespacePrefix,// NamespacePrefix.Text,
                 Setting = _setting,
                 ValidationType = _setting.ValidationType,
                 Controller = _setting.Controller,
@@ -98,10 +98,16 @@ namespace AbpCodeGeneration.VisualStudio.UI
         {
             int _rowIndex = 0;
             int _columnIndex = 0;
-            if (GetCellXY(dataGrid, ref _rowIndex, ref _columnIndex))
+            if (GetCellXY(PropertyGrid, ref _rowIndex, ref _columnIndex))
             {
                 DataList.RemoveAt(_rowIndex);
             }
+        }
+
+        private void PropertyGrid_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // 模拟双击
+            Util.Mouse.DoubleClick(MouseButton.Left);
         }
 
         //---取得选中 Cell 所在的行列
@@ -116,5 +122,6 @@ namespace AbpCodeGeneration.VisualStudio.UI
             }
             return false;
         }
+
     }
 }

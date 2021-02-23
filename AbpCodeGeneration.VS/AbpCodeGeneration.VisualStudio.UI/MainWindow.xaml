@@ -11,10 +11,10 @@
             <TextBox x:Name="ClassLocalName" Width="50"/>
             <Label>类主键</Label>
             <TextBox x:Name="ClassKeyType" Width="50"/>
-            <Label>命名空间前缀</Label>
-            <TextBox x:Name="NamespacePrefix" Width="80"/>
+            <!--<Label>命名空间前缀</Label>
+            <TextBox x:Name="NamespacePrefix" Width="80"/>-->
         </StackPanel>
-        <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" SelectionUnit="CellOrRowHeader" LoadingRow="DataGrid_LoadingRow">
+        <DataGrid x:Name="PropertyGrid" AutoGenerateColumns="False" SelectionUnit="CellOrRowHeader" LoadingRow="DataGrid_LoadingRow">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="属性名" Width="80" Binding="{Binding PropertyName, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="类型" Width="80" Binding="{Binding PropertyType, UpdateSourceTrigger=PropertyChanged}" />

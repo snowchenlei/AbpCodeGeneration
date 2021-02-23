@@ -43,6 +43,11 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         public bool PictureUpload { get; set; }
 
         /// <summary>
+        /// 命名空间前缀
+        /// </summary>
+        public string NamespacePrefix { get; set; }
+
+        /// <summary>
         /// 标准项目
         /// </summary>
         public bool IsStandardProject { get; set; }

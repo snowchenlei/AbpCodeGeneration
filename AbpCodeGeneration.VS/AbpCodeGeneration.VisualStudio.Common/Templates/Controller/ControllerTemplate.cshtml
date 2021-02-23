@@ -24,7 +24,7 @@ namespace @(Model.Namespace).Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
-        public virtual async Task<QualificationDetailDto> GetAsync(int id)
+        public virtual async Task<@(Model.ClassName)DetailDto> GetAsync(int id)
         {
             return await _@(Model.CamelClassName)AppService.GetAsync(id);
         }
@@ -35,7 +35,7 @@ namespace @(Model.Namespace).Controllers
         /// <param name="input">查询条件</param>
         /// <returns>结果</returns>
         [HttpGet]
-        public virtual async Task<PagedResultDto<QualificationListDto>> GetListAsync(Get@(Model.ClassName)sInput input)
+        public virtual async Task<PagedResultDto<@(Model.ClassName)ListDto>> GetListAsync(Get@(Model.ClassName)sInput input)
         {
             return await _@(Model.CamelClassName)AppService.GetListAsync(input);
         }
@@ -47,7 +47,7 @@ namespace @(Model.Namespace).Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{id}/editor")]
-        public virtual async Task<GetQualificationForEditOutput> GetEditorAsync(int id)
+        public virtual async Task<Get@(Model.ClassName)ForEditOutput> GetEditorAsync(int id)
         {
             return await _@(Model.CamelClassName)AppService.GetEditorAsync(id);
         }
@@ -58,7 +58,7 @@ namespace @(Model.Namespace).Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
-        public virtual async Task<QualificationListDto> CreateAsync(@(Model.ClassName)CreateDto input)
+        public virtual async Task<@(Model.ClassName)ListDto> CreateAsync(@(Model.ClassName)CreateDto input)
         {
             return await _@(Model.CamelClassName)AppService.CreateAsync(input);
         }
@@ -70,7 +70,7 @@ namespace @(Model.Namespace).Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut]
-        public virtual async Task<QualificationListDto> UpdateAsync(int id, @(Model.ClassName)UpdateDto input)
+        public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(int id, @(Model.ClassName)UpdateDto input)
         {
             return await _@(Model.CamelClassName)AppService.UpdateAsync(id, input);
         }

@@ -21,11 +21,11 @@
                     <RowDefinition Height="40" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="35" />
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="187*"/>
@@ -45,10 +45,36 @@
                     <RadioButton x:Name="SimplificationDDD" GroupName="ProjectLayout" IsChecked="True">简化DDD</RadioButton>
                     <RadioButton x:Name="StandardDDD" GroupName="ProjectLayout">标准DDD</RadioButton>                    
                 </StackPanel>
-                
-                <CheckBox x:Name="SharedPermission" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    分离服务共享权限
-                </CheckBox>
+
+                <StackPanel Grid.Row="3" Grid.Column="0">
+                    <CheckBox x:Name="SharedPermission" VerticalAlignment="Center" Margin="0,0,4,0">
+                        分离服务共享权限
+                    </CheckBox>
+                    <TextBox x:Name="NamespacePrefix" Width="120" IsHitTestVisible="True" IsEnabled="{Binding ElementName=SharedPermission, Path=IsChecked}">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                <Style.Resources>
+                                    <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                        <VisualBrush.Visual>
+                                            <Label Content="命名空间前缀" Foreground="LightGray" />
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Style.Resources>
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                    </Trigger>
+                                    <Trigger Property="Text" Value="{x:Null}">
+                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                    </Trigger>
+                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                        <Setter Property="Background" Value="White" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                </StackPanel>
 
                 <CheckBox x:Name="ApplicationService" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">
                     应用服务

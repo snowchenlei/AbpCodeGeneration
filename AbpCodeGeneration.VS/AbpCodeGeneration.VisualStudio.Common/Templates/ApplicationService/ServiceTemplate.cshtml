@@ -6,10 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@(Model.DirectoryName).Dtos;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
+@if (String.IsNullOrEmpty(Model.Prefix))
+{
+    string dtos = String.Format("using {0}.{1}.Dtos;", Model.Namespace, Model.DirectoryName);
+}
+else
+{
+    string dtos = String.Format("using {0}{1};using {0}{1}.{3}.Dtos;", Model.Namespace, Model.Prefix, Model.DirectoryName);
+}
+dtos
+@*using @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@(Model.DirectoryName).Dtos;*@
 
 namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@Model.DirectoryName
 {

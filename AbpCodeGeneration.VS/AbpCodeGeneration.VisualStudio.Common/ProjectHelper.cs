@@ -89,18 +89,29 @@ namespace AbpCodeGeneration.VisualStudio.Common
         {
             var model = new DtoFileModel() { Namespace = ApplicationRootNamespace, Name = CodeClass.Name, DirName = ClassAbsolutePathInProject.Replace("\\", ".") };
             List<ClassProperty> classProperties = new List<ClassProperty>();
-
+                        
             if (CodeClass.Bases.Count > 0)
             {
-                //C#仅支持单继承
-                CodeElements baseMembers = CodeClass.Bases.Cast<CodeClass2>().ToList()[0].Members;
-                AddClassProperty(baseMembers, ref classProperties);
+                GetBaseProperty(CodeClass, ref classProperties);
             }
             var codeMembers = CodeClass.Members;
             AddClassProperty(codeMembers, ref classProperties);
             model.ClassPropertys = classProperties;
 
             return model;
+        }
+
+        private void GetBaseProperty(CodeClass2 currentClass, ref List<ClassProperty> classProperties)
+        {
+            //C#仅支持单继承
+            CodeClass2 baseClass = currentClass.Bases.Cast<CodeClass2>().ToList()[0];
+            CodeElements baseMembers = baseClass.Members;
+            AddClassProperty(baseMembers, ref classProperties);
+            currentClass = baseClass;
+            if (currentClass.Bases.Count > 0)
+            {
+                GetBaseProperty(currentClass, ref classProperties);
+            }
         }
 
         private void AddClassProperty(CodeElements codeElements, ref List<ClassProperty> classProperties)
@@ -209,7 +220,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
 
             if (model.Setting.Controller)
             {
-                CreateController(model, apiProjectItem.SubProject.ProjectItems.Item("Controller"));
+                CreateController(model, apiProjectItem.SubProject.ProjectItems.Item("Controllers"));
             }
             //应用服务
             if (model.Setting.ApplicationService)
@@ -532,7 +543,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
         private void CreateController(CreateFileInput model, ProjectItem project)
         {
             string content_Controller = RunTemplate("Controller.ControllerTemplate", model);
-            string fileName_Controller = $"I{model.ClassName}Controller.cs";
+            string fileName_Controller = $"{model.ClassName}Controller.cs";
             AddFileToProjectItem(project, content_Controller, fileName_Controller);
         }
 
