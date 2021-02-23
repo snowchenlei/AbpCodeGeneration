@@ -64,6 +64,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string[] names = {
                 "Dto.GetsInputTemplate", "Dto.ListDtoTemplate", "Dto.DetailDtoTemplate",
                 "Dto.GetForEditorOutputDtoTemplate", "Dto.CreateDtoTemplate",
+                "Validation.CreateValidationTemplate", "Validation.UpdateValidationTemplate",
                 "ApplicationService.SettingsTemplate", "Controller.ControllerTemplate",
                 "ApplicationService.SettingDefinitionProviderTemplate", "MapperTemplate",
                 "ApplicationService.ServiceAuthTemplate", "ApplicationService.ServiceTemplate",
@@ -199,16 +200,28 @@ namespace AbpCodeGeneration.VisualStudio.Common
             var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject)
                 ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
             ProjectItem applicationContractsNewFolder = null;
-            ProjectItem dtoFolder;
+            ProjectItem dtoFolder, validatorFolder;
             if (model.Setting.IsStandardProject)
             {
                 applicationContractsNewFolder = GetDeepProjectItem(applicationContractsProjectItem, ClassAbsolutePathInProject)
                     ?? applicationContractsProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);                
             }
 
-            // TODO:参数验证
-            //var applicationValidatorFolder = applicationNewFolder.ProjectItems.Item("Validators") ?? applicationNewFolder.ProjectItems.AddFolder("Validators");
-            //CreateValidatorFile(model, applicationValidatorFolder);
+            if (model.Setting.IsStandardProject)
+            {
+                validatorFolder = applicationContractsNewFolder.ProjectItems.Item("Dtos")
+                    ?? applicationContractsNewFolder.ProjectItems.AddFolder("Dtos");
+            }
+            else
+            {
+                validatorFolder = applicationNewFolder.ProjectItems.Item("Dtos")
+                    ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
+            }
+            // 参数验证
+            if (model.Setting.ValidationType == Enums.ValidationType.FluentApi)
+            {
+                CreateValidatorFile(model, validatorFolder);
+            }
             //权限
             if (model.Setting.AuthorizationService)
             {
@@ -514,9 +527,13 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="dtoFolder"></param>
         private void CreateValidatorFile(CreateFileInput model, ProjectItem dtoFolder)
         {
-            string content_Edit = RazorEngine.Engine.Razor.RunCompile("ValidationTemplate", typeof(CreateFileInput), model);
-            string fileName_Edit = $"{model.ClassName}EditValidator.cs";
-            AddFileToProjectItem(dtoFolder, content_Edit, fileName_Edit);
+            string content_Create = RunTemplate("Validation.CreateValidationTemplate", model);
+            string fileName_Create = $"{model.ClassName}CreateValidator.cs";
+            AddFileToProjectItem(dtoFolder, content_Create, fileName_Create);
+
+            string content_Update = RunTemplate("Validation.UpdateValidationTemplate", model);
+            string fileName_Update = $"{model.ClassName}UpdateValidator.cs";
+            AddFileToProjectItem(dtoFolder, content_Update, fileName_Update);
         }
 
         /// <summary>

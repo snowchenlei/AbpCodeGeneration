@@ -149,7 +149,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Templates\MapperTemplate.cshtml" />
-    <EmbeddedResource Include="Templates\Validation\ValidationTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Validation\CreateValidationTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Validation\ValidationBaseTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Auth\AppPermissionName.cshtml" />
     <EmbeddedResource Include="Templates\DomainService\DomainServiceTemplate.cshtml" />
@@ -161,6 +161,7 @@
     <EmbeddedResource Include="Templates\ApplicationService\ServiceAuthTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Dto\DetailDtoTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Controller\ControllerTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Validation\UpdateValidationTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0-rc2\tools\analyzers\C#\Microsoft.CodeAnalysis.Analyzers.dll" />

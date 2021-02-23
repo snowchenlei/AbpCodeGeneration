@@ -8,7 +8,7 @@ using FluentValidation;
 
 namespace @(Model.Namespace).@(Model.DirectoryName)
 {
-    public class @(Model.AbsoluteNamespace)Validator<T> : AbstractValidator<T>
+    public class @(Model.ClassName)CreateOrUpdateValidator : AbstractValidator<@(Model.ClassName)CreateOrUpdateDtoBase>
     {
         protected string L(string name, params object[] args)
         {

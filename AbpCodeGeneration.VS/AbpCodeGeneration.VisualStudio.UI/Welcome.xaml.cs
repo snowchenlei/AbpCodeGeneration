@@ -36,10 +36,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
             InitializeComponent();
             ValidationTypes = EnumHelper.EnumToDictionary<ValidationType>(-1, "请选择验证类型");
             Validations.ItemsSource = ValidationTypes;
-            //ValidationTypes.ItemsSource = 
-            //ValidationTypes.SelectedValuePath = "key";
-            //ValidationTypes.DisplayMemberPath = "Value";
-            //ValidationTypes.SelectedIndex = 0;
+            Validations.SelectedIndex = 0;
 
         }
 
@@ -47,7 +44,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
         {
             Setting setting = new Setting
             {
-                ValidationType = (int)Validations.SelectedValue,
+                ValidationType = (ValidationType)Validations.SelectedValue,
                 SharedPermission = SharedPermission.IsChecked ?? false,
                 ApplicationService = ApplicationService.IsChecked ?? false,
                 DomainService = DomainService.IsChecked ?? false,
@@ -56,7 +53,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 ExcelImportAndExport = ExcelImportAndExport.IsChecked ?? false,
                 PictureUpload = PictureUpload.IsChecked ?? false,
                 IsStandardProject = (StandardDDD.IsChecked ?? false) ? true : false,
-                NamespacePrefix =""// NamespacePrefix.Text
+                NamespacePrefix = NamespacePrefix.Text
             };
             this.Content = new MainWindow(_dte, setting);
         }

@@ -16,7 +16,7 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         /// <summary>
         /// 验证方式
         /// </summary>
-        public int ValidationType { get; set; }
+        public ValidationType ValidationType { get; set; }
         /// <summary>
         /// 应用服务
         /// </summary>

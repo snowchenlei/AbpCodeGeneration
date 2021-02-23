@@ -39,7 +39,7 @@
                 <!--<TextBlock Text="前端" Grid.Row="0" Grid.Column="3" Style="{DynamicResource TitleStyle}"/>-->
 
                 <ComboBox x:Name="Validations" DisplayMemberPath="Value" SelectedValuePath="Key"
-                      Grid.Row="1" Grid.Column="0" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,4">
+                      Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,4">
                 </ComboBox>
                 <StackPanel Grid.Row="2" Grid.Column="0">
                     <RadioButton x:Name="SimplificationDDD" GroupName="ProjectLayout" IsChecked="True">简化DDD</RadioButton>

@@ -12,8 +12,8 @@ namespace AbpCodeGeneration.VisualStudio.Common.Enums
         //[Description("没有")]
         //Normal,
         [Description("FluentApi")]
-        FluentApi,
-        [Description("数据注解")]
-        DataAnnotation
+        FluentApi = 1,
+        //[Description("数据注解")]
+        //DataAnnotation
     }
 }

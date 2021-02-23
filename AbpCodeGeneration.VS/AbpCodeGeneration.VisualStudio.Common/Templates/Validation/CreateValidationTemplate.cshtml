@@ -1,0 +1,49 @@
+﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using FluentValidation;
+using @(Model.Namespace).Localization;
+using Microsoft.Extensions.Localization;
+
+namespace @(Model.Namespace)@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@(Model.DirectoryName).Dtos
+{
+    public class @(Model.ClassName)CreateValidator : AbstractValidator<@(Model.ClassName)CreateDto>
+    {
+        public @(Model.ClassName)CreateValidator(IStringLocalizer<@(Model.AbsoluteNamespace)Resource> local)
+        {
+        @foreach (DtoPropertyInfo classProperty in Model.PropertyInfos)
+        {
+            if (classProperty.IsValidate)
+            {
+                <text>RuleFor(m => m.@(classProperty.PropertyName))</text>
+                if (classProperty.Required)
+                {
+                    <text>.NotNull()</text>
+                    <text>.WithMessage(local("IsRequired", "{PropertyName}"))</text>
+                    <text>.NotEmpty()</text>
+                    <text>.WithMessage(local("IsRequired", "{PropertyName}"))</text>
+                }
+                if (classProperty.MinLength.HasValue)
+                {
+                    <text>.MaximumLength(@classProperty.MinLength.Value)</text>
+                    <text>.WithMessage(local("OnMinLength", "{PropertyName}", "{MinLength}"))</text>
+                }
+                if (classProperty.MaxLength.HasValue)
+                {
+                    <text>.MaximumLength(@classProperty.MaxLength.Value)</text>
+                    <text>.WithMessage(local("UnderMaxLength", "{PropertyName}", "{MaxLength}"))</text>
+                }
+                if (!String.IsNullOrEmpty(classProperty.Regular))
+                {
+                    <text>.Matches("@classProperty.Regular")</text>
+                    <text>.WithMessage(local("EnterRight", "{PropertyName}"))</text>
+                }
+                <text>;</text>
+            }
+        }
+        }
+    }
+}
