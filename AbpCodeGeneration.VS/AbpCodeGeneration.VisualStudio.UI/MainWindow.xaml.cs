@@ -56,7 +56,13 @@ namespace AbpCodeGeneration.VisualStudio.UI
         }
 
         private void Query_Click(object sender, RoutedEventArgs e)
-        {            
+        {
+            if (String.IsNullOrWhiteSpace(ClassKeyType.Text))
+            {
+                MessageBox.Show("类主键是必须的", "错误", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.None);
+                return;
+            }
+
             DtoFileModel dto = projectHelper.GetDtoModel();
             projectHelper.CreateFile(new CreateFileInput()
             {

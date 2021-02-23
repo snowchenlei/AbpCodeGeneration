@@ -56,7 +56,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 ExcelImportAndExport = ExcelImportAndExport.IsChecked ?? false,
                 PictureUpload = PictureUpload.IsChecked ?? false,
                 IsStandardProject = (StandardDDD.IsChecked ?? false) ? true : false,
-                NamespacePrefix = NamespacePrefix.Text
+                NamespacePrefix =""// NamespacePrefix.Text
             };
             this.Content = new MainWindow(_dte, setting);
         }
