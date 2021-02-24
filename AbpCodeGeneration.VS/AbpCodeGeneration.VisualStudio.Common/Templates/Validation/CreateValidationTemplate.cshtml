@@ -22,24 +22,46 @@ namespace @(Model.Namespace)@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Pr
                 if (classProperty.Required)
                 {
                     <text>.NotNull()</text>
-                    <text>.WithMessage(local("IsRequired", "{PropertyName}"))</text>
+                    <text>.WithMessage(local["The {0} field is required.", "{PropertyName}"])</text>
                     <text>.NotEmpty()</text>
-                    <text>.WithMessage(local("IsRequired", "{PropertyName}"))</text>
+                    <text>.WithMessage(local["The {0} field is required.", "{PropertyName}"])</text>
                 }
-                if (classProperty.MinLength.HasValue)
+                if (classProperty.PropertyType == "string")
                 {
-                    <text>.MaximumLength(@classProperty.MinLength.Value)</text>
-                    <text>.WithMessage(local("OnMinLength", "{PropertyName}", "{MinLength}"))</text>
+                    if(classProperty.MinLength.HasValue && classProperty.MaxLength.HasValue)
+                    {
+                        <text>.Length(@classProperty.MinLength.Value, @classProperty.MaxLength.Value)</text>
+                        <text>.WithMessage(local["The field {0} must be a string with a minimum length of {2} and a maximum length of {1}.", "{PropertyName}", "{MaxLength}", "{MinLength}"])</text>
+                    }
+                    else if (classProperty.MaxLength.HasValue)
+                    {
+                        <text>.MaximumLength(@classProperty.MaxLength.Value)</text>
+                        <text>.WithMessage(local["The field {0} must be a string with a maximum length of {1}.", "{PropertyName}", "{MaxLength}"])</text>
+                    }
                 }
-                if (classProperty.MaxLength.HasValue)
+                else if(classProperty.PropertyType == "int")
                 {
-                    <text>.MaximumLength(@classProperty.MaxLength.Value)</text>
-                    <text>.WithMessage(local("UnderMaxLength", "{PropertyName}", "{MaxLength}"))</text>
+                    
+                    if(classProperty.MinLength.HasValue && classProperty.MaxLength.HasValue)
+                    {
+                        <text>.InclusiveBetween(@classProperty.MinLength.Value, @classProperty.MaxLength.Value)</text>
+                        <text>.WithMessage(local["The field {0} must be between {1} and {2}.", "{PropertyName}", "{From}", "{To}"])</text>
+                    }
+                    else if (classProperty.MinLength.HasValue)
+                    {
+                        <text>.GreaterThanOrEqualTo(@classProperty.MinLength.Value)</text>
+                        <text>.WithMessage(local["The field {0} must be greater than or equal to {1}.", "{PropertyName}", "{ComparisonValue}"])</text>
+                    }
+                    else
+                    {
+                        <text>.LessThanOrEqualTo(@classProperty.MaxLength.Value)</text>
+                        <text>.WithMessage(local["The field {0} must be less than or equal to {1}.", "{PropertyName}", "{ComparisonValue}"])</text>
+                    }
                 }
                 if (!String.IsNullOrEmpty(classProperty.Regular))
                 {
                     <text>.Matches("@classProperty.Regular")</text>
-                    <text>.WithMessage(local("EnterRight", "{PropertyName}"))</text>
+                    <text>.WithMessage(local["The field {0} must match the regular expression '{1}'.", "{PropertyName}", "{RegularExpression}"])</text>
                 }
                 <text>;</text>
             }

@@ -9,8 +9,8 @@ namespace AbpCodeGeneration.VisualStudio.Common.Enums
 {
     public enum ValidationType
     {
-        //[Description("没有")]
-        //Normal,
+        [Description("无需验证")]
+        Normal,
         [Description("FluentApi")]
         FluentApi = 1,
         //[Description("数据注解")]

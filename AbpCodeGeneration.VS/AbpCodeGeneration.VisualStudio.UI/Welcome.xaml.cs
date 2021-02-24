@@ -34,7 +34,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
             //thread.Start();
             _dte = dte;
             InitializeComponent();
-            ValidationTypes = EnumHelper.EnumToDictionary<ValidationType>(-1, "请选择验证类型");
+            ValidationTypes = EnumHelper.EnumToDictionary<ValidationType>(null, null);
             Validations.ItemsSource = ValidationTypes;
             Validations.SelectedIndex = 0;
 

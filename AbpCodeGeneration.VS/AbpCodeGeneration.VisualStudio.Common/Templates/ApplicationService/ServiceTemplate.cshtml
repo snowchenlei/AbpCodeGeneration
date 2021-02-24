@@ -9,16 +9,18 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
-@if (String.IsNullOrEmpty(Model.Prefix))
-{
-    string dtos = String.Format("using {0}.{1}.Dtos;", Model.Namespace, Model.DirectoryName);
+@{
+    string currentNamespace = String.Empty;
+    if (String.IsNullOrEmpty(Model.Prefix))
+    {
+        currentNamespace = String.Format("using {0}.{1}.Dtos;", Model.Namespace, Model.DirectoryName);
+    }
+    else
+    {
+        currentNamespace = String.Format("using {0}.{2};using {0}{1}.{2}.Dtos;", Model.Namespace, Model.Prefix, Model.DirectoryName);
+    }
+    @currentNamespace
 }
-else
-{
-    string dtos = String.Format("using {0}{1};using {0}{1}.{3}.Dtos;", Model.Namespace, Model.Prefix, Model.DirectoryName);
-}
-dtos
-@*using @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@(Model.DirectoryName).Dtos;*@
 
 namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@Model.DirectoryName
 {
@@ -27,20 +29,16 @@ namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Pref
     /// </summary>
     public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppService, I@(Model.ClassName)AppService
     {
-        private readonly IAsyncQueryableExecuter _asyncExecuter;
         private readonly IRepository<@(Model.ClassName), @Model.KeyType> _@(Model.CamelClassName)Repository;
 
         /// <summary>
         /// .ctor
         /// </summary>
-        /// <param name="asyncExecuter"></param>
         /// <param name="@(Model.CamelClassName)Repository"></param>
         public @(Model.ClassName)AppService(
-            IAsyncQueryableExecuter asyncExecuter,
             IRepository<@(Model.ClassName), @Model.KeyType> @(Model.CamelClassName)Repository)
         {
-            _asyncExecuter = asyncExecuter;        
-            _@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;            
+            _@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
         }
             
         /// <summary>
@@ -64,11 +62,11 @@ namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Pref
         {
             await NormalizeMaxResultCountAsync(input);
 
-            var tempQuery = _@(Model.CamelClassName)Repository;
+            var queryable = await _@(Model.CamelClassName)Repository.GetQueryableAsync();
 
-            long totalCount = await _asyncExecuter.CountAsync(tempQuery);
+            long totalCount = await AsyncExecuter.CountAsync(queryable);
             
-            var entities = await _asyncExecuter.ToListAsync(tempQuery
+            var entities = await AsyncExecuter.ToListAsync(queryable
                 .OrderBy(input.Sorting ?? "Id DESC")
                 .Skip(input.SkipCount)
                 .Take(input.MaxResultCount));

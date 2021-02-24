@@ -3,16 +3,30 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.Application.Dtos;
-namespace @(Model.Namespace).Controllers
+
+@{
+    string currentNamespace = String.Empty;
+    if (String.IsNullOrEmpty(Model.Prefix))
+    {
+        currentNamespace = String.Format("using {0}.{1};using {0}.{1}.Dtos;", Model.Namespace, Model.DirectoryName);
+    }
+    else
+    {
+        currentNamespace = String.Format("using {0}{1}.{2};using {0}{1}.{2}.Dtos;", Model.Namespace, Model.Prefix, Model.DirectoryName);
+    }
+    @currentNamespace
+}
+
+namespace @(Model.Namespace)@(Model.Prefix).Controllers
 {
     /// <summary>
     /// @(Model.LocalName)
     /// </summary>
-    public static class @(Model.ClassName)Controller : @(Model.AbsoluteNamespace)Controller, I@(Model.ClassName)AppService
+    public class @(Model.ClassName)Controller : @(Model.AbsoluteNamespace)Controller, I@(Model.ClassName)AppService
     {
         private readonly I@(Model.ClassName)AppService _@(Model.CamelClassName)AppService;
 
-        public @(Model.ClassName)Controller(IQualificationAppService @(Model.CamelClassName)AppService)
+        public @(Model.ClassName)Controller(I@(Model.ClassName)AppService @(Model.CamelClassName)AppService)
         {
             _@(Model.CamelClassName)AppService = @(Model.CamelClassName)AppService;
         }
@@ -47,7 +61,7 @@ namespace @(Model.Namespace).Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{id}/editor")]
-        public virtual async Task<Get@(Model.ClassName)ForEditOutput> GetEditorAsync(int id)
+        public virtual async Task<Get@(Model.ClassName)ForEditorOutput> GetEditorAsync(int id)
         {
             return await _@(Model.CamelClassName)AppService.GetEditorAsync(id);
         }

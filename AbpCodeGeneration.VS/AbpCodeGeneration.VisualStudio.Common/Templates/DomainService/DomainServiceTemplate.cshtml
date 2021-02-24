@@ -6,6 +6,9 @@ using Volo.Abp.Domain.Services;
 
 namespace @(Model.Namespace).@(Model.DirectoryName)
 {
+	/// <summary>
+    /// @(Model.LocalName)
+    /// </summary>
     public class @(Model.ClassName)Manager : DomainService, I@(Model.ClassName)Manager
     {
         private readonly IRepository<@(Model.ClassName), @(Model.KeyType)> _@(Model.CamelClassName)Repository;

@@ -57,7 +57,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             CodeClass = GetClass(SelectProjectItem.FileCodeModel.CodeElements);
         }
 
-        private static bool Cached { get; set; }
+        private static ParallelLoopResult CacheParallelLoopResult { get; set; }
         public static void InitRazor()
         {
             InitRazorEngine();
@@ -72,11 +72,10 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 "DomainService.IDomainServiceTemplate", "DomainService.DomainServiceTemplate",
                 "Dto.UpdateDtoTemplate"
             };
-            Parallel.ForEach(names, n =>
+            CacheParallelLoopResult = Parallel.ForEach(names, n =>
             {
                 CacheTemplate(n);
             });
-            Cached = true;
         }
         /// <summary>
         /// 获取DtoModel
@@ -183,9 +182,12 @@ namespace AbpCodeGeneration.VisualStudio.Common
             // TODO:区分Contracts
             //InitRazorEngine();
             //CompileTemplate();
-            while(!Cached)
+            while (true)
             {
-
+                if (CacheParallelLoopResult.IsCompleted)
+                {
+                    break;
+                }
             }
             ProjectItem applicationProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application");
             ProjectItem apiProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".HttpApi");
@@ -200,33 +202,18 @@ namespace AbpCodeGeneration.VisualStudio.Common
             var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject)
                 ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
             ProjectItem applicationContractsNewFolder = null;
-            ProjectItem dtoFolder, validatorFolder;
+            ProjectItem dtoFolder;
             if (model.Setting.IsStandardProject)
             {
                 applicationContractsNewFolder = GetDeepProjectItem(applicationContractsProjectItem, ClassAbsolutePathInProject)
                     ?? applicationContractsProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);                
             }
 
-            if (model.Setting.IsStandardProject)
-            {
-                validatorFolder = applicationContractsNewFolder.ProjectItems.Item("Dtos")
-                    ?? applicationContractsNewFolder.ProjectItems.AddFolder("Dtos");
-            }
-            else
-            {
-                validatorFolder = applicationNewFolder.ProjectItems.Item("Dtos")
-                    ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
-            }
-            // 参数验证
-            if (model.Setting.ValidationType == Enums.ValidationType.FluentApi)
-            {
-                CreateValidatorFile(model, validatorFolder);
-            }
             //权限
             if (model.Setting.AuthorizationService)
             {
                 CreatePermission(model,
-                    model.Setting.SharedPermission
+                    model.Setting.IsStandardProject
                         ? applicationContractsSharedProjectItem
                         : applicationContractsProjectItem);
             }
@@ -235,7 +222,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             {
                 CreateController(model, apiProjectItem.SubProject.ProjectItems.Item("Controllers"));
             }
-            //应用服务
+            // 应用服务
             if (model.Setting.ApplicationService)
             {
                 CreateSettingFile(model, applicationNewFolder);
@@ -253,13 +240,20 @@ namespace AbpCodeGeneration.VisualStudio.Common
                         ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
                 }
                 CreateDtos(model, applicationProjectItem, dtoFolder);
+
+                // 参数验证
+                if (model.Setting.ValidationType == Enums.ValidationType.FluentApi)
+                {
+                    CreateValidatorFile(model, dtoFolder);
+                }
             }
-            //领域服务
+            // 领域服务
             if (model.Setting.DomainService)
             {
                 ProjectItem currentProjectItem = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);
                 CreateDomainServiceFile(model, currentProjectItem);
             }
+            // 仓储
         }
 
         /// <summary>
