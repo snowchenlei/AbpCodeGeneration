@@ -1,0 +1,24 @@
+﻿@using RazorEngine
+@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Domain.Services;
+
+namespace @(Model.Namespace).EntityFrameworkCore.@(Model.DirectoryName)
+{
+	/// <summary>
+    /// @(Model.LocalName)
+    /// </summary>
+    public class @(Model.ClassName)Repository : EfCoreRepository<@(Model.AbsoluteNamespace)DbContext, @(Model.ClassName), @(Model.KeyType)>, I@(Model.ClassName)Repository
+    {
+		/// <summary>
+		/// .ctor
+		///</summary>
+		public @(Model.ClassName)Repository(
+			IDbContextProvider<@(Model.AbsoluteNamespace)DbContext> dbContextProvider)
+			: base(dbContextProvider)
+		{
+		}
+        // TODO:编写仓储代码
+    }
+}

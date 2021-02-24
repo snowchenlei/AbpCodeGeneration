@@ -1,0 +1,14 @@
+﻿@using RazorEngine
+@using AbpCodeGeneration.VisualStudio.Common.Model
+@inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
+using Volo.Abp.Domain.Services;
+
+namespace @(Model.Namespace).@(Model.DirectoryName)
+{
+    /// <summary>
+    /// @(Model.LocalName)
+    /// </summary>
+    public interface I@(Model.ClassName)Repository : IRepository<@(Model.ClassName), @(Model.KeyType)>
+    {
+    }
+}
