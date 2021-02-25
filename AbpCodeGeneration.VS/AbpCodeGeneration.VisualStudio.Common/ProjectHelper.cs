@@ -62,19 +62,16 @@ namespace AbpCodeGeneration.VisualStudio.Common
         {
             InitRazorEngine();
             string[] names = {
-                //"Repository.RepositoryTemplate"
-                "Repository.IRepositoryTemplate"
-                , "Repository.RepositoryTemplate"
-                //"Dto.GetsInputTemplate", "Dto.ListDtoTemplate", "Dto.DetailDtoTemplate",
-                //"Dto.GetForEditorOutputDtoTemplate", "Dto.CreateDtoTemplate",
-                //"Validation.CreateValidationTemplate", "Validation.UpdateValidationTemplate",
-                //"ApplicationService.SettingsTemplate", "Controller.ControllerTemplate",
-                //"ApplicationService.SettingDefinitionProviderTemplate", "MapperTemplate",
-                //"ApplicationService.ServiceAuthTemplate", "ApplicationService.ServiceTemplate",
-                //"ApplicationService.IServiceTemplate", "Dto.CreateOrUpdateDtoBaseTemplate",
-                //"DomainService.IDomainServiceTemplate", "DomainService.DomainServiceTemplate",
-                //"Repository.IRepositoryTemplate", "Repository.RepositoryTemplate",
-                //"Dto.UpdateDtoTemplate"
+                "Dto.GetsInputTemplate", "Dto.ListDtoTemplate", "Dto.DetailDtoTemplate",
+                "Dto.GetForEditorOutputDtoTemplate", "Dto.CreateDtoTemplate",
+                "Validation.CreateValidationTemplate", "Validation.UpdateValidationTemplate",
+                "ApplicationService.SettingsTemplate", "Controller.ControllerTemplate",
+                "ApplicationService.SettingDefinitionProviderTemplate", "MapperTemplate",
+                "ApplicationService.ServiceAuthTemplate", "ApplicationService.ServiceTemplate",
+                "ApplicationService.IServiceTemplate", "Dto.CreateOrUpdateDtoBaseTemplate",
+                "DomainService.IDomainServiceTemplate", "DomainService.DomainServiceTemplate",
+                "Repository.IRepositoryTemplate", "Repository.RepositoryTemplate",
+                "Dto.UpdateDtoTemplate"
             };
             CacheParallelLoopResult = Parallel.ForEach(names, n =>
             {
