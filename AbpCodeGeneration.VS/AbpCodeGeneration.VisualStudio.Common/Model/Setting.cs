@@ -25,6 +25,11 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         /// 领域服务
         /// </summary>
         public bool DomainService { get; set; }
+
+        /// <summary>
+        /// 仓储
+        /// </summary>
+        public bool Repository { get; set; }
         /// <summary>
         /// 授权服务
         /// </summary>

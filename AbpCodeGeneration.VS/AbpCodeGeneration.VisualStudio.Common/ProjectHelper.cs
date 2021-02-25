@@ -62,15 +62,19 @@ namespace AbpCodeGeneration.VisualStudio.Common
         {
             InitRazorEngine();
             string[] names = {
-                "Dto.GetsInputTemplate", "Dto.ListDtoTemplate", "Dto.DetailDtoTemplate",
-                "Dto.GetForEditorOutputDtoTemplate", "Dto.CreateDtoTemplate",
-                "Validation.CreateValidationTemplate", "Validation.UpdateValidationTemplate",
-                "ApplicationService.SettingsTemplate", "Controller.ControllerTemplate",
-                "ApplicationService.SettingDefinitionProviderTemplate", "MapperTemplate",
-                "ApplicationService.ServiceAuthTemplate", "ApplicationService.ServiceTemplate",
-                "ApplicationService.IServiceTemplate", "Dto.CreateOrUpdateDtoBaseTemplate",
-                "DomainService.IDomainServiceTemplate", "DomainService.DomainServiceTemplate",
-                "Dto.UpdateDtoTemplate"
+                //"Repository.RepositoryTemplate"
+                "Repository.IRepositoryTemplate"
+                , "Repository.RepositoryTemplate"
+                //"Dto.GetsInputTemplate", "Dto.ListDtoTemplate", "Dto.DetailDtoTemplate",
+                //"Dto.GetForEditorOutputDtoTemplate", "Dto.CreateDtoTemplate",
+                //"Validation.CreateValidationTemplate", "Validation.UpdateValidationTemplate",
+                //"ApplicationService.SettingsTemplate", "Controller.ControllerTemplate",
+                //"ApplicationService.SettingDefinitionProviderTemplate", "MapperTemplate",
+                //"ApplicationService.ServiceAuthTemplate", "ApplicationService.ServiceTemplate",
+                //"ApplicationService.IServiceTemplate", "Dto.CreateOrUpdateDtoBaseTemplate",
+                //"DomainService.IDomainServiceTemplate", "DomainService.DomainServiceTemplate",
+                //"Repository.IRepositoryTemplate", "Repository.RepositoryTemplate",
+                //"Dto.UpdateDtoTemplate"
             };
             CacheParallelLoopResult = Parallel.ForEach(names, n =>
             {
@@ -193,22 +197,12 @@ namespace AbpCodeGeneration.VisualStudio.Common
             ProjectItem apiProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".HttpApi");
             ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application.Contracts");
             ProjectItem applicationContractsSharedProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application.Contracts.Shared");
+            ProjectItem entityFrameworkCoreProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".EntityFrameworkCore");
             string moduleName = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[0];
             model.ModuleName = moduleName;
             //获取当前点击的类所在的项目
             Project topProject = SelectProjectItem.ContainingProject;
-
-            //添加项目目录结构
-            var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject)
-                ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
-            ProjectItem applicationContractsNewFolder = null;
-            ProjectItem dtoFolder;
-            if (model.Setting.IsStandardProject)
-            {
-                applicationContractsNewFolder = GetDeepProjectItem(applicationContractsProjectItem, ClassAbsolutePathInProject)
-                    ?? applicationContractsProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);                
-            }
-
+            
             //权限
             if (model.Setting.AuthorizationService)
             {
@@ -225,6 +219,18 @@ namespace AbpCodeGeneration.VisualStudio.Common
             // 应用服务
             if (model.Setting.ApplicationService)
             {
+                //添加项目目录结构
+                var applicationNewFolder = GetDeepProjectItem(applicationProjectItem, ClassAbsolutePathInProject)
+                    ?? applicationProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
+                
+                ProjectItem applicationContractsNewFolder = null;
+                ProjectItem dtoFolder;
+                if (model.Setting.IsStandardProject)
+                {
+                    applicationContractsNewFolder = GetDeepProjectItem(applicationContractsProjectItem, ClassAbsolutePathInProject)
+                        ?? applicationContractsProjectItem.SubProject.ProjectItems.AddFolder(ClassAbsolutePathInProject);
+                }
+
                 CreateSettingFile(model, applicationNewFolder);
                 CreateServiceClass(model, applicationNewFolder);
                 if (model.Setting.IsStandardProject)
@@ -254,6 +260,15 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateDomainServiceFile(model, currentProjectItem);
             }
             // 仓储
+            if (model.Setting.Repository)
+            {
+                ProjectItem interfaceFolder = GetDeepProjectItem(topProject, ClassAbsolutePathInProject);
+
+                string implementAbsolutePathInProject = "EntityFrameworkCore\\" + ClassAbsolutePathInProject;
+                ProjectItem implementFolder = GetDeepProjectItem(entityFrameworkCoreProjectItem, implementAbsolutePathInProject)
+                    ?? entityFrameworkCoreProjectItem.SubProject.ProjectItems.AddFolder(implementAbsolutePathInProject);
+                CreateRepositoryFile(model, interfaceFolder, implementFolder);
+            }
         }
 
         /// <summary>
@@ -476,6 +491,22 @@ namespace AbpCodeGeneration.VisualStudio.Common
             string contentPermissionName = RunTemplate("DomainService.DomainServiceTemplate", model);
             string fileNamePermissionName = model.ClassName + "Manager.cs";
             AddFileToProjectItem(coreFolder, contentPermissionName, fileNamePermissionName);
+        }
+
+        /// <summary>
+        /// 创建仓储文件
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="coreFolder"></param>
+        private void CreateRepositoryFile(CreateFileInput model, ProjectItem interfaceFolder, ProjectItem implementFolder)
+        {
+            string contentAuthorizationProvider = RunTemplate("Repository.IRepositoryTemplate", model);
+            string fileNameAuthorizationProvider = $"I{model.ClassName}Repository.cs";
+            AddFileToProjectItem(interfaceFolder, contentAuthorizationProvider, fileNameAuthorizationProvider);
+
+            string contentPermissionName = RunTemplate("Repository.RepositoryTemplate", model);
+            string fileNamePermissionName = model.ClassName + "Repository.cs";
+            AddFileToProjectItem(implementFolder, contentPermissionName, fileNamePermissionName);
         }
 
         /// <summary>

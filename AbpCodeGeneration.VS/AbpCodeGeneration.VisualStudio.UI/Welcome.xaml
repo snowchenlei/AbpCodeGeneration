@@ -22,6 +22,7 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="35" />
                     <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
@@ -87,7 +88,10 @@
                 <CheckBox x:Name="Controller" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
                     控制器
                 </CheckBox>
-
+                <CheckBox x:Name="Repository" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
+                    仓储
+                </CheckBox>
+                <!-- TODO:仓储类别 -->
                 <CheckBox x:Name="ExcelImportAndExport" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,8,0,8" IsEnabled="False">
                     Excel导入导出
                 </CheckBox>

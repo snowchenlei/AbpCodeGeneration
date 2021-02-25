@@ -162,8 +162,8 @@
     <EmbeddedResource Include="Templates\Dto\DetailDtoTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Controller\ControllerTemplate.cshtml" />
     <EmbeddedResource Include="Templates\Validation\UpdateValidationTemplate.cshtml" />
-    <None Include="Templates\Repository\RepositoryTemplate.cshtml" />
-    <None Include="Templates\Repository\IRepositoryTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Repository\RepositoryTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\Repository\IRepositoryTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0-rc2\tools\analyzers\C#\Microsoft.CodeAnalysis.Analyzers.dll" />
