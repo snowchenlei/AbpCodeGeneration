@@ -204,7 +204,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             if (model.Setting.AuthorizationService)
             {
                 CreatePermission(model,
-                    model.Setting.IsStandardProject
+                    model.Setting.SharedPermission
                         ? applicationContractsSharedProjectItem
                         : applicationContractsProjectItem);
             }
