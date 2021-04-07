@@ -286,7 +286,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CreateMapperFile(model, moduleItem);
             }
             mapperItem = moduleItem.ProjectItems.Item(model.ModuleName + "ApplicationAutoMapperProfile.cs");
-            EditMapper(mapperItem, $"{model.Namespace}.{model.DirectoryName}", model.Prefix, model.ClassName, model.LocalName);
+            EditMapper(mapperItem, model.Namespace, model.DirectoryName, model.Prefix, model.ClassName, model.LocalName);
         }
 
         /// <summary>
@@ -641,15 +641,22 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="classCnName"></param>
         /// <param name="mapperItem"></param>
         /// <param name="nameSpace"></param>
-        private void EditMapper(ProjectItem mapperItem, string nameSpace, string prefix, string className, string classCnName)
+        private void EditMapper(ProjectItem mapperItem, string nameSpace, string directoryName, string prefix, string className, string classCnName)
         {
             if (mapperItem != null)
             {
                 CodeClass codeClass = GetClass(mapperItem.FileCodeModel.CodeElements);
                 var insertUsingCode = codeClass.StartPoint.CreateEditPoint();//codeClass.GetStartPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                 insertUsingCode.MoveToLineAndOffset(1, 1);
-                insertUsingCode.Insert($"using {nameSpace};\r\n");
-                insertUsingCode.Insert($"using {nameSpace}{prefix}.Dtos;\r\n");
+                insertUsingCode.Insert($"using {nameSpace}.{directoryName};\r\n");
+                if (String.IsNullOrWhiteSpace(prefix))
+                {
+                    insertUsingCode.Insert($"using {nameSpace}.{directoryName}.Dtos;\r\n");
+                }
+                else
+                {
+                    insertUsingCode.Insert($"using {nameSpace}{prefix}.{directoryName}.Dtos;\r\n");
+                }
 
                 var codeChilds = codeClass.Members;
                 foreach (CodeElement codeChild in codeChilds)
