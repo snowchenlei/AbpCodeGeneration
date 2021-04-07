@@ -47,7 +47,7 @@ namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Pref
         /// <param name="id">主键</param>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<@(Model.ClassName)ListDto> UpdateAsync(int id, @(Model.ClassName)UpdateDto input);
+        Task<@(Model.ClassName)ListDto> UpdateAsync(@(Model.KeyType) id, @(Model.ClassName)UpdateDto input);
 
         /// <summary>
         /// 删除
