@@ -36,8 +36,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public virtual async Task<@(Model.ClassName)DetailDto> GetAsync(int id)
         {
             return await _@(Model.CamelClassName)AppService.GetAsync(id);
@@ -59,8 +58,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        [HttpGet]
-        [Route("{id}/editor")]
+        [HttpGet("{id}/editor")]
         public virtual async Task<Get@(Model.ClassName)ForEditorOutput> GetEditorAsync(int id)
         {
             return await _@(Model.CamelClassName)AppService.GetEditorAsync(id);
@@ -83,7 +81,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
         /// <param name="id">主键</param>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("{id}")]
         public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(int id, @(Model.ClassName)UpdateDto input)
         {
             return await _@(Model.CamelClassName)AppService.UpdateAsync(id, input);
@@ -94,7 +92,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public virtual async Task DeleteAsync(int id)
         {
             await _@(Model.CamelClassName)AppService.DeleteAsync(id);
