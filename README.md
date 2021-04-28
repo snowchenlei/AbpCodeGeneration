@@ -1,5 +1,6 @@
 # AbpCodeGeneration
 基于Abp构建的代码生成器，避免了基础代码的编写。
+[Vs插件地址](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGeneration)
 
 ### 文档
 首次启动需要加载模板缓存，请耐心等待。
