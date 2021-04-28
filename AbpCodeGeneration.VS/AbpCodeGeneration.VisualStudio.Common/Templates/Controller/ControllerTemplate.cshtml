@@ -37,7 +37,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
         /// <param name="id">主键</param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public virtual async Task<@(Model.ClassName)DetailDto> GetAsync(int id)
+        public virtual async Task<@(Model.ClassName)DetailDto> GetAsync(@(Model.KeyType) id)
         {
             return await _@(Model.CamelClassName)AppService.GetAsync(id);
         }
@@ -59,7 +59,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
         /// <param name="id">主键</param>
         /// <returns></returns>
         [HttpGet("{id}/editor")]
-        public virtual async Task<Get@(Model.ClassName)ForEditorOutput> GetEditorAsync(int id)
+        public virtual async Task<Get@(Model.ClassName)ForEditorOutput> GetEditorAsync(@(Model.KeyType) id)
         {
             return await _@(Model.CamelClassName)AppService.GetEditorAsync(id);
         }
@@ -82,7 +82,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(int id, @(Model.ClassName)UpdateDto input)
+        public virtual async Task<@(Model.ClassName)ListDto> UpdateAsync(@(Model.KeyType) id, @(Model.ClassName)UpdateDto input)
         {
             return await _@(Model.CamelClassName)AppService.UpdateAsync(id, input);
         }
@@ -93,7 +93,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
         /// <param name="id">主键</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public virtual async Task DeleteAsync(int id)
+        public virtual async Task DeleteAsync(@(Model.KeyType) id)
         {
             await _@(Model.CamelClassName)AppService.DeleteAsync(id);
         }
