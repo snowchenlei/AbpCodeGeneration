@@ -3,8 +3,8 @@
 
 | Package | VS Stable |
 | ------- | ------------ |
-| [AbpCodeGeneration](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGeneration) | [![AbpCodeGeneration](https://img.shields.io/badge/VS%20Marketplace-v1.1.4-blue)](https://www.nuget.org/packages/Newtonsoft.Json/) |
-| [AbpCodeGeneration VS2022](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGenerationVS2022) | [![AbpCodeGeneration VS2022](https://img.shields.io/badge/VS%20Marketplace-v0.1.0-blue)](https://www.nuget.org/packages/Dapper.EntityFramework/) |
+| [AbpCodeGeneration](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGeneration) | [![AbpCodeGeneration](https://img.shields.io/badge/VS%20Marketplace-v1.1.4-blue)](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGeneration) |
+| [AbpCodeGeneration VS2022](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGenerationVS2022) | [![AbpCodeGeneration VS2022](https://img.shields.io/badge/VS%20Marketplace-v0.1.0-blue)](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGenerationVS2022) |
 
 ### 文档
 首次启动需要加载模板缓存，请耐心等待。
