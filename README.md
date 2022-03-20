@@ -1,6 +1,10 @@
 # AbpCodeGeneration
 基于Abp构建的代码生成器，避免了基础代码的编写。
-[Vs插件地址](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGeneration)
+
+| Package | VS Stable |
+| ------- | ------------ |
+| [AbpCodeGeneration](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGeneration) | [![AbpCodeGeneration](https://img.shields.io/badge/VS%20Marketplace-v1.1.4-blue)](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGeneration) |
+| [AbpCodeGeneration VS2022](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGenerationVS2022) | [![AbpCodeGeneration VS2022](https://img.shields.io/badge/VS%20Marketplace-v0.1.0-blue)](https://marketplace.visualstudio.com/items?itemName=Snow258.AbpCodeGenerationVS2022) |
 
 ### 文档
 首次启动需要加载模板缓存，请耐心等待。

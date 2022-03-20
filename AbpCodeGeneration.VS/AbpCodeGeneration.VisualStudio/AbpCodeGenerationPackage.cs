@@ -1,21 +1,12 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+﻿using EnvDTE;
+using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
-using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
 using Task = System.Threading.Tasks.Task;
 
-namespace AbpCodeGeneration.VisualStudio
+namespace AbpCodeGeneration
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -35,27 +26,14 @@ namespace AbpCodeGeneration.VisualStudio
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [InstalledProductRegistration("#1110", "#1112", "1.0", IconResourceID = 1400)] // Info on this package for Help/About
     [Guid(AbpCodeGenerationPackage.PackageGuidString)]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class AbpCodeGenerationPackage : AsyncPackage
     {
         /// <summary>
         /// AbpCodeGenerationPackage GUID string.
         /// </summary>
-        public const string PackageGuidString = "072e154c-aa8d-4813-a06d-cf3a0fb7236f";
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AbpCodeGenerationPackage"/> class.
-        /// </summary>
-        public AbpCodeGenerationPackage()
-        {
-            // Inside this method you can place any initialization code that does not require
-            // any Visual Studio service because at this point the package object is created but
-            // not sited yet inside Visual Studio environment. The place to do all the other
-            // initialization is the Initialize method.
-        }
+        public const string PackageGuidString = "ad1d5434-cc72-47f7-9b30-b5a41bf93ebc";
 
         #region Package Members
 
@@ -70,13 +48,12 @@ namespace AbpCodeGeneration.VisualStudio
         {
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
-
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
             DTE2 dte = (DTE2)await GetServiceAsync(typeof(DTE));
             await AbpCodeGenerationCommand.InitializeAsync(this, dte);
-            await base.InitializeAsync(cancellationToken, progress);
         }
 
-        #endregion Package Members
+        #endregion
     }
 }
