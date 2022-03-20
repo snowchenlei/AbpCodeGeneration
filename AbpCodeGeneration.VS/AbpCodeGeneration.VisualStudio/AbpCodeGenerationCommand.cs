@@ -1,19 +1,16 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
-using AbpCodeGeneration.VisualStudio.Common;
-using AbpCodeGeneration.VisualStudio.Services;
-using AbpCodeGeneration.VisualStudio.Shared;
+﻿using AbpCodeGeneration.VisualStudio.Common;
 using AbpCodeGeneration.VisualStudio.UI;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Task = System.Threading.Tasks.Task;
+using System;
+using System.ComponentModel.Design;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace AbpCodeGeneration.VisualStudio
+namespace AbpCodeGeneration
 {
     /// <summary>
     /// Command handler
@@ -28,7 +25,7 @@ namespace AbpCodeGeneration.VisualStudio
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("8d697762-4f15-440d-8c7b-5500cca23478");
+        public static readonly Guid CommandSet = new Guid("701dd155-2615-414a-aad5-302b3941734f");
 
         /// <summary>
         /// VS Package that provides this command, not null.
@@ -83,8 +80,11 @@ namespace AbpCodeGeneration.VisualStudio
             // the UI thread.
             System.Threading.Thread thread = new System.Threading.Thread(ProjectHelper.InitRazor);
             thread.Start();
+
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+
             _dte = dte;
+
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             Instance = new AbpCodeGenerationCommand(package, commandService);
         }
@@ -99,17 +99,28 @@ namespace AbpCodeGeneration.VisualStudio
         private void Execute(object sender, EventArgs e)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
+
             if (_dte.SelectedItems.Count > 0)
             {
                 SelectedItem selectedItem = _dte.SelectedItems.Item(1);
                 ProjectItem selectProjectItem = selectedItem.ProjectItem;
                 if (selectProjectItem != null)
                 {
-                    IShellService shell = new ShellService();
-                    //shell.ShowDialog("生成配置", new MainWindow(_dte));
-                    shell.ShowDialog("生成配置", new Welcome(_dte));
+                    new CodeGenerationDialogWindow("生成配置", new Welcome(_dte)).ShowDialog();
                 }
             }
+            
+            //string message = "你好啊";
+            //string title = "AbpCodeGenerationCommand";
+
+            //// Show a message box to prove we were here
+            //VsShellUtilities.ShowMessageBox(
+            //    this.package,
+            //    message,
+            //    title,
+            //    OLEMSGICON.OLEMSGICON_INFO,
+            //    OLEMSGBUTTON.OLEMSGBUTTON_OK,
+            //    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
     }
 }
