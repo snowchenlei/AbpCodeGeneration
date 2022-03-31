@@ -83,11 +83,11 @@
     <Content Include="Resources\AbpCodeGenerationCommand.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:\work\git\dotnet\project\AbpCodeGeneration\AbpCodeGeneration.VS\AbpCodeGeneration.VisualStudio.Common\AbpCodeGeneration.VisualStudio.Common.csproj">
+    <ProjectReference Include="..\AbpCodeGeneration.VisualStudio.Common\AbpCodeGeneration.VisualStudio.Common.csproj">
       <Project>{6f613b3d-3320-4de8-809b-c636875686e8}</Project>
       <Name>AbpCodeGeneration.VisualStudio.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="D:\work\git\dotnet\project\AbpCodeGeneration\AbpCodeGeneration.VS\AbpCodeGeneration.VisualStudio.UI\AbpCodeGeneration.VisualStudio.UI.csproj">
+    <ProjectReference Include="..\AbpCodeGeneration.VisualStudio.UI\AbpCodeGeneration.VisualStudio.UI.csproj">
       <Project>{979a0c89-22d3-4247-9dd0-2915ec7357ca}</Project>
       <Name>AbpCodeGeneration.VisualStudio.UI</Name>
     </ProjectReference>
