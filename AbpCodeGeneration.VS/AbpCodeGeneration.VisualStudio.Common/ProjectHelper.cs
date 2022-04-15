@@ -105,13 +105,20 @@ namespace AbpCodeGeneration.VisualStudio.Common
         private void GetBaseProperty(CodeClass2 currentClass, ref List<ClassProperty> classProperties)
         {
             //C#仅支持单继承
-            CodeClass2 baseClass = currentClass.Bases.Cast<CodeClass2>().ToList()[0];
-            CodeElements baseMembers = baseClass.Members;
-            AddClassProperty(baseMembers, ref classProperties);
-            currentClass = baseClass;
-            if (currentClass.Bases.Count > 0)
+            try
             {
-                GetBaseProperty(currentClass, ref classProperties);
+                CodeClass2 baseClass = currentClass.Bases.Cast<CodeClass2>().ToList()[0];
+                CodeElements baseMembers = baseClass.Members;
+                AddClassProperty(baseMembers, ref classProperties);
+                currentClass = baseClass;
+                if (currentClass.Bases.Count > 0)
+                {
+                    GetBaseProperty(currentClass, ref classProperties);
+                }
+            }
+            catch(Exception ex)
+            {
+
             }
         }
 
@@ -195,8 +202,18 @@ namespace AbpCodeGeneration.VisualStudio.Common
             ProjectItem applicationContractsProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + model.Prefix + ".Application.Contracts");
             ProjectItem applicationContractsSharedProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".Application.Contracts.Shared");
             ProjectItem entityFrameworkCoreProjectItem = SolutionProjectItems.Find(t => t.Name == ApplicationRootNamespace + ".EntityFrameworkCore");
-            string moduleName = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[0];
-            model.ModuleName = moduleName;
+            
+            string autoMapperPrefix = String.Empty;
+            if (ClassAbsolutePathInProject.IndexOf("\\") == -1)
+            {
+                model.IsModule = false;
+                autoMapperPrefix = ApplicationRootNamespace.Split(new char[] {'.'}).Last();
+            }
+            else
+            {
+                model.IsModule = true;
+                autoMapperPrefix = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[0];
+            }
             //获取当前点击的类所在的项目
             Project topProject = SelectProjectItem.ContainingProject;
             
@@ -233,8 +250,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 if (model.Setting.IsStandardProject)
                 {
                     CreateServiceInterface(model, applicationContractsNewFolder);
-                    dtoFolder = applicationContractsNewFolder.ProjectItems.Item("Dtos")
-                        ?? applicationContractsNewFolder.ProjectItems.AddFolder("Dtos");
+                    dtoFolder = applicationContractsNewFolder;
                 }
                 else
                 {
@@ -242,7 +258,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                     dtoFolder = applicationNewFolder.ProjectItems.Item("Dtos")
                         ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
                 }
-                CreateDtos(model, applicationProjectItem, dtoFolder);
+                CreateDtos(model, applicationProjectItem, applicationNewFolder, autoMapperPrefix);
 
                 // 参数验证
                 if (model.Setting.ValidationType == Enums.ValidationType.FluentApi)
@@ -274,18 +290,29 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="model"></param>
         /// <param name="applicationProjectItem"></param>
         /// <param name="dtoFolder"></param>
-        private void CreateDtos(CreateFileInput model, ProjectItem applicationProjectItem, ProjectItem dtoFolder)
+        private void CreateDtos(CreateFileInput model, ProjectItem applicationProjectItem, ProjectItem dtoFolder, string autoMapperPrefix)
         {
             CreateDtoFile(model, dtoFolder);
             //设置Autompper映射
-            
-            ProjectItem moduleItem = applicationProjectItem.SubProject.ProjectItems.Item(model.ModuleName);
-            ProjectItem mapperItem = moduleItem.ProjectItems.Item(model.ModuleName + "ApplicationAutoMapperProfile.cs");
+
+            ProjectItem mapperFolderItem;
+            ProjectItem mapperItem;            
+            if (model.IsModule)
+            {
+                ProjectItem moduleItem = applicationProjectItem.SubProject.ProjectItems.Item(model.ModuleName);
+                mapperFolderItem = moduleItem;
+                mapperItem = moduleItem.ProjectItems.Item(autoMapperPrefix + "ApplicationAutoMapperProfile.cs");
+            }
+            else
+            {
+                mapperFolderItem = applicationProjectItem;
+                mapperItem = applicationProjectItem.SubProject.ProjectItems.Item(autoMapperPrefix + "ApplicationAutoMapperProfile.cs");
+            }
+           
             if (mapperItem == null)
             {
-                CreateMapperFile(model, moduleItem);
+                CreateMapperFile(model, mapperFolderItem);
             }
-            mapperItem = moduleItem.ProjectItems.Item(model.ModuleName + "ApplicationAutoMapperProfile.cs");
             EditMapper(mapperItem, model.Namespace, model.DirectoryName, model.Prefix, model.ClassName, model.LocalName);
         }
 

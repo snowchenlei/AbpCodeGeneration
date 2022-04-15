@@ -118,96 +118,93 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApplicationServices" xml:space="preserve">
-    <value>应用服务</value>
+    <value>Application Services</value>
   </data>
   <data name="Basic" xml:space="preserve">
-    <value>基础</value>
+    <value>Basic</value>
   </data>
   <data name="Confirm" xml:space="preserve">
-    <value>确认</value>
+    <value>Confirm</value>
   </data>
   <data name="Controller" xml:space="preserve">
-    <value>控制器</value>
+    <value>Controller</value>
   </data>
   <data name="DomainServices" xml:space="preserve">
-    <value>领域服务</value>
+    <value>Domain Services</value>
   </data>
   <data name="Editable" xml:space="preserve">
-    <value>编辑</value>
+    <value>Editable</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>错误</value>
+    <value>Error</value>
   </data>
   <data name="Excel" xml:space="preserve">
     <value>Excel</value>
   </data>
   <data name="Framework" xml:space="preserve">
-    <value>框架</value>
+    <value>Framework</value>
   </data>
   <data name="Function" xml:space="preserve">
-    <value>功能</value>
+    <value>Function</value>
   </data>
   <data name="List" xml:space="preserve">
-    <value>列表</value>
+    <value>List</value>
   </data>
   <data name="LocalName" xml:space="preserve">
-    <value>本地名称</value>
+    <value>Local Name</value>
   </data>
   <data name="MaxLength" xml:space="preserve">
-    <value>最大长度</value>
+    <value>Max Length</value>
   </data>
   <data name="MinLength" xml:space="preserve">
-    <value>最小长度</value>
-  </data>
-  <data name="NamespacePrefix" xml:space="preserve">
-    <value>命名空间前缀</value>
+    <value>Min Length</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>下一步</value>
+    <value>Next</value>
   </data>
   <data name="Permission" xml:space="preserve">
-    <value>权限</value>
+    <value>Permission</value>
   </data>
   <data name="PrimaryKey" xml:space="preserve">
-    <value>主键</value>
+    <value>Primary Key</value>
   </data>
   <data name="PrimaryKeyIsRequired" xml:space="preserve">
-    <value>主键是必须的！</value>
+    <value>Primary Key Is Required!</value>
   </data>
   <data name="Property" xml:space="preserve">
-    <value>属性</value>
+    <value>Property</value>
   </data>
   <data name="Regular" xml:space="preserve">
-    <value>正则</value>
+    <value>Regular</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>删除</value>
+    <value>Remove</value>
   </data>
   <data name="Repository" xml:space="preserve">
-    <value>仓储</value>
+    <value>Repository</value>
   </data>
   <data name="Required" xml:space="preserve">
-    <value>必填</value>
+    <value>Required</value>
   </data>
   <data name="Setting" xml:space="preserve">
-    <value>设置</value>
+    <value>Setting</value>
   </data>
   <data name="SimpleDDD" xml:space="preserve">
-    <value>简单的DDD</value>
+    <value>Simple DDD</value>
   </data>
   <data name="SplitServiceSharedPermission" xml:space="preserve">
-    <value>分离服务共享权限</value>
+    <value>Split Service Shared Permission</value>
   </data>
   <data name="StandardDDD" xml:space="preserve">
-    <value>标准的DDD</value>
+    <value>Standard DDD</value>
   </data>
   <data name="Succeeded" xml:space="preserve">
-    <value>代码生成成功！</value>
+    <value>Succeeded</value>
   </data>
   <data name="Tips" xml:space="preserve">
-    <value>提示</value>
+    <value>Tips</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>类型</value>
+    <value>Type</value>
   </data>
 </root>

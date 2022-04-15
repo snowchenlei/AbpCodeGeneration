@@ -27,6 +27,8 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         public string Namespace { get; set; }
         public string ClassName { get; set; }
 
+        public bool IsModule { get; set; }
+
         public string ModuleName { get; set; }
         public string CamelClassName
         {
@@ -67,10 +69,6 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         /// Excel导入导出
         /// </summary>
         public bool ExcelImportAndExport { get; set; }
-        /// <summary>
-        /// 图片上传
-        /// </summary>
-        public bool PictureUpload { get; set; }
 
         /// <summary>
         /// 命名空间前缀

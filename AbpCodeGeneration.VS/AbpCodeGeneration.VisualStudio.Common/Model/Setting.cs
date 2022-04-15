@@ -42,10 +42,6 @@ namespace AbpCodeGeneration.VisualStudio.Common.Model
         /// Excel导入导出
         /// </summary>
         public bool ExcelImportAndExport { get; set; }
-        /// <summary>
-        /// 图片上传
-        /// </summary>
-        public bool PictureUpload { get; set; }
 
         /// <summary>
         /// 命名空间前缀

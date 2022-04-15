@@ -51,7 +51,6 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 Controller = Controller.IsChecked ?? false,
                 AuthorizationService = AuthorizationService.IsChecked ?? false,
                 ExcelImportAndExport = ExcelImportAndExport.IsChecked ?? false,
-                PictureUpload = PictureUpload.IsChecked ?? false,
                 IsStandardProject = StandardDDD.IsChecked ?? false,
                 NamespacePrefix = NamespacePrefix.Text,
                 Repository = Repository.IsChecked ?? false,

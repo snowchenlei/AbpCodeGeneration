@@ -78,8 +78,14 @@ namespace AbpCodeGeneration
         {
             // Switch to the main thread - the call to AddCommand in AbpCodeGenerationCommand's constructor requires
             // the UI thread.
+
+#if DEBUG
+            //System.Threading.Thread thread = new System.Threading.Thread(ProjectHelper.InitRazor);
+            //thread.Start();
+#else
             System.Threading.Thread thread = new System.Threading.Thread(ProjectHelper.InitRazor);
             thread.Start();
+#endif
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 

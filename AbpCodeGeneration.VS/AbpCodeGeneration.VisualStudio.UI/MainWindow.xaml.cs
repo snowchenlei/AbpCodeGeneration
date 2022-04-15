@@ -55,11 +55,11 @@ namespace AbpCodeGeneration.VisualStudio.UI
             PropertyGrid.ItemsSource = DataList;
         }
 
-        private void Query_Click(object sender, RoutedEventArgs e)
+        private void Confirm_Click(object sender, RoutedEventArgs e)
         {
             if (String.IsNullOrWhiteSpace(ClassKeyType.Text))
             {
-                MessageBox.Show("类主键是必须的", "错误", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.None);
+                MessageBox.Show(Properties.Resources.PrimaryKeyIsRequired, Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.None);
                 return;
             }
 
@@ -81,10 +81,9 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 DomainService = _setting.DomainService,
                 AuthorizationService = _setting.AuthorizationService,
                 ExcelImportAndExport = _setting.ExcelImportAndExport,
-                PictureUpload = _setting.PictureUpload,
                 IsStandardProject = _setting.IsStandardProject
             });
-            MessageBoxResult result = MessageBox.Show("代码生成成功", "提示", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+            MessageBoxResult result = MessageBox.Show(Properties.Resources.Succeeded, Properties.Resources.Tips, MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
             if (result == MessageBoxResult.OK)
             {
                 //获取父窗体并关闭

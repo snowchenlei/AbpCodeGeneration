@@ -4,31 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AbpCodeGeneration.VisualStudio.UI"
+        xmlns:properties="clr-namespace:AbpCodeGeneration.VisualStudio.UI.Properties"
         mc:Ignorable="d">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Label>类中文名</Label>
+            <Label Content="{x:Static properties:Resources.LocalName}"></Label>
             <TextBox x:Name="ClassLocalName" Width="50" VerticalContentAlignment="Center"/>
-            <Label>类主键</Label>
+            <Label Content="{x:Static properties:Resources.PrimaryKey}"></Label>
             <TextBox x:Name="ClassKeyType" Width="50" VerticalContentAlignment="Center"/>
             <!--<Label>命名空间前缀</Label>
             <TextBox x:Name="NamespacePrefix" Width="80"/>-->
         </StackPanel>
         <DataGrid x:Name="PropertyGrid" AutoGenerateColumns="False" SelectionUnit="CellOrRowHeader" LoadingRow="DataGrid_LoadingRow">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="属性名" Width="80" Binding="{Binding PropertyName, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="类型" Width="80" Binding="{Binding PropertyType, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridCheckBoxColumn Header="列表" Width="80" Binding="{Binding IsList, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridCheckBoxColumn Header="修改" Width="80" Binding="{Binding IsEdit, UpdateSourceTrigger=PropertyChanged}" />                
-                <DataGridCheckBoxColumn Header="必填" Width="80" Binding="{Binding Required, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="最小长度" Width="80" Binding="{Binding MinLength, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="最大长度" Width="80" Binding="{Binding MaxLength, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="正则" Width="150" Binding="{Binding Regular, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="{x:Static properties:Resources.Property}" Width="80" Binding="{Binding PropertyName, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="{x:Static properties:Resources.Type}" Width="80" Binding="{Binding PropertyType, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridCheckBoxColumn Header="{x:Static properties:Resources.List}" Width="80" Binding="{Binding IsList, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridCheckBoxColumn Header="{x:Static properties:Resources.Editable}" Width="80" Binding="{Binding IsEdit, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridCheckBoxColumn Header="{x:Static properties:Resources.Required}" Width="80" Binding="{Binding Required, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="{x:Static properties:Resources.MinLength}" Width="80" Binding="{Binding MinLength, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="{x:Static properties:Resources.MaxLength}" Width="80" Binding="{Binding MaxLength, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="{x:Static properties:Resources.Regular}" Width="150" Binding="{Binding Regular, UpdateSourceTrigger=PropertyChanged}" />
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="Remove" Content="删除" Click="Remove_Click"></Button>
-            <Button x:Name="Query" Content="确认" Click="Query_Click"></Button>
+            <Button x:Name="Remove" Content="{x:Static properties:Resources.Remove}" Click="Remove_Click"></Button>
+            <Button x:Name="Confirm" Content="{x:Static properties:Resources.Confirm}" Click="Confirm_Click"></Button>
         </StackPanel>
     </StackPanel>
 </UserControl>

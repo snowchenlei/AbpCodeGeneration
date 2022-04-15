@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AbpCodeGeneration.VisualStudio.UI"
+             xmlns:properties="clr-namespace:AbpCodeGeneration.VisualStudio.UI.Properties"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,44 +20,48 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40" />
                     <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="35" />
                     <RowDefinition Height="35" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"/>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="187*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <!--<ColumnDefinition Width="187*"/>
                     <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="258*"/>
+                    <ColumnDefinition Width="258*"/>-->
                     <!--<ColumnDefinition Width="140"/>-->
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="基础" Grid.Row="0" Grid.Column="0" Style="{DynamicResource TitleStyle}" Margin="44,2,42,2"/>
-                <TextBlock Text="框架" Grid.Row="0" Grid.Column="1" Style="{DynamicResource TitleStyle}" Margin="30,2,26,2"/>
-                <TextBlock Text="功能" Grid.Row="0" Grid.Column="2" Style="{DynamicResource TitleStyle}" Margin="30,2,26,2"/>
+                <TextBlock Text="{x:Static properties:Resources.Basic}" Grid.Row="0" Grid.Column="0" Style="{DynamicResource TitleStyle}" Margin="44,2,42,2"/>
+                <TextBlock Text="{x:Static properties:Resources.Framework}" Grid.Row="0" Grid.Column="1" Style="{DynamicResource TitleStyle}" Margin="30,2,26,2"/>
+                <TextBlock Text="{x:Static properties:Resources.Function}" Grid.Row="0" Grid.Column="2" Style="{DynamicResource TitleStyle}" Margin="30,2,26,2"/>
                 <!--<TextBlock Text="前端" Grid.Row="0" Grid.Column="3" Style="{DynamicResource TitleStyle}"/>-->
 
                 <ComboBox x:Name="Validations" DisplayMemberPath="Value" SelectedValuePath="Key"
                       Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,4">
                 </ComboBox>
-                <StackPanel Grid.Row="2" Grid.Column="0">
-                    <RadioButton x:Name="SimplificationDDD" GroupName="ProjectLayout" IsChecked="True">简化DDD</RadioButton>
-                    <RadioButton x:Name="StandardDDD" GroupName="ProjectLayout">标准DDD</RadioButton>                    
+                <StackPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">
+                    <RadioButton x:Name="SimplificationDDD" GroupName="ProjectLayout" IsChecked="True">
+                        <TextBlock Text="{x:Static properties:Resources.SimpleDDD}"/>
+                    </RadioButton>
+                    <RadioButton x:Name="StandardDDD" GroupName="ProjectLayout">
+                        <TextBlock Text="{x:Static properties:Resources.StandardDDD}"/>
+                    </RadioButton>                    
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Grid.Column="0">
                     <CheckBox x:Name="SharedPermission" VerticalAlignment="Center" Margin="0,0,4,0">
-                        分离服务共享权限
+                        <TextBlock Text="{x:Static properties:Resources.SplitServiceSharedPermission}"/>
                     </CheckBox>
-                    <TextBox x:Name="NamespacePrefix" Width="120" IsHitTestVisible="True" IsEnabled="{Binding ElementName=SharedPermission, Path=IsChecked}">
+                    <TextBox x:Name="NamespacePrefix" IsHitTestVisible="True" IsEnabled="{Binding ElementName=SharedPermission, Path=IsChecked}">
                         <TextBox.Style>
                             <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                                 <Style.Resources>
                                     <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                         <VisualBrush.Visual>
-                                            <Label Content="命名空间前缀" Foreground="LightGray" />
+                                            <Label Content="{x:Static properties:Resources.NamespacePrefix}" Foreground="LightGray" />
                                         </VisualBrush.Visual>
                                     </VisualBrush>
                                 </Style.Resources>
@@ -77,33 +82,29 @@
                 </StackPanel>
 
                 <CheckBox x:Name="ApplicationService" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="True" Margin="1,8,0,8">
-                    应用服务
+                    <TextBlock Text="{x:Static properties:Resources.ApplicationServices}"/>
                 </CheckBox>
                 <CheckBox x:Name="DomainService" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
-                    领域服务
+                    <TextBlock Text="{x:Static properties:Resources.DomainServices}"/>
                 </CheckBox>
                 <CheckBox x:Name="AuthorizationService" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
-                    权限服务
+                    <TextBlock Text="{x:Static properties:Resources.Permission}"/>
                 </CheckBox>
                 <CheckBox x:Name="Controller" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
-                    控制器
+                    <TextBlock Text="{x:Static properties:Resources.Controller}"/>
                 </CheckBox>
                 <CheckBox x:Name="Repository" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,8,0,8">
-                    仓储
+                    <TextBlock Text="{x:Static properties:Resources.Repository}"/>
                 </CheckBox>
                 <!-- TODO:仓储类别 -->
                 <CheckBox x:Name="ExcelImportAndExport" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,8,0,8" IsEnabled="False">
-                    Excel导入导出
+                    <TextBlock Text="{x:Static properties:Resources.Excel}"/>
                 </CheckBox>
-                <CheckBox x:Name="PictureUpload" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,8,0,8" IsEnabled="False">
-                    图片上传
-                </CheckBox>
-
             </Grid>
         </StackPanel>
         <Separator/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="next" Click="Next_Click">下一步</Button>
+            <Button x:Name="next" Click="Next_Click" Content="{x:Static properties:Resources.Next}"></Button>
         </StackPanel>
     </StackPanel>
 </UserControl>
