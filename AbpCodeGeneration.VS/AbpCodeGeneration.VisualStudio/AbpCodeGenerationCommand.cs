@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Globalization;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -80,8 +81,8 @@ namespace AbpCodeGeneration
             // the UI thread.
 
 #if DEBUG
-            //System.Threading.Thread thread = new System.Threading.Thread(ProjectHelper.InitRazor);
-            //thread.Start();
+            System.Threading.Thread thread = new System.Threading.Thread(ProjectHelper.InitRazor);
+            thread.Start();
 #else
             System.Threading.Thread thread = new System.Threading.Thread(ProjectHelper.InitRazor);
             thread.Start();
@@ -112,7 +113,7 @@ namespace AbpCodeGeneration
                 ProjectItem selectProjectItem = selectedItem.ProjectItem;
                 if (selectProjectItem != null)
                 {
-                    new CodeGenerationDialogWindow("生成配置", new Welcome(_dte)).ShowDialog();
+                    new Welcome(_dte).ShowDialog();
                 }
             }
             

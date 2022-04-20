@@ -1,11 +1,12 @@
-﻿<UserControl x:Class="AbpCodeGeneration.VisualStudio.UI.MainWindow"
+﻿<Window x:Class="AbpCodeGeneration.VisualStudio.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AbpCodeGeneration.VisualStudio.UI"
         xmlns:properties="clr-namespace:AbpCodeGeneration.VisualStudio.UI.Properties"
-        mc:Ignorable="d">
+        mc:Ignorable="d"
+        Title="{x:Static properties:Resources.Settings}" Height="450" Width="800">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <Label Content="{x:Static properties:Resources.LocalName}"></Label>
@@ -32,4 +33,4 @@
             <Button x:Name="Confirm" Content="{x:Static properties:Resources.Confirm}" Click="Confirm_Click"></Button>
         </StackPanel>
     </StackPanel>
-</UserControl>
+</Window>

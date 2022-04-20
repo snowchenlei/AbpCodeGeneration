@@ -5,16 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.Application.Dtos;
 
 @{
-    string currentNamespace = String.Empty;
-    if (String.IsNullOrEmpty(Model.Prefix))
-    {
-        currentNamespace = String.Format("using {0}.{1};using {0}.{1}.Dtos;", Model.Namespace, Model.DirectoryName);
-    }
-    else
-    {
-        currentNamespace = String.Format("using {0}{1}.{2};using {0}{1}.{2}.Dtos;", Model.Namespace, Model.Prefix, Model.DirectoryName);
-    }
-    @currentNamespace
+    @String.Format("using {0}{1}.{2};", Model.Namespace, Model.Prefix, Model.DirectoryName);
 }
 
 namespace @(Model.Namespace)@(Model.Prefix).Controllers

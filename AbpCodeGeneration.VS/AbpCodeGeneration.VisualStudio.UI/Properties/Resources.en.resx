@@ -159,8 +159,14 @@
   <data name="MinLength" xml:space="preserve">
     <value>Min Length</value>
   </data>
+  <data name="NamespacePrefix" xml:space="preserve">
+    <value>Namespace Prefix</value>
+  </data>
   <data name="Next" xml:space="preserve">
     <value>Next</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
   </data>
   <data name="Permission" xml:space="preserve">
     <value>Permission</value>
@@ -188,6 +194,9 @@
   </data>
   <data name="Setting" xml:space="preserve">
     <value>Setting</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="SimpleDDD" xml:space="preserve">
     <value>Simple DDD</value>

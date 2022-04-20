@@ -11,7 +11,7 @@ namespace AbpCodeGeneration
 {
     internal class CodeGenerationDialogWindow:DialogWindow
     {
-        public CodeGenerationDialogWindow(string title, Control content)
+        public CodeGenerationDialogWindow(Control content)
         {
             if (content == null)
             {
@@ -19,7 +19,6 @@ namespace AbpCodeGeneration
             }
 
             Content = content;
-            Title = title;
             ResizeMode = ResizeMode.NoResize;
             SizeToContent = SizeToContent.WidthAndHeight;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;

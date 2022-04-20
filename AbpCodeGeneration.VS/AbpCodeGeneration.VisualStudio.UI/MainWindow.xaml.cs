@@ -1,12 +1,9 @@
 ﻿using AbpCodeGeneration.VisualStudio.Common;
 using AbpCodeGeneration.VisualStudio.Common.Model;
-using AbpCodeGeneration.VisualStudio.UI.ViewModels;
-using EnvDTE;
 using EnvDTE80;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +14,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace AbpCodeGeneration.VisualStudio.UI
@@ -25,13 +21,14 @@ namespace AbpCodeGeneration.VisualStudio.UI
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : UserControl
+    public partial class MainWindow : Window
     {
         private ObservableCollection<DtoPropertyInfo> DataList = new ObservableCollection<DtoPropertyInfo>();
         private readonly Setting _setting;
         private readonly ProjectHelper projectHelper;
         public MainWindow(DTE2 _dte, Setting setting)
         {
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
             _setting = setting;
             projectHelper = new ProjectHelper(_dte);
@@ -73,7 +70,7 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 LocalName = ClassLocalName.Text,
                 DirectoryName = dto.DirName,
                 PropertyInfos = DataList,
-                Prefix = _setting.NamespacePrefix,// NamespacePrefix.Text,
+                Prefix = _setting.NamespacePrefix,
                 Setting = _setting,
                 ValidationType = _setting.ValidationType,
                 Controller = _setting.Controller,
@@ -127,6 +124,5 @@ namespace AbpCodeGeneration.VisualStudio.UI
             }
             return false;
         }
-
     }
 }

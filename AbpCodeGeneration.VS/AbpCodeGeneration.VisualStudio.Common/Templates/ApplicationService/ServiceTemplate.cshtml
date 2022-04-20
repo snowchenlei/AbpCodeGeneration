@@ -9,18 +9,6 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
-@{
-    string currentNamespace = String.Empty;
-    if (String.IsNullOrEmpty(Model.Prefix))
-    {
-        currentNamespace = String.Format("using {0}.{1}.Dtos;", Model.Namespace, Model.DirectoryName);
-    }
-    else
-    {
-        currentNamespace = String.Format("using {0}.{2};using {0}{1}.{2}.Dtos;", Model.Namespace, Model.Prefix, Model.DirectoryName);
-    }
-    @currentNamespace
-}
 
 namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@Model.DirectoryName
 {

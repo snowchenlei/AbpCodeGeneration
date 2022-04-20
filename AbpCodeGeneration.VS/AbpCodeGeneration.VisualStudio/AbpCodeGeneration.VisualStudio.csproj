@@ -28,6 +28,7 @@
     <StartArguments>/rootsuffix Exp</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <UICulture>en-US</UICulture>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -49,6 +50,16 @@
     <Compile Include="CodeGenerationDialogWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AbpCodeGenerationPackage.cs" />
+    <Compile Include="source.extension.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="source.extension.zh-Hans.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.zh-Hans.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -75,12 +86,29 @@
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.1.4054" />
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="AbpCodeGenerationPackage.vsct">
+    <VSCTCompile Include="AbpCodeGenerationPackage.en-US.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
+    <VSCTCompile Include="AbpCodeGenerationPackage.zh-Hans.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+    <Content Include="Resources\AbpCodeGenerationCommand.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\AbpCodeGenerationCommand.png" />
+    <EmbeddedResource Include="source.extension.en-US.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+      <LogicalName>VSPackage.en-US.resources</LogicalName>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>source.extension.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="source.extension.zh-Hans.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+      <LogicalName>VSPackage.zh-Hans.resources</LogicalName>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>source.extension.zh-Hans.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AbpCodeGeneration.VisualStudio.Common\AbpCodeGeneration.VisualStudio.Common.csproj">

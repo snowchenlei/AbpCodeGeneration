@@ -213,6 +213,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             {
                 model.IsModule = true;
                 autoMapperPrefix = ClassAbsolutePathInProject.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                model.ModuleName = autoMapperPrefix;
             }
             //获取当前点击的类所在的项目
             Project topProject = SelectProjectItem.ContainingProject;
@@ -258,7 +259,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                     dtoFolder = applicationNewFolder.ProjectItems.Item("Dtos")
                         ?? applicationNewFolder.ProjectItems.AddFolder("Dtos");
                 }
-                CreateDtos(model, applicationProjectItem, applicationNewFolder, autoMapperPrefix);
+                CreateDtos(model, applicationProjectItem, dtoFolder, autoMapperPrefix);
 
                 // 参数验证
                 if (model.Setting.ValidationType == Enums.ValidationType.FluentApi)
@@ -299,7 +300,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             ProjectItem mapperItem;            
             if (model.IsModule)
             {
-                ProjectItem moduleItem = applicationProjectItem.SubProject.ProjectItems.Item(model.ModuleName);
+                ProjectItem moduleItem = applicationProjectItem.SubProject.ProjectItems.Item(autoMapperPrefix);
                 mapperFolderItem = moduleItem;
                 mapperItem = moduleItem.ProjectItems.Item(autoMapperPrefix + "ApplicationAutoMapperProfile.cs");
             }
@@ -312,6 +313,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
             if (mapperItem == null)
             {
                 CreateMapperFile(model, mapperFolderItem);
+                mapperItem = mapperFolderItem.ProjectItems.Item(autoMapperPrefix + "ApplicationAutoMapperProfile.cs");
             }
             EditMapper(mapperItem, model.Namespace, model.DirectoryName, model.Prefix, model.ClassName, model.LocalName);
         }
@@ -675,15 +677,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 CodeClass codeClass = GetClass(mapperItem.FileCodeModel.CodeElements);
                 var insertUsingCode = codeClass.StartPoint.CreateEditPoint();//codeClass.GetStartPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                 insertUsingCode.MoveToLineAndOffset(1, 1);
-                insertUsingCode.Insert($"using {nameSpace}.{directoryName};\r\n");
-                if (String.IsNullOrWhiteSpace(prefix))
-                {
-                    insertUsingCode.Insert($"using {nameSpace}.{directoryName}.Dtos;\r\n");
-                }
-                else
-                {
-                    insertUsingCode.Insert($"using {nameSpace}{prefix}.{directoryName}.Dtos;\r\n");
-                }
+                insertUsingCode.Insert($"using {nameSpace}{prefix}.{directoryName};\r\n");
 
                 var codeChilds = codeClass.Members;
                 foreach (CodeElement codeChild in codeChilds)

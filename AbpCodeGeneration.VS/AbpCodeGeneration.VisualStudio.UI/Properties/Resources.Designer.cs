@@ -205,6 +205,15 @@ namespace AbpCodeGeneration.VisualStudio.UI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 选项 的本地化字符串。
+        /// </summary>
+        public static string Options {
+            get {
+                return ResourceManager.GetString("Options", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 权限 的本地化字符串。
         /// </summary>
         public static string Permission {
@@ -282,6 +291,15 @@ namespace AbpCodeGeneration.VisualStudio.UI.Properties {
         public static string Setting {
             get {
                 return ResourceManager.GetString("Setting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 设置 的本地化字符串。
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
             }
         }
         
