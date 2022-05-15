@@ -13,6 +13,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
     /// <summary>
     /// @(Model.LocalName)
     /// </summary>
+    [Route('api/@(Model.CamelClassName)')]
     public class @(Model.ClassName)Controller : @(Model.AbsoluteNamespace)Controller, I@(Model.ClassName)AppService
     {
         private readonly I@(Model.ClassName)AppService _@(Model.CamelClassName)AppService;

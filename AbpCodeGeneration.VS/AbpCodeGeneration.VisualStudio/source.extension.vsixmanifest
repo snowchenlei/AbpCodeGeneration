@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" ?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="AbpCodeGeneration.a13243fe-4ed7-4643-b717-fcd04c1a0998" Version="0.1.1" Language="zh-CN" Publisher="Snow" />
+        <Identity Id="AbpCodeGeneration.a13243fe-4ed7-4643-b717-fcd04c1a0998" Version="0.1.3" Language="zh-CN" Publisher="Snow" />
         <DisplayName>AbpCodeGeneration VS2022</DisplayName>
         <Description xml:space="preserve">a abp code generation</Description>
         <Tags>abp code</Tags>

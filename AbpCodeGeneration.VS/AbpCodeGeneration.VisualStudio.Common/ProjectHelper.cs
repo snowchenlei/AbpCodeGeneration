@@ -733,7 +733,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                         {
                             EditPoint authorizationPoint = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
                             authorizationPoint.Insert("\r\n");
-                            authorizationPoint.Insert($"var {model.CamelClassName}s = {model.CamelAbsoluteNamespace}Group.AddPermission({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Default, L(\"Permission:{model.ClassName}s\"));\r\n");
+                            authorizationPoint.Insert($"var {model.CamelClassName}s = myGroup.AddPermission({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Default, L(\"Permission:{model.ClassName}s\"));\r\n");
                             authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Create, L(\"Permission:Create\"));\r\n");
                             authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Update, L(\"Permission:Edit\"));\r\n");
                             authorizationPoint.Insert($"{model.CamelClassName}s.AddChild({model.AbsoluteNamespace}Permissions.{model.ClassName}s.Delete, L(\"Permission:Delete\"));\r\n");
