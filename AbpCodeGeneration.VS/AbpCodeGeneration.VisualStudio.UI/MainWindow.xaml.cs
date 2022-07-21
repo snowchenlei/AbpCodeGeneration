@@ -71,21 +71,14 @@ namespace AbpCodeGeneration.VisualStudio.UI
                 DirectoryName = dto.DirName,
                 PropertyInfos = DataList,
                 Prefix = _setting.NamespacePrefix,
-                Setting = _setting,
-                ValidationType = _setting.ValidationType,
-                Controller = _setting.Controller,
-                ApplicationService = _setting.ApplicationService,
-                DomainService = _setting.DomainService,
-                AuthorizationService = _setting.AuthorizationService,
-                ExcelImportAndExport = _setting.ExcelImportAndExport,
-                IsStandardProject = _setting.IsStandardProject
+                Setting = _setting
             });
             MessageBoxResult result = MessageBox.Show(Properties.Resources.Succeeded, Properties.Resources.Tips, MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
             if (result == MessageBoxResult.OK)
             {
                 //获取父窗体并关闭
-                System.Windows.Window parentWindow = System.Windows.Window.GetWindow(this);
-                parentWindow.Close();
+                System.Windows.Window parentWindow = GetWindow(this);
+                parentWindow?.Close();
                 return;
             }
         }
@@ -98,11 +91,11 @@ namespace AbpCodeGeneration.VisualStudio.UI
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            int _rowIndex = 0;
-            int _columnIndex = 0;
-            if (GetCellXY(PropertyGrid, ref _rowIndex, ref _columnIndex))
+            int rowIndex = 0;
+            int columnIndex = 0;
+            if (GetCellXY(PropertyGrid, ref rowIndex, ref columnIndex))
             {
-                DataList.RemoveAt(_rowIndex);
+                DataList.RemoveAt(rowIndex);
             }
         }
 

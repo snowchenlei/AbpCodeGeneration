@@ -1,4 +1,5 @@
-﻿@using AbpCodeGeneration.VisualStudio.Common.Model
+﻿@using System
+@using AbpCodeGeneration.VisualStudio.Common.Model
 @inherits RazorEngine.Templating.TemplateBase<CreateFileInput>
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace @(Model.Namespace)@(Model.Prefix).Controllers
     /// <summary>
     /// @(Model.LocalName)
     /// </summary>
-    [Route('api/@(Model.CamelClassName)')]
+    [Route("api/@(Model.CamelClassName)")]
     public class @(Model.ClassName)Controller : @(Model.AbsoluteNamespace)Controller, I@(Model.ClassName)AppService
     {
         private readonly I@(Model.ClassName)AppService _@(Model.CamelClassName)AppService;

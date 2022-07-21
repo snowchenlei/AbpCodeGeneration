@@ -69,7 +69,7 @@ namespace AbpCodeGeneration.VisualStudio.Common
                 "ApplicationService.SettingDefinitionProviderTemplate", "MapperTemplate",
                 "ApplicationService.ServiceAuthTemplate", "ApplicationService.ServiceTemplate",
                 "ApplicationService.IServiceTemplate", "Dto.CreateOrUpdateDtoBaseTemplate",
-                "DomainService.IDomainServiceTemplate", "DomainService.DomainServiceTemplate",
+                "DomainService.DomainServiceTemplate",
                 "Repository.IRepositoryTemplate", "Repository.RepositoryTemplate",
                 "Dto.UpdateDtoTemplate"
             };
@@ -510,9 +510,9 @@ namespace AbpCodeGeneration.VisualStudio.Common
         /// <param name="coreFolder"></param>
         private void CreateDomainServiceFile(CreateFileInput model, ProjectItem coreFolder)
         {
-            string contentAuthorizationProvider = RunTemplate("DomainService.IDomainServiceTemplate", model);
-            string fileNameAuthorizationProvider = $"I{model.ClassName}Manager.cs";
-            AddFileToProjectItem(coreFolder, contentAuthorizationProvider, fileNameAuthorizationProvider);
+            //string contentAuthorizationProvider = RunTemplate("DomainService.IDomainServiceTemplate", model);
+            //string fileNameAuthorizationProvider = $"I{model.ClassName}Manager.cs";
+            //AddFileToProjectItem(coreFolder, contentAuthorizationProvider, fileNameAuthorizationProvider);
 
             string contentPermissionName = RunTemplate("DomainService.DomainServiceTemplate", model);
             string fileNamePermissionName = model.ClassName + "Manager.cs";

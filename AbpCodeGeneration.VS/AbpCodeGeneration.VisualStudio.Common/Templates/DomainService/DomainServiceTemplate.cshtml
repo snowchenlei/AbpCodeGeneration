@@ -9,18 +9,36 @@ namespace @(Model.Namespace).@(Model.DirectoryName)
 	/// <summary>
     /// @(Model.LocalName)
     /// </summary>
-    public class @(Model.ClassName)Manager : DomainService, I@(Model.ClassName)Manager
+    public class @(Model.ClassName)Manager : DomainService
     {
-        private readonly IRepository<@(Model.ClassName), @(Model.KeyType)> _@(Model.CamelClassName)Repository;
+        @if (Model.Setting.Repository)
+        {
+        @:private readonly I@(Model.ClassName)Repository _@(Model.CamelClassName)Repository;
 
-		/// <summary>
-		/// .ctor
-		///</summary>
-		public @(Model.ClassName)Manager(
-			IRepository<@(Model.ClassName), @(Model.KeyType)> @(Model.CamelClassName)Repository)
-		{
-			_@(Model.CamelClassName)Repository =  @(Model.CamelClassName)Repository;
-		}
+        @:/// <summary>
+        @:/// .ctor
+        @:/// </summary>
+        @:/// <param name="@(Model.CamelClassName)Repository"></param>
+        @:public @(Model.ClassName)Manager(
+        @:    I@(Model.ClassName)Repository @(Model.CamelClassName)Repository)
+        @:{
+            @:_@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
+        @:}
+        }
+        else
+        {
+        @:private readonly IRepository<@(Model.ClassName), @Model.KeyType> _@(Model.CamelClassName)Repository;
+
+        @:/// <summary>
+        @:/// .ctor
+        @:/// </summary>
+        @:/// <param name="@(Model.CamelClassName)Repository"></param>
+        @:public @(Model.ClassName)Manager(
+            @:IRepository<@(Model.ClassName), @Model.KeyType> @(Model.CamelClassName)Repository)
+        @:{
+            @:_@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
+        @:}
+        }
         // TODO:编写领域业务代码
     }
 }

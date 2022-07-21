@@ -10,11 +10,9 @@
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <Label Content="{x:Static properties:Resources.LocalName}"></Label>
-            <TextBox x:Name="ClassLocalName" Width="50" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="ClassLocalName" Width="200" VerticalContentAlignment="Center"/>
             <Label Content="{x:Static properties:Resources.PrimaryKey}"></Label>
-            <TextBox x:Name="ClassKeyType" Width="50" VerticalContentAlignment="Center"/>
-            <!--<Label>命名空间前缀</Label>
-            <TextBox x:Name="NamespacePrefix" Width="80"/>-->
+            <TextBox x:Name="ClassKeyType" Width="100" VerticalContentAlignment="Center"/>
         </StackPanel>
         <DataGrid x:Name="PropertyGrid" AutoGenerateColumns="False" SelectionUnit="CellOrRowHeader" LoadingRow="DataGrid_LoadingRow">
             <DataGrid.Columns>

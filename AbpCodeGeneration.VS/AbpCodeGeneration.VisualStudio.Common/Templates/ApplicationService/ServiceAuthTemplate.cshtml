@@ -13,7 +13,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
 using @(Model.Namespace).Permissions;
 
-namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Prefix).@Model.DirectoryName
+namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? String.Empty : Model.Prefix).@Model.DirectoryName
 {
     /// <summary>
     /// @(Model.LocalName)管理
@@ -21,16 +21,33 @@ namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Pref
     [Authorize(@(Model.AbsoluteNamespace)Permissions.@(Model.ClassName)s.Default)]
     public class @(Model.ClassName)AppService : @(Model.AbsoluteNamespace)AppService, I@(Model.ClassName)AppService
     {
-        private readonly IRepository<@(Model.ClassName), @Model.KeyType> _@(Model.CamelClassName)Repository;
-
-        /// <summary>
-        /// .ctor
-        /// </summary>
-        /// <param name="@(Model.CamelClassName)Repository"></param>
-        public @(Model.ClassName)AppService(
-            IRepository<@(Model.ClassName), @Model.KeyType> @(Model.CamelClassName)Repository)
+        @if (Model.Setting.Repository)
         {
-            _@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
+        @:private readonly I@(Model.ClassName)Repository _@(Model.CamelClassName)Repository;
+
+        @:/// <summary>
+        @:/// .ctor
+        @:/// </summary>
+        @:/// <param name="@(Model.CamelClassName)Repository"></param>
+        @:public @(Model.ClassName)AppService(
+        @:    I@(Model.ClassName)Repository @(Model.CamelClassName)Repository)
+        @:{
+            @:_@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
+        @:}
+        }
+        else
+        {
+        @:private readonly IRepository<@(Model.ClassName), @Model.KeyType> _@(Model.CamelClassName)Repository;
+
+        @:/// <summary>
+        @:/// .ctor
+        @:/// </summary>
+        @:/// <param name="@(Model.CamelClassName)Repository"></param>
+        @:public @(Model.ClassName)AppService(
+            @:IRepository<@(Model.ClassName), @Model.KeyType> @(Model.CamelClassName)Repository)
+        @:{
+            @:_@(Model.CamelClassName)Repository = @(Model.CamelClassName)Repository;
+        @:}
         }
 
         /// <summary>
@@ -60,8 +77,7 @@ namespace @Model.Namespace@(String.IsNullOrEmpty(Model.Prefix) ? "" : Model.Pref
             
             var entities = await AsyncExecuter.ToListAsync(queryable
                 .OrderBy(input.Sorting ?? "Id DESC")
-                .Skip(input.SkipCount)
-                .Take(input.MaxResultCount));
+                .PageBy(input));
 
             var dtos = ObjectMapper.Map<List<@(Model.ClassName)>, List<@(Model.ClassName)ListDto>>(entities);
 
